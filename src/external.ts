@@ -13,5 +13,9 @@ export const base = dlopen(libsdl, {
   SDL_CreateWindow: {
   	args: ['cstring', 'int', 'int', 'int', 'int', 'uint32_t'],
   	returns: 'pointer'
+  },
+  SDL_PollEvent: {
+  	args: ['pointer'],
+  	returns: 'int'
   }
 })
