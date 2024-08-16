@@ -1,11 +1,16 @@
 import { base } from "./external";
 import Window from './core/window';
+import Events from './core/events';
+import Keyboard from './core/keyboard';
 import { ptr } from 'bun:ffi';
 
 class Slifer 
 {
 	public static gameWindow: Window | null = null;
 	public static isRunning: boolean = false;
+
+	// Classes for user to pull specific functions from
+	public static Keyboard = Keyboard;
 
 	public static initialize(title: string, width: number, height: number) : Window 
 	{
@@ -36,23 +41,11 @@ class Slifer
 
 		if (isEvent)
 		{
-			this.handleEvents(eventArray);
+			(Events as any).handleEvents(eventArray);
 		}
 
 		return !this.isRunning;
 	}
-
-	private static handleEvents(array: Uint16Array)
-	{
-		switch (array[0])
-		{
-			case 256:
-				this.isRunning = false;
-				break;
-				
-		}
-	}
-
 }
 
 export default Slifer;

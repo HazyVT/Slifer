@@ -17,5 +17,8 @@ export const base = dlopen(libsdl, {
   SDL_PollEvent: {
   	args: ['pointer'],
   	returns: 'int'
+  },
+  SDL_Quit: {
+  	returns: 'void'
   }
 })
