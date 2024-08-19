@@ -1,10 +1,11 @@
-import { base } from "./external";
+import { base, image } from "./external";
 import Window from './core/window';
 import Keyboard from './core/keyboard';
 import Mouse from './core/mouse';
 import { ptr } from 'bun:ffi';
 import keys from "./core/keys";
 import buttons from "./core/buttons";
+import Graphics from './core/graphics';
 
 class SliferClass
 {
@@ -14,6 +15,7 @@ class SliferClass
 	// Classes for user to pull specific functions from
 	public Keyboard = Keyboard;
 	public Mouse = Mouse;
+	public Graphics = Graphics;
 
 	// Variables to take from
 	public keys = keys;
@@ -25,6 +27,13 @@ class SliferClass
 		const init = base.symbols.SDL_Init(48);
 
 		if (init != 0)
+		{
+			throw new Error("Slifer: Initialization failed");
+		}
+
+		// Initialize image library
+		const img = image.symbols.IMG_Init(3);
+		if (img != 3)
 		{
 			throw new Error("Slifer: Initialization failed");
 		}

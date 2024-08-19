@@ -3,7 +3,11 @@ import { dlopen } from 'bun:ffi';
 //@ts-ignore
 import libsdlImport from '../libs/libSDL2.dylib';
 
+//@ts-ignore
+import libsdlImageImport from '../libs/libSDL2_image.dylib';
+
 const libsdl = libsdlImport;
+const libimage = libsdlImageImport;
 
 export const base = dlopen(libsdl, {
   SDL_Init: { 
@@ -21,4 +25,11 @@ export const base = dlopen(libsdl, {
   SDL_Quit: {
   	returns: 'void'
   }
+})
+
+export const image = dlopen(libimage, {
+	IMG_Init: {
+		args: ['int'],
+		returns: 'int'
+	}
 })
