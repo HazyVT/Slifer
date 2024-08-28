@@ -60,5 +60,9 @@ export const libimage = dlopen(libImageImport.default, {
 export const libttf = dlopen(libTTFImport.default, {
     TTF_Init: {
         returns: 'int'
+    },
+    TTF_OpenFont: {
+        args: ['cstring', 'int'],
+        returns: 'pointer'
     }
 })
