@@ -3,10 +3,13 @@ import { ptr } from 'bun:ffi';
 import Math from "./modules/math";
 import Vector2 from "./modules/vectors/vector2";
 import Window from "./modules/window";
+import Graphics from "./modules/graphics";
 
 class SliferClass {
     // Modules
     public Math = new Math();
+    public Graphics = new Graphics();
+
 
     // Classes
     public Vector2 = Vector2;
@@ -19,7 +22,7 @@ class SliferClass {
     private hasBeenInitialized = false;
     private window: Window | null = null;
 
-    public createWindow(title: string, width: number, height: number) : Window {
+    public createWindow(title: string, width: number, height: number) : void {
         if (libsdl.symbols.SDL_Init(0x0000FFFF) != 0) {
             throw `Slifer failed to be initialized`;
         }
@@ -37,15 +40,19 @@ class SliferClass {
 
         if (this.window == null) {
             this.window = new Window(title, width, height);
+            (this.Graphics as any).renderer = (this.window as any).ptrRenderer;
         }
-
-        return this.window;
     }
 
     public shouldClose() : boolean {
+        // Check if slifer has been initialized properly
         if (!this.hasBeenInitialized) {
             throw `Slifer has not been initialized`;
         };
+
+        // Clear the renderer
+        if (libsdl.symbols.SDL_RenderClear((this.window as any).ptrRenderer) != 0) throw `Clear failed`;
+
 
         const eventArray = new Uint16Array(32);
         const isEvent = libsdl.symbols.SDL_PollEvent(ptr(eventArray));

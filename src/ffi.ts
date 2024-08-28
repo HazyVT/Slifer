@@ -35,6 +35,18 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_PollEvent: {
         args: ['pointer'],
         returns: 'int'
+    },
+    SDL_RenderClear: {
+        args: ['pointer'],
+        returns: 'int'
+    },
+    SDL_RenderCopy: {
+        args: ['pointer', 'pointer', 'pointer', 'pointer'],
+        returns: 'int'
+    },
+    SDL_RenderPresent: {
+        args: ['pointer'],
+        returns: 'void'
     }
 })
 
