@@ -1,4 +1,4 @@
-import SliferClass from './src/slifer.ts';
+import SliferClass from "./src/slifer";
 
 const Slifer = new SliferClass();
 
