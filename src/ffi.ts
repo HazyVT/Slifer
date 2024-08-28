@@ -2,6 +2,7 @@ import { dlopen, FFIType, suffix } from 'bun:ffi';
 
 const libSDLImport = await import(`../libs/libSDL2.${suffix}`);
 const libImageImport = await import(`../libs/libSDL2_image.${suffix}`);
+const libTTFImport = await import(`../libs/libSDL2_ttf.${suffix}`);
 
 export const libsdl = dlopen(libSDLImport.default, {
     SDL_Init: {
@@ -30,12 +31,22 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_SetWindowFullscreen: {
         args: ['pointer', 'u32'],
         returns: 'int'
+    },
+    SDL_PollEvent: {
+        args: ['pointer'],
+        returns: 'int'
     }
 })
 
 export const libimage = dlopen(libImageImport.default, {
     IMG_Init: {
         args: ['int'],
+        returns: 'int'
+    }
+})
+
+export const libttf = dlopen(libTTFImport.default, {
+    TTF_Init: {
         returns: 'int'
     }
 })

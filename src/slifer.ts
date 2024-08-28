@@ -1,3 +1,4 @@
+import { libimage, libsdl, libttf } from "./ffi";
 import { ptr } from 'bun:ffi';
 import Math from "./modules/math";
 import Vector2 from "./modules/vectors/vector2";
@@ -24,6 +25,10 @@ class SliferClass {
         }
 
         if (libimage.symbols.IMG_Init(3) != 3) {
+            throw `Slifer failed to be initialized`;
+        }
+
+        if (libttf.symbols.TTF_Init() != 0) {
             throw `Slifer failed to be initialized`;
         }
 
