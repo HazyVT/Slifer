@@ -1,4 +1,4 @@
-import { libsdl } from "./ffi";
+import { libimage, libsdl } from "./ffi";
 import InitError from "./modules/errors/initError";
 import Math from "./modules/math";
 import Vector2 from "./modules/vectors/vector2";
@@ -22,6 +22,10 @@ class SliferClass {
 
     public createWindow(title: string, width: number, height: number) : Window {
         if (libsdl.symbols.SDL_Init(0x0000FFFF) != 0) {
+            throw `Slifer failed to be initialized`;
+        }
+
+        if (libimage.symbols.IMG_Init(3) != 3) {
             throw `Slifer failed to be initialized`;
         }
 
