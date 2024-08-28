@@ -1,11 +1,9 @@
-import { libimage, libsdl } from "./ffi";
-import InitError from "./modules/errors/initError";
+import { ptr } from 'bun:ffi';
 import Math from "./modules/math";
 import Vector2 from "./modules/vectors/vector2";
 import Window from "./modules/window";
 
 class SliferClass {
-
     // Modules
     public Math = new Math();
 
@@ -43,6 +41,18 @@ class SliferClass {
         if (!this.hasBeenInitialized) {
             throw `Slifer has not been initialized`;
         };
+
+        const eventArray = new Uint16Array(32);
+        const isEvent = libsdl.symbols.SDL_PollEvent(ptr(eventArray));
+
+        if (isEvent) {
+            switch (eventArray[0]) {
+                case 256:
+                    this.isRunning = false;
+                    break;
+            }
+        }
+
         return !this.isRunning;
     }
 
