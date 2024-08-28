@@ -74,6 +74,13 @@ class SliferClass {
         const versionString  = "Slifer v" + this.version;
         return versionString;
     }
+
+    public quit() : void {
+        libsdl.symbols.SDL_DestroyRenderer((this.window as any).ptrRenderer);
+        libsdl.symbols.SDL_DestroyWindow((this.window as any).ptrWindow);
+        libttf.symbols.TTF_Quit();
+        libsdl.symbols.SDL_Quit();
+    }
 }
 
 export default SliferClass;
