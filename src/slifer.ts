@@ -2,6 +2,7 @@ import { libsdl } from "./ffi";
 import InitError from "./modules/errors/initError";
 import Math from "./modules/math";
 import Vector2 from "./modules/vectors/vector2";
+import Window from "./modules/window";
 
 class SliferClass {
 
@@ -17,19 +18,27 @@ class SliferClass {
     // Engine Variables
     private isRunning = false;
     private hasBeenInitialized = false;
+    private window: Window | null = null;
 
-    public init() : void {
+    public createWindow(title: string, width: number, height: number) : Window {
         if (libsdl.symbols.SDL_Init(0x0000FFFF) != 0) {
-            console.error(new InitError("Slifer failed to be initialized").toString());
-            return;
+            throw `Slifer failed to be initialized`;
         }
 
         this.isRunning = true;
         this.hasBeenInitialized = true;
+
+        if (this.window == null) {
+            this.window = new Window(title, width, height);
+        }
+
+        return this.window;
     }
 
     public shouldClose() : boolean {
-        if (!this.hasBeenInitialized) {console.error(new InitError("Slifer has not been initialized").toString()); return true};
+        if (!this.hasBeenInitialized) {
+            throw `Slifer has not been initialized`;
+        };
         return !this.isRunning;
     }
 

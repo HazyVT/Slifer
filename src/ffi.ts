@@ -10,7 +10,12 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_GetRevision: {
         returns: 'cstring'
     },
-    SDL_GetVersion: {
-        returns: 'int'
+    SDL_CreateWindow: {
+        args: ['cstring', 'int', 'int', 'int', 'int', 'u32'],
+        returns: 'pointer'
+    },
+    SDL_CreateRenderer: {
+        args: ['pointer', 'int', 'u32'],
+        returns: 'pointer'
     }
 })
