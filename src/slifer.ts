@@ -4,6 +4,7 @@ import Math from "./modules/math";
 import Vector2 from "./modules/vectors/vector2";
 import Window from "./modules/window";
 import Graphics from "./modules/graphics";
+import Color from "./modules/color";
 
 class SliferClass {
     // Modules
@@ -13,9 +14,10 @@ class SliferClass {
 
     // Classes
     public Vector2 = Vector2;
+    public Color = Color;
 
     // Constants
-    private readonly version = "0.0.2";
+    private readonly version = "0.0.3";
 
     // Engine Variables
     private isRunning = false;

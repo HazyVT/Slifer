@@ -88,5 +88,9 @@ export const libttf = dlopen(libTTFImport.default, {
     TTF_RenderText_Solid: {
         args: ['pointer', 'cstring', 'u32'],
         returns: 'pointer'
+    },
+    TTF_SizeText: {
+        args: ['pointer', 'cstring', 'pointer', 'pointer'],
+        returns: 'int'
     }
 })
