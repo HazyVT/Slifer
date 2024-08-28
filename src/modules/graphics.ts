@@ -11,11 +11,21 @@ class Graphics {
         return font;
     }
 
+    drawText(font: Font, text: string, color: number) {
+        const surface = libttf.symbols.TTF_RenderText_Solid(font, Buffer.from(text+"\x00"), color);
+        const texture = libsdl.symbols.SDL_CreateTextureFromSurface(this.renderer, surface);
+        libsdl.symbols.SDL_RenderCopy(
+            this.renderer,
+            texture,
+            null, null
+        );
+    }
+
     flip() : void {
         libsdl.symbols.SDL_RenderPresent(this.renderer);
     }
 }
 
-type Font = Pointer;
+export type Font = Pointer;
 
 export default Graphics;

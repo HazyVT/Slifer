@@ -63,6 +63,10 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_RenderPresent: {
         args: ['pointer'],
         returns: 'void'
+    },
+    SDL_CreateTextureFromSurface: {
+        args: ['pointer', 'pointer'],
+        returns: 'pointer'
     }
 })
 
@@ -79,6 +83,10 @@ export const libttf = dlopen(libTTFImport.default, {
     },
     TTF_OpenFont: {
         args: ['cstring', 'int'],
+        returns: 'pointer'
+    },
+    TTF_RenderText_Solid: {
+        args: ['pointer', 'cstring', 'u32'],
         returns: 'pointer'
     }
 })
