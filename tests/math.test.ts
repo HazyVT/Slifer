@@ -8,3 +8,7 @@ test("Math Sum 2 + 2", () => {
 test("Math Sum 1.201839 + 1.1029389", () => {
     expect(Slifer.Math.sum(1.201839, 1.1029389)).toBe(1.1029389 + 1.201839);
 })
+
+test("Math Sum -24 + -24", () => {
+    expect(Slifer.Math.sum(-24, -24)).toBe(-48);
+})

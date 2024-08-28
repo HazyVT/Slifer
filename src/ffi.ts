@@ -7,5 +7,11 @@ export const libsdl = dlopen(libSDLImport, {
     SDL_Init: {
         args: [FFIType.int],
         returns: FFIType.int
+    },
+    SDL_GetRevision: {
+        returns: 'cstring'
+    },
+    SDL_GetVersion: {
+        returns: 'int'
     }
 })
