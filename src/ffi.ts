@@ -1,8 +1,24 @@
 import { dlopen, FFIType, suffix } from 'bun:ffi';
 
-const libSDLImport = await import(`../libs/libSDL2.${suffix}`);
-const libImageImport = await import(`../libs/libSDL2_image.${suffix}`);
-const libTTFImport = await import(`../libs/libSDL2_ttf.${suffix}`);
+let libSDLImport;
+let libImageImport;
+let libTTFImport;
+
+if (process.platform == "win32") {
+    //@ts-expect-error
+    libSDLImport = await import("../libs/libSDL2.dll");
+    //@ts-expect-error
+    libImageImport = await import("../libs/libSDL2_image.dll");
+    //@ts-expect-error
+    libTTFImport = await import("../libs/libSDL2_ttf.dll");
+} else if (process.platform == "darwin") {
+    //@ts-expect-error
+    libSDLImport = await import("../libs/libSDL2.dylib");
+    //@ts-expect-error
+    libImageImport = await import("../libs/libSDL2_image.dylib");
+    //@ts-expect-error
+    libTTFImport = await import("../libs/libSDL2_ttf.dylib");
+}
 
 export const libsdl = dlopen(libSDLImport.default, {
     SDL_Init: {
