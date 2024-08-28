@@ -1,9 +1,8 @@
-import { dlopen, FFIType } from 'bun:ffi';
+import { dlopen, FFIType, suffix } from 'bun:ffi';
 
-//@ts-expect-error
-import libSDLImport from '../libs/libSDL2.dylib';
+const libSDLImport = await import(`../libs/libSDL2.${suffix}`);
 
-export const libsdl = dlopen(libSDLImport, {
+export const libsdl = dlopen(libSDLImport.default, {
     SDL_Init: {
         args: [FFIType.int],
         returns: FFIType.int
