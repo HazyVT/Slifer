@@ -86,6 +86,12 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_GetKeyFromScancode: {
         args: ['int'],
         returns: 'int'
+    },
+    SDL_GetPerformanceCounter: {
+        returns: 'u64'
+    },
+    SDL_GetPerformanceFrequency: {
+        returns: 'u64'
     }
 })
 

@@ -25,7 +25,17 @@ class SliferClass {
     public isRunning = false;
     private hasBeenInitialized = false;
     private window: Window | null = null;
+    private timerNow = 0;
+    private timerLast = 0;
+    public deltaTime = 0;
 
+    /**
+     * Initializes Slifer and creates a window
+     * 
+     * @param title default title of window
+     * @param width default width of window
+     * @param height default height of window
+     */
     public createWindow(title: string, width: number, height: number) : void {
         if (libsdl.symbols.SDL_Init(0x0000FFFF) != 0) {
             throw `Slifer failed to be initialized`;
@@ -45,9 +55,19 @@ class SliferClass {
         if (this.window == null) {
             this.window = new Window(title, width, height);
             (this.Graphics as any).renderer = (this.window as any).ptrRenderer;
+            (this.Graphics as any).windowWidth = this.window.getWidth();
+            (this.Graphics as any).windowHeight = this.window.getHeight();
         }
+
+        this.timerNow = Number(libsdl.symbols.SDL_GetPerformanceCounter());
+        this.timerLast = 0;
     }
 
+    /**
+     * Method to get if slifer should be closing. Always use in while loop
+     * 
+     * @returns whether Slifer should close
+     */
     public shouldClose() : boolean {
         // Check if slifer has been initialized properly
         if (!this.hasBeenInitialized) {
@@ -57,6 +77,11 @@ class SliferClass {
         // Clear the renderer
         if (libsdl.symbols.SDL_RenderClear((this.window as any).ptrRenderer) != 0) throw `Clear failed`;
 
+        // Get delta time
+        this.timerLast = this.timerNow;
+        this.timerNow = Number(libsdl.symbols.SDL_GetPerformanceCounter());
+
+        this.deltaTime = ((this.timerNow - this.timerLast) / Number(libsdl.symbols.SDL_GetPerformanceFrequency()));
 
         const eventArray = new Uint16Array(32);
         const isEvent = libsdl.symbols.SDL_PollEvent(ptr(eventArray));
@@ -78,11 +103,18 @@ class SliferClass {
         return !this.isRunning;
     }
 
+    /**
+     * 
+     * @returns Installed version of Slifer
+     */
     public getVersion() : string {
         const versionString  = "Slifer v" + this.version;
         return versionString;
     }
 
+    /**
+     * Quit method for Slifer
+     */
     public quit() : void {
         libsdl.symbols.SDL_DestroyRenderer((this.window as any).ptrRenderer);
         libsdl.symbols.SDL_DestroyWindow((this.window as any).ptrWindow);

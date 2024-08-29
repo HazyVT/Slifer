@@ -30,6 +30,14 @@ class Window {
         throw `Renderer failed to be created`;
       }
     }
+
+    getWidth() {
+      return this.width;
+    }
+
+    getHeight() {
+      return this.height;
+    }
 }
 
 export default Window;
