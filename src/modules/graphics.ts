@@ -1,5 +1,5 @@
 import { type Pointer, ptr } from "bun:ffi";
-import { libsdl, libttf } from "../ffi";
+import { libimage, libsdl, libttf } from "../ffi";
 import type Color from "./color";
 
 class Graphics {
@@ -19,6 +19,39 @@ class Graphics {
         const font = libttf.symbols.TTF_OpenFont(Buffer.from(path+"\x00"), pt);
         if (font == null) throw `Font load failed`;
         return font;
+    }
+
+    /**
+     * 
+     * 
+     * @param path string path to the image
+     * @returns Image type
+     */
+    loadImage(path: string) : Image {
+        const _img = libimage.symbols.IMG_Load(Buffer.from(path+"\x00"));
+        if (_img == null) throw `Image loading failed`;
+        return _img;
+    }
+
+    /**
+     * Draws the image to the screen
+     * 
+     * @param image Image type
+     * @param x x position to draw the image
+     * @param y y position to draw the image
+     */
+    draw(image: Image, x: number, y: number) : void {
+        const texture = libsdl.symbols.SDL_CreateTextureFromSurface(this.renderer, image);
+        const imageWidth = new Uint32Array(1);
+        const imageHeight = new Uint32Array(1);
+        libsdl.symbols.SDL_QueryTexture(texture, null, null, ptr(imageWidth), ptr(imageHeight));
+        const destSrc = new Uint32Array(4);
+        destSrc[0] = x;
+        destSrc[1] = y;
+        destSrc[2] = imageWidth[0];
+        destSrc[3] = imageHeight[0];
+        libsdl.symbols.SDL_RenderCopy(this.renderer, texture, null, ptr(destSrc));
+
     }
 
     /**
@@ -76,5 +109,6 @@ class Graphics {
 }
 
 export type Font = Pointer;
+export type Image = Pointer;
 
 export default Graphics;

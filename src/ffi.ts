@@ -92,6 +92,10 @@ export const libsdl = dlopen(libSDLImport.default, {
     },
     SDL_GetPerformanceFrequency: {
         returns: 'u64'
+    },
+    SDL_QueryTexture :{
+        args: ['pointer', 'pointer', 'pointer', 'pointer', 'pointer'],
+        returns: 'int'
     }
 })
 
@@ -99,6 +103,10 @@ export const libimage = dlopen(libImageImport.default, {
     IMG_Init: {
         args: ['int'],
         returns: 'int'
+    },
+    IMG_Load: {
+        args: ['cstring'],
+        returns: 'pointer'
     }
 })
 
