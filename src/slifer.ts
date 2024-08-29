@@ -6,6 +6,7 @@ import Window from "./modules/window";
 import Graphics from "./modules/graphics";
 import Color from "./modules/color";
 import Keyboard from "./modules/keyboard";
+import Mouse from "./modules/mouse";
 
 class SliferClass {
 
@@ -13,13 +14,14 @@ class SliferClass {
     public Math = new Math();
     public Graphics = new Graphics();
     public Keyboard = new Keyboard();
+    public Mouse = new Mouse();
 
     // Classes
     public Vector2 = Vector2;
     public Color = Color;
 
     // Constants
-    private readonly version = "0.0.4";
+    private readonly version = "0.0.5";
 
     // Engine Variables
     public isRunning = false;
@@ -96,6 +98,12 @@ class SliferClass {
                     break;
                 case 769:
                     (this.Keyboard as any).setKeyUp(eventArray[8]);
+                    break;
+                case 1025:
+                    (this.Mouse as any).setButtonDown(eventArray[8] - 256);
+                    break;
+                case 1026:
+                    (this.Mouse as any).setButtonUp(eventArray[8]);
                     break;
             }
         }
