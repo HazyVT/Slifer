@@ -25,7 +25,7 @@ class Window {
       this.height = height;
       this.isFullscreen = false;
 
-      this.ptrRenderer = libsdl.symbols.SDL_CreateRenderer(this.ptrWindow, -1, 0);
+      this.ptrRenderer = libsdl.symbols.SDL_CreateRenderer(this.ptrWindow, -1, 4);
       if (this.ptrRenderer == null) {
         throw `Renderer failed to be created`;
       }

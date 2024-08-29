@@ -5,22 +5,24 @@ import Vector2 from "./modules/vectors/vector2";
 import Window from "./modules/window";
 import Graphics from "./modules/graphics";
 import Color from "./modules/color";
+import Keyboard from "./modules/keyboard";
 
 class SliferClass {
+
     // Modules
     public Math = new Math();
     public Graphics = new Graphics();
-
+    public Keyboard = new Keyboard();
 
     // Classes
     public Vector2 = Vector2;
     public Color = Color;
 
     // Constants
-    private readonly version = "0.0.3";
+    private readonly version = "0.0.4";
 
     // Engine Variables
-    private isRunning = false;
+    public isRunning = false;
     private hasBeenInitialized = false;
     private window: Window | null = null;
 
@@ -63,6 +65,12 @@ class SliferClass {
             switch (eventArray[0]) {
                 case 256:
                     this.isRunning = false;
+                    break;
+                case 768:
+                    (this.Keyboard as any).setKeyDown(eventArray[8]);
+                    break;
+                case 769:
+                    (this.Keyboard as any).setKeyUp(eventArray[8]);
                     break;
             }
         }

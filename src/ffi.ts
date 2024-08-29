@@ -78,6 +78,14 @@ export const libsdl = dlopen(libSDLImport.default, {
     },
     SDL_Quit: {
         returns: 'void'
+    },
+    SDL_GetKeyName: {
+        args: ['int'],
+        returns: 'cstring'
+    },
+    SDL_GetKeyFromScancode: {
+        args: ['int'],
+        returns: 'int'
     }
 })
 
