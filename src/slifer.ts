@@ -21,7 +21,7 @@ class SliferClass {
     public Color = Color;
 
     // Constants
-    private readonly version = "0.0.5";
+    private readonly version = "0.1.0";
 
     // Engine Variables
     public isRunning = false;
