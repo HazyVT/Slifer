@@ -100,6 +100,14 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_GetMouseState: {
         args: ['pointer', 'pointer'],
         returns: 'u32'
+    },
+    SDL_CreateColorCursor: {
+        args: ['pointer', 'int', 'int'],
+        returns: 'pointer'
+    },
+    SDL_SetCursor: {
+        args: ['pointer'],
+        returns: 'void'
     }
 })
 

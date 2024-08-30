@@ -1,5 +1,6 @@
 import { ptr } from 'bun:ffi';
-import { libsdl } from "../ffi";
+import { libimage, libsdl } from "../ffi";
+import type { Image } from './graphics';
 
 class Mouse {
 
@@ -82,6 +83,13 @@ class Mouse {
         libsdl.symbols.SDL_GetMouseState(ptr(xArr), ptr(yArr));
         return {x: xArr[0], y: yArr[0]};
     }
+
+    setCursorImage(image: Image) {
+        const cursor = libsdl.symbols.SDL_CreateColorCursor(image, 8, 8);
+        if (cursor == null) throw `Cursor creation failed`;
+        libsdl.symbols.SDL_SetCursor(cursor);
+    }
+
     
 }
 
