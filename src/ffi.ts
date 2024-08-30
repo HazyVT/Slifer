@@ -96,6 +96,10 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_QueryTexture :{
         args: ['pointer', 'pointer', 'pointer', 'pointer', 'pointer'],
         returns: 'int'
+    },
+    SDL_GetMouseState: {
+        args: ['pointer', 'pointer'],
+        returns: 'u32'
     }
 })
 

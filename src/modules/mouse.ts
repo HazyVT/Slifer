@@ -1,3 +1,6 @@
+import { ptr } from 'bun:ffi';
+import { libsdl } from "../ffi";
+
 class Mouse {
 
     private holdButtonMap = new Map<string, boolean>();
@@ -71,7 +74,13 @@ class Mouse {
         }
 
         return false;
+    }
 
+    getMousePosition() : {x: number, y: number} {
+        const xArr = new Uint32Array(1);
+        const yArr = new Uint32Array(1);
+        libsdl.symbols.SDL_GetMouseState(ptr(xArr), ptr(yArr));
+        return {x: xArr[0], y: yArr[0]};
     }
     
 }
