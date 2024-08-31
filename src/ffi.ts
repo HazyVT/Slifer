@@ -3,6 +3,7 @@ import { dlopen, FFIType, suffix } from 'bun:ffi';
 let libSDLImport;
 let libImageImport;
 let libTTFImport;
+let libGFXImport;
 
 if (process.platform == "win32") {
     //@ts-expect-error
@@ -18,6 +19,8 @@ if (process.platform == "win32") {
     libImageImport = await import("../libs/libSDL2_image.dylib");
     //@ts-expect-error
     libTTFImport = await import("../libs/libSDL2_ttf.dylib");
+    //@ts-expect-error
+    libGFXImport = await import("../libs/libSDL2_gfx.dylib");
 }
 
 export const libsdl = dlopen(libSDLImport.default, {
@@ -108,6 +111,45 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_SetCursor: {
         args: ['pointer'],
         returns: 'void'
+    },
+    SDL_SetRenderDrawColor: {
+        args: ['pointer', 'int', 'int', 'int', 'int'],
+        returns: 'void'
+    },
+    SDL_RenderFillRect: {
+        args: ['pointer', 'pointer'],
+        returns: 'bool'
+    },
+    SDL_GetWindowPosition: {
+        args: ['pointer', 'pointer', 'pointer'],
+        returns: 'void'
+    },
+    SDL_SetWindowPosition: {
+        args: ['pointer', 'int', 'int'],
+        returns: 'void'
+    },
+    SDL_SetWindowHitTest: {
+        args: ['pointer', FFIType.function, 'pointer'],
+        returns: 'int'
+    },
+    SDL_GetWindowSize: {
+        args: ['pointer', 'pointer', 'pointer'],
+        returns: 'void'
+    },
+    SDL_CreateSystemCursor: {
+        args:['int'],
+        returns: 'pointer'
+    },
+    SDL_GetError: {
+        returns: 'cstring'
+    },
+    SDL_SetHint: {
+        args: ['cstring', 'cstring'],
+        returns: 'bool'
+    },
+    SDL_MinimizeWindow: {
+        args: ['pointer'],
+        returns: 'void'
     }
 })
 
@@ -140,5 +182,12 @@ export const libttf = dlopen(libTTFImport.default, {
     },
     TTF_Quit: {
         returns: 'void'
+    }
+})
+
+export const libgfx = dlopen(libGFXImport.default, {
+    filledCircleColor: {
+        args: ['pointer', 'int', 'int', 'int', 'u32'],
+        returns: 'int'
     }
 })
