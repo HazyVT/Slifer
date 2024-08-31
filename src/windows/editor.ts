@@ -71,6 +71,10 @@ import Color from "../modules/color";
     const draggie = libsdl.symbols.SDL_CreateTextureFromSurface(renderer, libimage.symbols.IMG_Load(Buffer.from("resources/draggie-editor.png")));
     const draggieRect = new Rectangle(1204, 0, 95, 60);
 
+    // Create icon
+    const icon = libimage.symbols.IMG_Load(Buffer.from("resources/icons/draggie.ico"));
+    libsdl.symbols.SDL_SetWindowIcon(window, icon);
+
     // Create task bar
     const taskbarRect = new Rectangle(12, 69, 1256, 36);
     // Create file explorer

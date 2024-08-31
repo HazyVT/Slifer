@@ -160,6 +160,10 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_SetWindowShape: {
         args: ['pointer', 'pointer', 'pointer'],
         returns: 'int'
+    },
+    SDL_SetWindowIcon: {
+        args: ['pointer', 'pointer'],
+        returns: 'void'
     }
 })
 
