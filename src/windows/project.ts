@@ -1,8 +1,6 @@
 import { libimage, libsdl, libttf } from "../ffi";
-import { JSCallback, type Pointer, toArrayBuffer, ptr, read } from 'bun:ffi';
+import { JSCallback, type Pointer, toArrayBuffer, ptr } from 'bun:ffi';
 import Rectangle from "../modules/rectangle";
-import Color from "../modules/color";
-import { Database } from 'bun:sqlite';
 
 // Create constants
 const width = 640;
@@ -92,13 +90,9 @@ const deleteRect = new Rectangle(80, 72, 64, 24);
 const managementBackground = libsdl.symbols.SDL_CreateTextureFromSurface(renderer, libimage.symbols.IMG_Load(Buffer.from("./resources/management-background.png")));
 const managementRect = new Rectangle(8, 108, 624, 360);
 
-
-
-// Loading fonts
-const robotoFlex = libttf.symbols.TTF_OpenFont(Buffer.from("./resources/RobotoFlex.ttf"), 12);
-
-// Create colors
-const white = new Color(255, 255, 255);
+// Project image
+const projectImage = libsdl.symbols.SDL_CreateTextureFromSurface(renderer, libimage.symbols.IMG_Load(Buffer.from("./resources/debug/debug-project-image.png")));
+const projectRect = new Rectangle(8 + 14, 108 + 14, 64, 64);
 
 // Create system cursors
 const arrow = libsdl.symbols.SDL_CreateSystemCursor(0);
@@ -127,10 +121,17 @@ while (running) {
                 if (eventArray[8] - 256 == 1) {
                     if (redRect.boundsCheck(mx, my)) {
                         running = false;
+                        break;
                     }
 
                     if (yellowRect.boundsCheck(mx, my)) {
                         libsdl.symbols.SDL_MinimizeWindow(window);
+                        break;
+                    }
+
+                    if (projectRect.boundsCheck(mx, my)) {
+                        import("./editor");
+                        running = false;
                     }
                 }
                 break;
@@ -144,6 +145,11 @@ while (running) {
                 }
 
                 if (createRect.boundsCheck(mx, my)) {
+                    libsdl.symbols.SDL_SetCursor(hand);
+                    break;
+                }
+
+                if (projectRect.boundsCheck(mx, my)) {
                     libsdl.symbols.SDL_SetCursor(hand);
                     break;
                 }
@@ -174,6 +180,9 @@ while (running) {
     // Draw management background
     libsdl.symbols.SDL_RenderCopy(renderer, managementBackground, null, managementRect.pointer);
     
+    // Draw Projects
+    libsdl.symbols.SDL_RenderCopy(renderer, projectImage, null, projectRect.pointer);
+
     // Draw the renderer
     libsdl.symbols.SDL_RenderPresent(renderer);
 }
