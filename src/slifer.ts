@@ -1,5 +1,5 @@
 import { libimage, libsdl, libttf } from "./ffi";
-import { JSCallback, type Pointer, toArrayBuffer, ptr } from 'bun:ffi';
+import { JSCallback, type Pointer, toArrayBuffer, ptr, read } from 'bun:ffi';
 import Rectangle from "./modules/rectangle";
 import Color from "./modules/color";
 import { Database } from 'bun:sqlite';
@@ -15,9 +15,6 @@ let running = true;
 let mx: number = 0;
 let my: number = 0;
 
-// Initialize new sqlite database
-const db = new Database("db.sqlite");
-
 // Creating the slifer project window
 // Initialization
 const baseinit = libsdl.symbols.SDL_Init(0x00000020);
@@ -31,11 +28,15 @@ if (ttfinit != 0) throw `Initialization failed`;
 
 // Create the window
 // Window is made borderless for custom titlebar
-const window = libsdl.symbols.SDL_CreateWindow(Buffer.from(title), 0x2FFF0000, 0x2FFF0000, width, height, 0x00000010);
+const window = libsdl.symbols.SDL_CreateShapedWindow(Buffer.from(title), 0x2FFF0000, 0x2FFF0000, width, height, 0x00000004);
 
 // Create the renderer
 // Renderer is made with vsync
 const renderer = libsdl.symbols.SDL_CreateRenderer(window, -1, 0x00000004);
+
+const surface = libimage.symbols.IMG_Load(Buffer.from("./resources/image.png"));
+const mode = new Uint32Array(2);
+const l = libsdl.symbols.SDL_SetWindowShape(window, surface, ptr(mode));
 
 // Set render scale quality
 const rsq = libsdl.symbols.SDL_SetHint(Buffer.from("SDL_RENDER_SCALE_QUALITY\x00"), Buffer.from("2"));
@@ -100,6 +101,8 @@ const deleteRect = new Rectangle(80, 72, 64, 24);
 // Management background
 const managementBackground = libsdl.symbols.SDL_CreateTextureFromSurface(renderer, libimage.symbols.IMG_Load(Buffer.from("./resources/management-background.png")));
 const managementRect = new Rectangle(8, 108, 624, 360);
+
+
 
 // Loading fonts
 const robotoFlex = libttf.symbols.TTF_OpenFont(Buffer.from("./resources/RobotoFlex.ttf"), 12);

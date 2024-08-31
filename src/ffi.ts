@@ -19,8 +19,6 @@ if (process.platform == "win32") {
     libImageImport = await import("../libs/libSDL2_image.dylib");
     //@ts-expect-error
     libTTFImport = await import("../libs/libSDL2_ttf.dylib");
-    //@ts-expect-error
-    libGFXImport = await import("../libs/libSDL2_gfx.dylib");
 }
 
 export const libsdl = dlopen(libSDLImport.default, {
@@ -150,6 +148,18 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_MinimizeWindow: {
         args: ['pointer'],
         returns: 'void'
+    },
+    SDL_GetShapedWindowMode: {
+        args: ['pointer', 'pointer'],
+        returns: 'int'
+    },
+    SDL_CreateShapedWindow: {
+        args: ['cstring', 'int', 'int', 'int', 'int', 'u32'],
+        returns: 'pointer'
+    },
+    SDL_SetWindowShape: {
+        args: ['pointer', 'pointer', 'pointer'],
+        returns: 'int'
     }
 })
 
@@ -182,12 +192,5 @@ export const libttf = dlopen(libTTFImport.default, {
     },
     TTF_Quit: {
         returns: 'void'
-    }
-})
-
-export const libgfx = dlopen(libGFXImport.default, {
-    filledCircleColor: {
-        args: ['pointer', 'int', 'int', 'int', 'u32'],
-        returns: 'int'
     }
 })
