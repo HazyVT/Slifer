@@ -9,7 +9,12 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "dev": "bun run src/windows/editor.ts"
+    "dev": "bun run src/windows/editor.ts",
+    "make-mac-arm": "bun build src/windows/editor.ts --target=bun-darwin-arm64 --minify --compile --outfile main",
+    "make-mac-x64": "bun build src/windows/editor.ts --target=bun-darwin-x64 --minify --compile --outfile main",
+    "make-windows-x64": "bun build src/windows/editor.ts --target=bun-windows-x64 --minify --compile --outfile main",
+    "make-linux-x64": "bun build src/windows/editor.ts --target=bun-linux-x64 --minify --compile --outfile main",
+    "build": "bun run src/build.ts"
   },
   "type": "module"
 }
