@@ -8,5 +8,8 @@
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
+  "scripts": {
+    "dev": "bun run src/windows/editor.ts"
+  },
   "type": "module"
 }
