@@ -7,6 +7,7 @@
 > [!CAUTION]
 > Slifer is currently in alpha. Use at your own risk.
 >
+
 > [!NOTE]
 > Not all basic features have been implemented. Many are missing such as window customization.
 > As such, I recommend waiting for a beta release of Slifer before using it for a long term project.
