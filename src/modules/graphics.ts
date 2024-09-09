@@ -1,6 +1,7 @@
-import { libimage, libsdl } from "../ffi";
+import { libimage, libsdl, libttf } from "../ffi";
 import Global from "../global";
 import { type Pointer, ptr } from 'bun:ffi';
+import path from 'path';
 
 class Graphics {
     /**
@@ -76,6 +77,36 @@ class Graphics {
         _center[0] = _dest[2] / 2;
         _center[1] = _dest[3] / 2;
         libsdl.symbols.SDL_RenderCopyEx(Global.ptrRenderer, (image as any).pointer, null, ptr(_dest), rotation ? rotation : 0, ptr(_center), flip ? Number(flip) : 0);
+    }
+
+    print(text: string, x: number, y: number, color: Color) {
+
+        // Create text buffer
+        const textBuffer = Buffer.from(text+"\x00");
+
+        // Get width and height of text        
+        const wArr = new Uint32Array(1);
+        const hArr = new Uint32Array(1);
+        libttf.symbols.TTF_SizeText(Global.ptrFont,textBuffer , ptr(wArr), ptr(hArr));
+
+        // Define color
+        const _col = ((color.r << 0) + (color.g << 8) + (color.b << 16));
+
+        // Create texture
+        const surface = libttf.symbols.TTF_RenderText_Solid(Global.ptrFont, textBuffer, _col);
+        if (surface == null) throw `Surface creation failed on print`;
+        const texture = libsdl.symbols.SDL_CreateTextureFromSurface(Global.ptrRenderer, surface);
+        if (texture == null) throw `Texture creation failed on print`;
+
+        // Create destination
+        const destArr = new Uint32Array(4);
+        destArr[0] = x;
+        destArr[1] = y;
+        destArr[2] = wArr[0];
+        destArr[3] = hArr[0];
+
+        // Draw text
+        libsdl.symbols.SDL_RenderCopy(Global.ptrRenderer, texture, null, ptr(destArr));        
     }
     
 }

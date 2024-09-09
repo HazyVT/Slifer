@@ -4,6 +4,7 @@ class Global {
 
     static ptrWindow : Pointer;
     static ptrRenderer : Pointer;
+    static ptrFont : Pointer;
 }
 
 export default Global;

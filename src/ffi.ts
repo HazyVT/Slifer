@@ -204,5 +204,10 @@ export const libttf = dlopen(libTTFImport.default, {
     },
     TTF_Quit: {
         returns: 'void'
+    },
+    TTF_CloseFont: {
+        args: ['pointer'],
+        returns: 'void'
     }
+
 })
