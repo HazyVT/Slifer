@@ -79,6 +79,14 @@ class Graphics {
         libsdl.symbols.SDL_RenderCopyEx(Global.ptrRenderer, (image as any).pointer, null, ptr(_dest), rotation ? rotation : 0, ptr(_center), flip ? Number(flip) : 0);
     }
 
+    /**
+     * Method to draw text to the screen
+     * 
+     * @param text the string of text to print
+     * @param x x position
+     * @param y y position
+     * @param color color of text. Made using Slifer.Graphics.makeColor.
+     */
     print(text: string, x: number, y: number, color: Color) {
 
         // Create text buffer
