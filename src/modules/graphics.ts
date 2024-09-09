@@ -116,7 +116,18 @@ class Graphics {
         // Draw text
         libsdl.symbols.SDL_RenderCopy(Global.ptrRenderer, texture, null, ptr(destArr));        
     }
-    
+
+    /**
+     * Sets the font to a ttf file in your project
+     * 
+     * @param path relative path to font
+     * @param pt size of text
+     */
+    setFont(path: string, pt: number) {
+        const tempFont = libttf.symbols.TTF_OpenFont(Buffer.from(path+"\x00"), pt);
+        if (tempFont == null) throw `Font loading failed`;
+        Global.ptrFont = tempFont;
+    }
 }
 
 class Image {
