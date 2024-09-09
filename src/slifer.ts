@@ -1,10 +1,14 @@
 import { libimage, libsdl, libttf } from "./ffi";
 import Global from "./global";
 import { ptr } from 'bun:ffi';
+import Graphics from "./modules/graphics";
 
 export class SliferClass {
 
     isRunning : boolean = true;
+
+    // Modules
+    Graphics = new Graphics();
 
     constructor() {
         const baseInit = libsdl.symbols.SDL_Init(0x00000020);
@@ -39,10 +43,13 @@ export class SliferClass {
         Global.ptrRenderer = _ren;
     }
 
+    /**
+     * 
+     * @returns if the window should close
+     */
     shouldClose() : boolean {
 
         // Clear the renderer
-        libsdl.symbols.SDL_SetRenderDrawColor(Global.ptrRenderer, 34, 34, 34, 255);
         libsdl.symbols.SDL_RenderClear(Global.ptrRenderer);
 
         // Poll Events
@@ -55,15 +62,9 @@ export class SliferClass {
                 case 256:
                     this.isRunning = false;
                     break;
-                default:
-                    console.log(eventArray);
-                    break;
             }
         }
 
         return this.isRunning;
     }
-
-
-
 }
