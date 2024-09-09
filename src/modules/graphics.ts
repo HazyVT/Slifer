@@ -1,5 +1,6 @@
-import { libsdl } from "../ffi";
+import { libimage, libsdl } from "../ffi";
 import Global from "../global";
+import { type Pointer, ptr } from 'bun:ffi';
 
 class Graphics {
     /**
@@ -36,8 +37,39 @@ class Graphics {
         libsdl.symbols.SDL_RenderClear(Global.ptrRenderer);
     }
 
+    /**
+     * Loads a new image
+     * 
+     * @param path string path to image
+     * @returns Image ready to draw
+     */
+    loadImage(path: string) : Image {
+        const _path = Buffer.from(path + "\x00");
+        const surface = libimage.symbols.IMG_Load(_path);
+        if (surface == null) throw `Image failed to load`;
+        const texture = libsdl.symbols.SDL_CreateTextureFromSurface(Global.ptrRenderer, surface);
+        if (texture == null) throw `Image failed to be created`;
+        return new Image(texture);
+    }
+
+    draw(image: Image, x: number, y: number, width: number, height: number) {
+        const _dest = new Uint32Array(4);
+        _dest[0] = x;
+        _dest[1] = y;
+        _dest[2] = width;
+        _dest[3] = height;
+        libsdl.symbols.SDL_RenderCopy(Global.ptrRenderer, (image as any).pointer, null, ptr(_dest));
+    }
     
+}
+
+class Image {
+
+    private pointer;
     
+    constructor(texture: Pointer) {
+        this.pointer = texture;
+    }
 }
 
 class Color {
