@@ -3,6 +3,7 @@ import Global from "./global";
 import { ptr } from 'bun:ffi';
 import Graphics from "./modules/graphics";
 import Keyboard from "./modules/keyboard";
+import Mouse from "./modules/mouse";
 
 export class SliferClass {
 
@@ -11,6 +12,7 @@ export class SliferClass {
     // Modules
     Graphics = new Graphics();
     Keyboard = new Keyboard();
+    Mouse = new Mouse();
 
     constructor() {
         const baseInit = libsdl.symbols.SDL_Init(0x00000020);
@@ -77,6 +79,16 @@ export class SliferClass {
                     const _ukey = libsdl.symbols.SDL_GetKeyFromScancode(_uscancode);
                     const _uname = libsdl.symbols.SDL_GetKeyName(_ukey);
                     Keyboard.setKeyUp(_uname.toString().toLowerCase());
+                    break;
+                // Mouse down event
+                case 1025:
+                    const _dbtn = eventArray[8] - 256;
+                    Mouse.setButtonDown(_dbtn);
+                    break;
+                // Mouse up event
+                case 1026:
+                    const _ubtn = eventArray[8];
+                    Mouse.setButtonUp(_ubtn);
                     break;
             }
         }
