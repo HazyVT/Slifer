@@ -36,11 +36,11 @@ class Mouse {
 
     /**
      * 
-     * @param key string of key
-     * @returns if the key is being held down
+     * @param button string of button
+     * @returns if the button is being held down
      */
-    isDown(key: buttons) {
-        const _state = Mouse.downKeyMap.get(key);
+    isDown(button: buttons) {
+        const _state = Mouse.downKeyMap.get(button);
         if (_state == undefined) return false
 
         return _state;
@@ -48,16 +48,16 @@ class Mouse {
 
     /**
      * 
-     * @param key string of key
-     * @returns if key is pressed. Returns only once
+     * @param button string of button
+     * @returns if button is pressed. Returns only once
      */
-    isPressed(key: buttons) {
-        const _pressedState = Mouse.pressedKeyMap.get(key);
-        const _downState = Mouse.downKeyMap.get(key);
+    isPressed(button: buttons) {
+        const _pressedState = Mouse.pressedKeyMap.get(button);
+        const _downState = Mouse.downKeyMap.get(button);
 
         if (_downState == true) {
             if (_pressedState == false || _pressedState == undefined) {
-                Mouse.pressedKeyMap.set(key, true);
+                Mouse.pressedKeyMap.set(button, true);
                 return true;
             }
         }
@@ -67,16 +67,16 @@ class Mouse {
 
     /**
      * 
-     * @param key string of key
-     * @returns if key is released. Returns only once
+     * @param button string of button
+     * @returns if button is released. Returns only once
      */
-    isReleased(key: buttons) {
-        const _releasedState = Mouse.releasedKeyMap.get(key);
-        const _downState = Mouse.downKeyMap.get(key);
+    isReleased(button: buttons) {
+        const _releasedState = Mouse.releasedKeyMap.get(button);
+        const _downState = Mouse.downKeyMap.get(button);
 
         if (_downState == false) {
             if (_releasedState == false || undefined) {
-                Mouse.releasedKeyMap.set(key, true);
+                Mouse.releasedKeyMap.set(button, true);
                 return true;
             }
         }
