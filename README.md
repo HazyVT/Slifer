@@ -40,7 +40,7 @@ Slifer is a game framework made to allow users to code games in typescript. The 
 ```ts
 import Slifer from Slifer;
 
-Slifer.createWindow("Example Window", 1280, 720);
+Slifer.createWindow("Example Window", 640, 480);
 
 const bg = Slifer.Graphics.makeColor(36, 36, 36, 255);
 

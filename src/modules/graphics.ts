@@ -52,13 +52,30 @@ class Graphics {
         return new Image(texture);
     }
 
-    draw(image: Image, x: number, y: number, width: number, height: number) {
+    /**
+     * Method to draw the image to the screen
+     * 
+     * @param image Image object to draw. Made using Slifer.Graphics.loadImage
+     * @param x x position to draw image
+     * @param y y position to draw image
+     * @param rotation (optional) rotation of image
+     * @param xs (optional) scale of x axis
+     * @param ys (optional) scale of y axis
+     * @param flip (optional) horizontal flip
+     */
+    draw(image: Image, x: number, y: number, rotation?: number, xs?: number, ys?: number, flip?: true) {
         const _dest = new Uint32Array(4);
+        const wArr = new Uint32Array(1);
+        const hArr = new Uint32Array(1);
+        libsdl.symbols.SDL_QueryTexture((image as any).pointer, null, null, ptr(wArr), ptr(hArr));
         _dest[0] = x;
         _dest[1] = y;
-        _dest[2] = width;
-        _dest[3] = height;
-        libsdl.symbols.SDL_RenderCopy(Global.ptrRenderer, (image as any).pointer, null, ptr(_dest));
+        _dest[2] = wArr[0] * (xs ? xs : 1);
+        _dest[3] = hArr[0] * (ys ? ys : 1);
+        const _center = new Uint32Array(2);
+        _center[0] = _dest[2] / 2;
+        _center[1] = _dest[3] / 2;
+        libsdl.symbols.SDL_RenderCopyEx(Global.ptrRenderer, (image as any).pointer, null, ptr(_dest), rotation ? rotation : 0, ptr(_center), flip ? Number(flip) : 0);
     }
     
 }
