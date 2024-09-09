@@ -168,6 +168,10 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_RaiseWindow: {
         args: ['pointer'],
         returns: 'void'
+    },
+    SDL_RenderCopyEx: {
+        args: ['pointer', 'pointer', 'pointer', 'pointer', 'double', 'pointer', 'int'],
+        returns: 'int'
     }
 })
 
@@ -200,5 +204,10 @@ export const libttf = dlopen(libTTFImport.default, {
     },
     TTF_Quit: {
         returns: 'void'
+    },
+    TTF_CloseFont: {
+        args: ['pointer'],
+        returns: 'void'
     }
+
 })

@@ -23,6 +23,13 @@ export class SliferClass {
 
         const ttfInit = libttf.symbols.TTF_Init();
         if (ttfInit != 0) throw `SDL TTF failed to initialize`;
+
+        if (process.platform == "darwin") {
+            const tempFont = libttf.symbols.TTF_OpenFont(Buffer.from("/System/Library/Fonts/SFNSMono.ttf"), 12);
+            if (tempFont == null) throw `Default font loading failed`;
+            Global.ptrFont = tempFont;
+        }
+        
     }
 
     /**
@@ -100,6 +107,7 @@ export class SliferClass {
      * Slifers quit method
      */
     quit() {
+        libttf.symbols.TTF_CloseFont(Global.ptrFont);
         libsdl.symbols.SDL_DestroyRenderer(Global.ptrRenderer);
         libsdl.symbols.SDL_DestroyWindow(Global.ptrWindow);
         libsdl.symbols.SDL_Quit();

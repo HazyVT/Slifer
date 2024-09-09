@@ -7,7 +7,8 @@
 > [!CAUTION]
 > Slifer is currently in alpha. Use at your own risk.
 >
-> [!INFO]
+
+> [!NOTE]
 > Not all basic features have been implemented. Many are missing such as window customization.
 > As such, I recommend waiting for a beta release of Slifer before using it for a long term project.
 
@@ -40,7 +41,7 @@ Slifer is a game framework made to allow users to code games in typescript. The 
 ```ts
 import Slifer from Slifer;
 
-Slifer.createWindow("Example Window", 1280, 720);
+Slifer.createWindow("Example Window", 640, 480);
 
 const bg = Slifer.Graphics.makeColor(36, 36, 36, 255);
 
