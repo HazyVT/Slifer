@@ -67,4 +67,13 @@ export class SliferClass {
 
         return this.isRunning;
     }
+
+    /**
+     * Slifers quit method
+     */
+    quit() {
+        libsdl.symbols.SDL_DestroyRenderer(Global.ptrRenderer);
+        libsdl.symbols.SDL_DestroyWindow(Global.ptrWindow);
+        libsdl.symbols.SDL_Quit();
+    }
 }
