@@ -93,7 +93,7 @@ export class SliferClass {
             }
         }
 
-        return this.isRunning;
+        return !this.isRunning;
     }
 
     /**

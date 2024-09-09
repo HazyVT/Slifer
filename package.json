@@ -1,6 +1,7 @@
 {
   "name": "slifer",
   "version": "0.1.0",
+  "description": "A game framework made for bun and typescript",
   "module": "index.ts",
   "devDependencies": {
     "@types/bun": "latest"

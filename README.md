@@ -16,6 +16,8 @@ Slifer is a game framework made to allow users to code games in typescript. The 
 ## Contents
 - [Goals](#goals)
 - [Current Features](#current-features)
+- [Future Features](#future-features)
+- [Example](#example)
 
 ## Goals
 
@@ -33,3 +35,24 @@ Slifer is a game framework made to allow users to code games in typescript. The 
 - Audio Implementation
 - Animation library
 - Save file library
+
+## Example
+```ts
+import Slifer from Slifer;
+
+Slifer.createWindow("Example Window", 1280, 720);
+
+const bg = Slifer.Graphics.makeColor(36, 36, 36, 255);
+
+while (!Slifer.shouldClose()) {
+    Slifer.Graphics.setBackground(bg);
+
+    if (Slifer.Keyboard.isPressed('escape')) {
+        Slifer.isRunning = false;
+    }
+
+    Slifer.Graphics.render();
+}
+
+Slifer.quit();
+```

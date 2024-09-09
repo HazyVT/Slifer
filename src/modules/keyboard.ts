@@ -72,6 +72,7 @@ type keys = 'a' |'b' |'c' |'d' |'e' |'f' |'g' |'h' |'i' |'j' |'k' |'l' |'m' |'n'
 'tab' |
 'left shift' |
 'right shift' |
-'left ctrl';
+'left ctrl' |
+'escape';
 
 export default Keyboard;
