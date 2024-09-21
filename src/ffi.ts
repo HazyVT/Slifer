@@ -156,6 +156,10 @@ export const libsdl = dlopen(libSDLImport.default, {
     args: ["pointer"],
     returns: "void",
   },
+  SDL_MaximizeWindow: {
+  	args: ["pointer"],
+  	returns: 'void'
+  },
   SDL_GetShapedWindowMode: {
     args: ["pointer", "pointer"],
     returns: "int",
