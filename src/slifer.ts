@@ -4,7 +4,9 @@ import { ptr } from "bun:ffi";
 import Graphics from "./modules/graphics";
 import Keyboard from "./modules/keyboard";
 import Mouse from "./modules/mouse";
+import { version } from '../package.json';
 
+/** @interal */
 export class SliferClass {
   isRunning: boolean = true;
 
@@ -122,5 +124,9 @@ export class SliferClass {
     libsdl.symbols.SDL_DestroyRenderer(Global.ptrRenderer);
     libsdl.symbols.SDL_DestroyWindow(Global.ptrWindow);
     libsdl.symbols.SDL_Quit();
+  }
+
+  getVersion() {
+    return version;
   }
 }

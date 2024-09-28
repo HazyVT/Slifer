@@ -28,6 +28,7 @@ if (process.platform == "win32") {
   libTTFImport = await import("../libs/libSDL2_ttf.so");
 }
 
+/** @internal */
 export const libsdl = dlopen(libSDLImport.default, {
   SDL_Init: {
     args: [FFIType.int],
@@ -190,6 +191,7 @@ export const libsdl = dlopen(libSDLImport.default, {
   },
 });
 
+/** @internal */
 export const libimage = dlopen(libImageImport.default, {
   IMG_Init: {
     args: ["int"],
@@ -201,6 +203,7 @@ export const libimage = dlopen(libImageImport.default, {
   },
 });
 
+/** @internal */
 export const libttf = dlopen(libTTFImport.default, {
   TTF_Init: {
     returns: "int",
