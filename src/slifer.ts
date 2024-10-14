@@ -6,6 +6,23 @@ import Keyboard from "./modules/keyboard";
 import Mouse from "./modules/mouse";
 import { version } from '../package.json';
 
+/** @internal */
+class Window {
+  public width: number;
+  public height: number;
+  public title: string;
+
+  constructor(title: string, width: number, height: number) {
+    this.width = width;
+    this.height = height;
+    this.title = title;
+  }
+
+  setFullscreen(flag: boolean) {
+    libsdl.symbols.SDL_SetWindowFullscreen(Number(flag));
+  }
+}
+
 /** @interal */
 export class SliferClass {
   isRunning: boolean = true;
@@ -47,7 +64,7 @@ export class SliferClass {
    * @param width Width of window
    * @param height Height of window
    */
-  createWindow(title: string, width: number, height: number): void {
+  createWindow(title: string, width: number, height: number): Window {
     // Creating cstring buffer from string
     const _title = Buffer.from(title + "\x00");
 
@@ -67,6 +84,8 @@ export class SliferClass {
     const _ren = libsdl.symbols.SDL_CreateRenderer(Global.ptrWindow, -1, 0);
     if (_ren == null) throw `Renderer Creation failed`;
     Global.ptrRenderer = _ren;
+
+    return new Window(title, width, height);
   }
 
   /**
