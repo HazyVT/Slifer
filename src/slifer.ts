@@ -18,8 +18,16 @@ class Window {
     this.title = title;
   }
 
+  setSize(width: number, height: number) : void {
+    libsdl.symbols.SDL_SetWindowSize(Global.ptrWindow, width, height);
+  }
+
+  setTitle(title: string) : void {
+    libsdl.symbols.SDL_SetWindowTitle(Global.ptrWindow, Buffer.from(title+'\x00'));
+  }
+
   setFullscreen(flag: boolean) {
-    libsdl.symbols.SDL_SetWindowFullscreen(Number(flag));
+    libsdl.symbols.SDL_SetWindowFullscreen(Global.ptrWindow, Number(flag));
   }
 }
 

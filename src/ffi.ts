@@ -193,6 +193,14 @@ export const libsdl = dlopen(libSDLImport.default, {
     ],
     returns: "int",
   },
+  SDL_SetWindowSize: {
+    args: ['pointer', 'int', 'int'],
+    returns: 'void'
+  },
+  SDL_SetWindowTitle: {
+    args: ['pointer', 'cstring'],
+    returns: 'void'
+  }
 });
 
 /** @internal */
