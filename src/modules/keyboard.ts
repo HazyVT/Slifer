@@ -1,3 +1,4 @@
+/** @internal */
 class Keyboard {
 
     static downKeyMap = new Map<string, boolean>();
@@ -75,4 +76,5 @@ type keys = 'a' |'b' |'c' |'d' |'e' |'f' |'g' |'h' |'i' |'j' |'k' |'l' |'m' |'n'
 'left ctrl' |
 'escape';
 
+/** @internal */
 export default Keyboard;

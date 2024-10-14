@@ -1,6 +1,7 @@
 import { libsdl } from "../ffi";
 import { ptr } from 'bun:ffi';
 
+/** @internal */
 class Mouse {
 
     static downKeyMap = new Map<string, boolean>();
@@ -97,4 +98,5 @@ class Mouse {
 
 type buttons = 'left' | 'middle' | 'right';
 
+/** @internal */
 export default Mouse;

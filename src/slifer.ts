@@ -4,57 +4,9 @@ import { ptr } from "bun:ffi";
 import Graphics from "./modules/graphics";
 import Keyboard from "./modules/keyboard";
 import Mouse from "./modules/mouse";
+import { version } from '../package.json';
 
-class Window {
-
-	public readonly width : number;
-	public readonly height : number;
-	public readonly title : string;
-	private isFullscreen : boolean;
-
-
-	constructor(width: number, height: number, title: string) {
-		this.width = width;
-		this.height = height;
-		this.title = title;
-		this.isFullscreen = false;
-	}
-
-	getDimensions() : { width: number, height: number} {
-		return { width: this.width, height: this.height };
-	}
-
-	getTitle() : string {
-		return this.title;
-	}
-
-	setIcon(path: string) : void {
-		const surface = libimage.symbols.IMG_Load(Buffer.from(path+"\x00"));
-		if (surface == null) throw `Icon Loading failed`;
-
-		libsdl.symbols.SDL_SetWindowIcon(Global.ptrWindow, surface);
-	}
-
-	toggleFullscreen() : void {
-		this.isFullscreen = !this.isFullscreen;
-		libsdl.symbols.SDL_SetWindowFullscreen(Global.ptrWindow, Number(this.isFullscreen));		
-	}
-
-	maximize() : void {
-		libsdl.symbols.SDL_MaximizeWindow(Global.ptrWindow);
-	}
-
-	minimize() : void {
-		libsdl.symbols.SDL_MinimizeWindow(Global.ptrWindow);
-	}
-
-	setPosition(x: number, y: number) : void {
-		libsdl.symbols.SDL_SetWindowPosition(Global.ptrWindow, x, y);
-	}
-	
-		
-}
-
+/** @interal */
 export class SliferClass {
   isRunning: boolean = true;
 
@@ -95,7 +47,7 @@ export class SliferClass {
    * @param width Width of window
    * @param height Height of window
    */
-  createWindow(title: string, width: number, height: number): Window {
+  createWindow(title: string, width: number, height: number): void {
     // Creating cstring buffer from string
     const _title = Buffer.from(title + "\x00");
 
@@ -115,9 +67,6 @@ export class SliferClass {
     const _ren = libsdl.symbols.SDL_CreateRenderer(Global.ptrWindow, -1, 0);
     if (_ren == null) throw `Renderer Creation failed`;
     Global.ptrRenderer = _ren;
-
-		return new Window(width, height, title);
-
   }
 
   /**
@@ -175,5 +124,9 @@ export class SliferClass {
     libsdl.symbols.SDL_DestroyRenderer(Global.ptrRenderer);
     libsdl.symbols.SDL_DestroyWindow(Global.ptrWindow);
     libsdl.symbols.SDL_Quit();
+  }
+
+  getVersion() {
+    return version;
   }
 }

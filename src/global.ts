@@ -7,4 +7,5 @@ class Global {
     static ptrFont : Pointer;
 }
 
+/** @internal */
 export default Global;

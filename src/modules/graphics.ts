@@ -3,6 +3,7 @@ import Global from "../global";
 import { type Pointer, ptr } from 'bun:ffi';
 import path from 'path';
 
+/** @internal */
 class Graphics {
     /**
      * Slifers draw function. Used to draw everything to the screen.
@@ -153,4 +154,5 @@ class Color {
     }
 }
 
+/** @internal */
 export default Graphics;
