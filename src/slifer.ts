@@ -26,8 +26,16 @@ class Window {
     libsdl.symbols.SDL_SetWindowTitle(Global.ptrWindow, Buffer.from(title+'\x00'));
   }
 
-  setFullscreen(flag: boolean) {
+  setFullscreen(flag: boolean) : void {
     libsdl.symbols.SDL_SetWindowFullscreen(Global.ptrWindow, Number(flag));
+  }
+
+  centerWindow() : void {
+    libsdl.symbols.SDL_SetWindowPosition(Global.ptrWindow, 0x2FFF0000, 0x2FFF0000);
+  }
+
+  setPosition(x: number, y: number) : void {
+    libsdl.symbols.SDL_SetWindowPosition(Global.ptrWindow, x, y);
   }
 }
 
