@@ -6,6 +6,9 @@ import Keyboard from "./modules/keyboard";
 import Mouse from "./modules/mouse";
 import { version } from '../package.json';
 
+//@ts-expect-error
+const fontFile = await import("../Jacquard_12/Jacquard12-Regular.ttf");
+
 /** @internal */
 class Window {
   public width: number;
@@ -75,6 +78,13 @@ export class SliferClass {
       Global.ptrFont = tempFont;
     }
     */
+
+    
+
+    const tempFont = libttf.symbols.TTF_OpenFont(
+      Buffer.from(fontFile.default), 24);
+      if (tempFont == null) throw `Default font loading failed`;
+      Global.ptrFont = tempFont;
   }
 
   /**
