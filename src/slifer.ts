@@ -58,6 +58,7 @@ export class SliferClass {
     const ttfInit = libttf.symbols.TTF_Init();
     if (ttfInit != 0) throw `SDL TTF failed to initialize`;
 
+    /*
     if (process.platform == "darwin") {
       const tempFont = libttf.symbols.TTF_OpenFont(
         Buffer.from("/System/Library/Fonts/SFNSMono.ttf"),
@@ -73,6 +74,7 @@ export class SliferClass {
       if (tempFont == null) throw `Default font loading failed`;
       Global.ptrFont = tempFont;
     }
+    */
   }
 
   /**
