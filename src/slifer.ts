@@ -4,7 +4,7 @@ import { ptr } from "bun:ffi";
 import Graphics from "./modules/graphics";
 import Keyboard from "./modules/keyboard";
 import Mouse from "./modules/mouse";
-import { version } from '../package.json';
+import { version } from "../package.json";
 
 //@ts-expect-error
 const fontFile = await import("../Jacquard_12/Jacquard12-Regular.ttf");
@@ -21,35 +21,47 @@ class Window {
     this.title = title;
   }
 
-  setSize(width: number, height: number) : void {
+  setSize(width: number, height: number): void {
     libsdl.symbols.SDL_SetWindowSize(Global.ptrWindow, width, height);
   }
 
-  setTitle(title: string) : void {
-    libsdl.symbols.SDL_SetWindowTitle(Global.ptrWindow, Buffer.from(title+'\x00'));
+  setTitle(title: string): void {
+    libsdl.symbols.SDL_SetWindowTitle(
+      Global.ptrWindow,
+      Buffer.from(title + "\x00")
+    );
   }
 
-  setFullscreen(flag: boolean) : void {
+  setFullscreen(flag: boolean): void {
     libsdl.symbols.SDL_SetWindowFullscreen(Global.ptrWindow, Number(flag));
   }
 
-  centerWindow() : void {
-    libsdl.symbols.SDL_SetWindowPosition(Global.ptrWindow, 0x2FFF0000, 0x2FFF0000);
+  centerWindow(): void {
+    libsdl.symbols.SDL_SetWindowPosition(
+      Global.ptrWindow,
+      0x2fff0000,
+      0x2fff0000
+    );
   }
 
-  setPosition(x: number, y: number) : void {
+  setPosition(x: number, y: number): void {
     libsdl.symbols.SDL_SetWindowPosition(Global.ptrWindow, x, y);
   }
 }
 
 /** @interal */
 export class SliferClass {
-  isRunning: boolean = true;
+  private isRunning: boolean = true;
+  private lastFrame: number = 0;
+  private firstFrame: number = 0;
 
   // Modules
   Graphics = new Graphics();
   Keyboard = new Keyboard();
   Mouse = new Mouse();
+
+  // Public Variables
+  public dt: number = 0;
 
   constructor() {
     const baseInit = libsdl.symbols.SDL_Init(0x00000020);
@@ -79,12 +91,12 @@ export class SliferClass {
     }
     */
 
-    
-
     const tempFont = libttf.symbols.TTF_OpenFont(
-      Buffer.from(fontFile.default), 24);
-      if (tempFont == null) throw `Default font loading failed`;
-      Global.ptrFont = tempFont;
+      Buffer.from(fontFile.default),
+      24
+    );
+    if (tempFont == null) throw `Default font loading failed`;
+    Global.ptrFont = tempFont;
   }
 
   /**
@@ -99,11 +111,11 @@ export class SliferClass {
     // Creating window pointer
     const _win = libsdl.symbols.SDL_CreateWindow(
       _title,
-      0x2FFF0000,
-      0x2FFF0000,
+      0x2fff0000,
+      0x2fff0000,
       width,
       height,
-      0,
+      0
     );
     if (_win == null) throw `Window creation failed`;
     Global.ptrWindow = _win;
@@ -112,6 +124,8 @@ export class SliferClass {
     const _ren = libsdl.symbols.SDL_CreateRenderer(Global.ptrWindow, -1, 0);
     if (_ren == null) throw `Renderer Creation failed`;
     Global.ptrRenderer = _ren;
+
+    this.firstFrame = Number(libsdl.symbols.SDL_GetPerformanceCounter());
 
     return new Window(title, width, height);
   }
@@ -122,6 +136,13 @@ export class SliferClass {
   shouldClose(): boolean {
     // Clear the renderer
     libsdl.symbols.SDL_RenderClear(Global.ptrRenderer);
+
+    // Setup deltatime
+    this.lastFrame = this.firstFrame;
+    this.firstFrame = Number(libsdl.symbols.SDL_GetPerformanceCounter());
+
+    this.dt = ((this.firstFrame - this.lastFrame) * 1000 / Number(libsdl.symbols.SDL_GetPerformanceFrequency()));
+
 
     // Poll Events
     const eventArray = new Uint16Array(32);
@@ -189,7 +210,6 @@ export class Vector2 {
 }
 
 export class Rectangle {
-
   private readonly pointer;
   readonly x;
   readonly y;
