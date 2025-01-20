@@ -124,7 +124,8 @@ export class SliferClass {
     Global.ptrWindow = _win;
 
     // Creating renderer pointer
-    const _ren = libsdl.symbols.SDL_CreateRenderer(Global.ptrWindow, -1, 0);
+    const vsyncHint = 0x00000004;
+    const _ren = libsdl.symbols.SDL_CreateRenderer(Global.ptrWindow, -1, vsyncHint);
     if (_ren == null) throw `Renderer Creation failed`;
     Global.ptrRenderer = _ren;
 
