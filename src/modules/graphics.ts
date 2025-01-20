@@ -48,6 +48,7 @@ class Graphics {
      */
     loadImage(path: string) : Image {
         const _path = Buffer.from(path + "\x00");
+      //@ts-expect-error Buffer and CString differences
         const surface = libimage.symbols.IMG_Load(_path);
         if (surface == null) throw `Image failed to load`;
         const texture = libsdl.symbols.SDL_CreateTextureFromSurface(Global.ptrRenderer, surface);
@@ -111,12 +112,14 @@ class Graphics {
         // Get width and height of text        
         const wArr = new Uint32Array(1);
         const hArr = new Uint32Array(1);
+      //@ts-expect-error Buffer and CString differences
         libttf.symbols.TTF_SizeText(Global.ptrFont,textBuffer , ptr(wArr), ptr(hArr));
 
         // Define color
         const _col = ((color.r << 0) + (color.g << 8) + (color.b << 16));
 
         // Create texture
+      //@ts-expect-error Buffer and CString differences
         const surface = libttf.symbols.TTF_RenderText_Solid(Global.ptrFont, textBuffer, _col);
         if (surface == null) throw `Surface creation failed on print`;
         const texture = libsdl.symbols.SDL_CreateTextureFromSurface(Global.ptrRenderer, surface);
@@ -140,6 +143,7 @@ class Graphics {
      * @param pt size of text
      */
     setFont(path: string, pt: number) {
+      //@ts-expect-error Buffer and CString differences
         const tempFont = libttf.symbols.TTF_OpenFont(Buffer.from(path+"\x00"), pt);
         if (tempFont == null) throw `Font loading failed`;
         Global.ptrFont = tempFont;

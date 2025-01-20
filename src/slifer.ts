@@ -7,7 +7,7 @@ import Mouse from "./modules/mouse";
 import { version } from "../package.json";
 
 //@ts-expect-error
-const fontFile = await import("../Jacquard_12/Jacquard12-Regular.ttf");
+const fontFile = await import("./Jost-Bold.ttf");
 
 /** @internal */
 class Window {
@@ -28,6 +28,7 @@ class Window {
   setTitle(title: string): void {
     libsdl.symbols.SDL_SetWindowTitle(
       Global.ptrWindow,
+      //@ts-expect-error Buffer and CString differences
       Buffer.from(title + "\x00")
     );
   }
@@ -92,6 +93,7 @@ export class SliferClass {
     */
 
     const tempFont = libttf.symbols.TTF_OpenFont(
+      //@ts-expect-error Buffer and CString differences
       Buffer.from(fontFile.default),
       24
     );
@@ -110,6 +112,7 @@ export class SliferClass {
 
     // Creating window pointer
     const _win = libsdl.symbols.SDL_CreateWindow(
+      //@ts-expect-error Buffer and CString differences
       _title,
       0x2fff0000,
       0x2fff0000,
