@@ -1,8 +1,7 @@
 import { libimage, libsdl, libttf } from "../ffi";
 import Global from "../global";
 import { type Pointer, ptr } from 'bun:ffi';
-import path from 'path';
-import type { Rectangle, Vector2 } from "../slifer";
+import type { Rectangle } from "../slifer";
 
 /** @internal */
 class Graphics {
@@ -67,7 +66,7 @@ class Graphics {
      * @param ys (optional) scale of y axis
      * @param flip (optional) horizontal flip
      */
-    draw(image: Image, position: Vector2, clipRectangle?: Rectangle, rotation?: number, xs?: number, ys?: number, flip?: true) {
+    draw(image: Image, positionX: number, positionY: number, clipRectangle?: Rectangle, rotation?: number, xs?: number, ys?: number, flip?: true) {
         const _dest = new Uint32Array(4);
         const wArr = new Uint32Array(1);
         const hArr = new Uint32Array(1);
@@ -86,8 +85,8 @@ class Graphics {
         }
 
         
-        _dest[0] = position.x;
-        _dest[1] = position.y;
+        _dest[0] = positionX;
+        _dest[1] = positionY;
         _dest[2] = wArr[0] * (xs ? xs : 1);
         _dest[3] = hArr[0] * (ys ? ys : 1);
         const _center = new Uint32Array(2);

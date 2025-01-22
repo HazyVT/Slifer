@@ -203,16 +203,6 @@ export class SliferClass {
   }
 }
 
-export class Vector2 {
-  x;
-  y;
-
-  constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
-  }
-}
-
 export class Rectangle {
   private readonly pointer;
   readonly x;
