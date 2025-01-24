@@ -1,7 +1,9 @@
 import { libimage, libsdl, libttf } from "../ffi";
 import Global from "../global";
-import { type Pointer, ptr } from 'bun:ffi';
-import type { Rectangle } from "../slifer";
+import { type Pointer, ptr } from "bun:ffi";
+import Rectangle from "../engine/rectangle";
+import Color from "../color";
+import Vector2 from "../engine/vector";
 
 /** @internal */
 class Graphics {
@@ -14,8 +16,8 @@ class Graphics {
 
     /**
      * Create a new color. All values are from 0-255
-     * 
-     * @param r red value 
+     *
+     * @param r red value
      * @param g green value
      * @param b blue value
      * @param a alpha value
@@ -27,37 +29,47 @@ class Graphics {
     }
 
     /**
-     * Sets the background of the window to a color of choice. 
-     * 
+     * Sets the background of the window to a color of choice.
+     *
      * Make sure this is put in the top level of the while loop
      * as it will clear the renderer.
-     * 
+     *
      * @param color Color object. Make using Slifer.Graphics.makeColor
      */
     setBackground(color: Color) {
-        libsdl.symbols.SDL_SetRenderDrawColor(Global.ptrRenderer, color.r, color.g, color.b, color.a);
+        libsdl.symbols.SDL_SetRenderDrawColor(
+            Global.ptrRenderer,
+            color.r,
+            color.g,
+            color.b,
+            color.a
+        );
         libsdl.symbols.SDL_RenderClear(Global.ptrRenderer);
     }
 
     /**
      * Loads a new image
-     * 
+     *
      * @param path string path to image
      * @returns Image ready to draw
      */
-    loadImage(path: string) : Image {
+    loadImage(path: string): Image {
         const _path = Buffer.from(path + "\x00");
-      //@ts-expect-error Buffer and CString differences
         const surface = libimage.symbols.IMG_Load(_path);
         if (surface == null) throw `Image failed to load`;
-        const texture = libsdl.symbols.SDL_CreateTextureFromSurface(Global.ptrRenderer, surface);
+        const texture = libsdl.symbols.SDL_CreateTextureFromSurface(
+            Global.ptrRenderer,
+            surface
+        );
         if (texture == null) throw `Image failed to be created`;
         return new Image(texture);
     }
 
+    draw(image: Image, position: Vector2) {}
+
     /**
      * Method to draw the image to the screen
-     * 
+     *
      * @param image Image object to draw. Made using Slifer.Graphics.loadImage
      * @param x x position to draw image
      * @param y y position to draw image
@@ -66,14 +78,28 @@ class Graphics {
      * @param ys (optional) scale of y axis
      * @param flip (optional) horizontal flip
      */
-    draw(image: Image, positionX: number, positionY: number, clipRectangle?: Rectangle, rotation?: number, xs?: number, ys?: number, flip?: true) {
+    drawEx(
+        image: Image,
+        position: Vector2,
+        clipRectangle?: Rectangle,
+        rotation?: number,
+        xs?: number,
+        ys?: number,
+        flip?: true
+    ) {
         const _dest = new Uint32Array(4);
         const wArr = new Uint32Array(1);
         const hArr = new Uint32Array(1);
         let srcRect: null | Uint32Array = null;
-        
+
         if (clipRectangle == undefined) {
-            libsdl.symbols.SDL_QueryTexture((image as any).pointer, null, null, ptr(wArr), ptr(hArr));
+            libsdl.symbols.SDL_QueryTexture(
+                (image as any).pointer,
+                null,
+                null,
+                ptr(wArr),
+                ptr(hArr)
+            );
         } else {
             srcRect = new Uint32Array(4);
             srcRect[0] = clipRectangle.x;
@@ -84,44 +110,60 @@ class Graphics {
             hArr[0] = clipRectangle.height;
         }
 
-        
-        _dest[0] = positionX;
-        _dest[1] = positionY;
+        _dest[0] = position.x;
+        _dest[1] = position.y;
         _dest[2] = wArr[0] * (xs ? xs : 1);
         _dest[3] = hArr[0] * (ys ? ys : 1);
         const _center = new Uint32Array(2);
         _center[0] = _dest[2] / 2;
         _center[1] = _dest[3] / 2;
-        libsdl.symbols.SDL_RenderCopyEx(Global.ptrRenderer, (image as any).pointer, srcRect, ptr(_dest), rotation ? rotation : 0, ptr(_center), flip ? Number(flip) : 0);
+        libsdl.symbols.SDL_RenderCopyEx(
+            Global.ptrRenderer,
+            (image as any).pointer,
+            srcRect,
+            ptr(_dest),
+            rotation ? rotation : 0,
+            ptr(_center),
+            flip ? Number(flip) : 0
+        );
     }
 
     /**
      * Method to draw text to the screen
-     * 
+     *
      * @param text the string of text to print
      * @param x x position
      * @param y y position
      * @param color color of text. Made using Slifer.Graphics.makeColor.
      */
     print(text: string, x: number, y: number, color: Color) {
-
         // Create text buffer
-        const textBuffer = Buffer.from(text+"\x00");
+        const textBuffer = Buffer.from(text + "\x00");
 
-        // Get width and height of text        
+        // Get width and height of text
         const wArr = new Uint32Array(1);
         const hArr = new Uint32Array(1);
-      //@ts-expect-error Buffer and CString differences
-        libttf.symbols.TTF_SizeText(Global.ptrFont,textBuffer , ptr(wArr), ptr(hArr));
+        libttf.symbols.TTF_SizeText(
+            Global.ptrFont,
+            textBuffer,
+            ptr(wArr),
+            ptr(hArr)
+        );
 
         // Define color
-        const _col = ((color.r << 0) + (color.g << 8) + (color.b << 16));
+        const _col = (color.r << 0) + (color.g << 8) + (color.b << 16);
 
         // Create texture
-      //@ts-expect-error Buffer and CString differences
-        const surface = libttf.symbols.TTF_RenderText_Solid(Global.ptrFont, textBuffer, _col);
+        const surface = libttf.symbols.TTF_RenderText_Solid(
+            Global.ptrFont,
+            textBuffer,
+            _col
+        );
         if (surface == null) throw `Surface creation failed on print`;
-        const texture = libsdl.symbols.SDL_CreateTextureFromSurface(Global.ptrRenderer, surface);
+        const texture = libsdl.symbols.SDL_CreateTextureFromSurface(
+            Global.ptrRenderer,
+            surface
+        );
         if (texture == null) throw `Texture creation failed on print`;
 
         // Create destination
@@ -132,43 +174,35 @@ class Graphics {
         destArr[3] = hArr[0];
 
         // Draw text
-        libsdl.symbols.SDL_RenderCopy(Global.ptrRenderer, texture, null, ptr(destArr));        
+        libsdl.symbols.SDL_RenderCopy(
+            Global.ptrRenderer,
+            texture,
+            null,
+            ptr(destArr)
+        );
     }
 
     /**
      * Sets the font to a ttf file in your project
-     * 
+     *
      * @param path relative path to font
      * @param pt size of text
      */
     setFont(path: string, pt: number) {
-      //@ts-expect-error Buffer and CString differences
-        const tempFont = libttf.symbols.TTF_OpenFont(Buffer.from(path+"\x00"), pt);
+        const tempFont = libttf.symbols.TTF_OpenFont(
+            Buffer.from(path + "\x00"),
+            pt
+        );
         if (tempFont == null) throw `Font loading failed`;
         Global.ptrFont = tempFont;
     }
 }
 
 class Image {
-
     private pointer;
-    
+
     constructor(texture: Pointer) {
         this.pointer = texture;
-    }
-}
-
-class Color {
-    readonly r;
-    readonly g;
-    readonly b;
-    readonly a;
-
-    constructor(r: number, g: number, b: number, a: number) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
     }
 }
 
