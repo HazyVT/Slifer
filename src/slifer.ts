@@ -49,7 +49,7 @@ class Window {
 
 /** @interal */
 export class SliferClass {
-    private isRunning: boolean = true;
+    public isRunning: boolean = true;
     private lastFrame: number = 0;
     private firstFrame: number = 0;
 
@@ -172,4 +172,3 @@ export class SliferClass {
         return version;
     }
 }
-
