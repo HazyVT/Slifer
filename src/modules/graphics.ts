@@ -65,13 +65,32 @@ class Graphics {
         return new Image(texture);
     }
 
-    draw(image: Image, position: Vector2) {}
+    /**
+     * Method to draw to the screen simply
+     * @param image Image object to draw. Made using Slifer.Graphics.loadImage
+     * @param position position to draw the image
+     *
+     */
+    draw(image: Image, position: Vector2) {
+        const dstRect = new Uint32Array(4);
+        dstRect[0] = position.x;
+        dstRect[1] = position.y;
+        dstRect[2] = image.width;
+        dstRect[3] = image.height;
+
+        libsdl.symbols.SDL_RenderCopy(
+            Global.ptrRenderer,
+            (image as any).pointer,
+            null,
+            dstRect
+        );
+    }
 
     /**
-     * Method to draw the image to the screen
+     * Method to draw the image to the screen with extended arguments
      *
      * @param image Image object to draw. Made using Slifer.Graphics.loadImage
-     * @param x x position to draw image
+     * @param position position to draw the image
      * @param y y position to draw image
      * @param rotation (optional) rotation of image
      * @param xs (optional) scale of x axis
@@ -81,39 +100,27 @@ class Graphics {
     drawEx(
         image: Image,
         position: Vector2,
-        clipRectangle?: Rectangle,
+        clipRectangle?: Rectangle | null,
         rotation?: number,
         xs?: number,
         ys?: number,
         flip?: true
     ) {
         const _dest = new Uint32Array(4);
-        const wArr = new Uint32Array(1);
-        const hArr = new Uint32Array(1);
         let srcRect: null | Uint32Array = null;
 
-        if (clipRectangle == undefined) {
-            libsdl.symbols.SDL_QueryTexture(
-                (image as any).pointer,
-                null,
-                null,
-                ptr(wArr),
-                ptr(hArr)
-            );
-        } else {
+        if (clipRectangle != null) {
             srcRect = new Uint32Array(4);
-            srcRect[0] = clipRectangle.x;
-            srcRect[1] = clipRectangle.y;
-            srcRect[2] = clipRectangle.width;
-            srcRect[3] = clipRectangle.height;
-            wArr[0] = clipRectangle.width;
-            hArr[0] = clipRectangle.height;
+            srcRect[0] = clipRectangle.position.x;
+            srcRect[1] = clipRectangle.position.y;
+            srcRect[2] = clipRectangle.size.x;
+            srcRect[3] = clipRectangle.size.y;
         }
 
         _dest[0] = position.x;
         _dest[1] = position.y;
-        _dest[2] = wArr[0] * (xs ? xs : 1);
-        _dest[3] = hArr[0] * (ys ? ys : 1);
+        _dest[2] = image.width * (xs ? xs : 1);
+        _dest[3] = image.height * (ys ? ys : 1);
         const _center = new Uint32Array(2);
         _center[0] = _dest[2] / 2;
         _center[1] = _dest[3] / 2;
@@ -200,9 +207,25 @@ class Graphics {
 
 class Image {
     private pointer;
+    public readonly width;
+    public readonly height;
 
     constructor(texture: Pointer) {
         this.pointer = texture;
+
+        const _wArr = new Uint32Array(1);
+        const _hArr = new Uint32Array(1);
+
+        libsdl.symbols.SDL_QueryTexture(
+            texture,
+            null,
+            null,
+            ptr(_wArr),
+            ptr(_hArr)
+        );
+
+        this.width = _wArr[0];
+        this.height = _hArr[0];
     }
 }
 
