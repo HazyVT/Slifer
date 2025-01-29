@@ -8,48 +8,7 @@ import Mouse from "./modules/mouse";
 import { version } from "../package.json";
 import Window from "./engine/window";
 import Renderer from "./engine/renderer";
-
-/** @internal */
-/*
-class Window {
-    public width: number;
-    public height: number;
-    public title: string;
-
-    constructor(title: string, width: number, height: number) {
-        this.width = width;
-        this.height = height;
-        this.title = title;
-    }
-
-    setSize(width: number, height: number): void {
-        libsdl.symbols.SDL_SetWindowSize(Global.ptrWindow, width, height);
-    }
-
-    setTitle(title: string): void {
-        libsdl.symbols.SDL_SetWindowTitle(
-            Global.ptrWindow,
-            Buffer.from(title + "\x00")
-        );
-    }
-
-    setFullscreen(flag: boolean): void {
-        libsdl.symbols.SDL_SetWindowFullscreen(Global.ptrWindow, Number(flag));
-    }
-
-    centerWindow(): void {
-        libsdl.symbols.SDL_SetWindowPosition(
-            Global.ptrWindow,
-            0x2fff0000,
-            0x2fff0000
-        );
-    }
-
-    setPosition(x: number, y: number): void {
-        libsdl.symbols.SDL_SetWindowPosition(Global.ptrWindow, x, y);
-    }
-}
-*/
+import Vector2 from "./engine/vector";
 
 /** @interal */
 export class SliferClass {
@@ -74,9 +33,9 @@ export class SliferClass {
      * @param width Width of window
      * @param height Height of window
      */
-    createWindow(title: string, width: number, height: number): Window {
+    createWindow(title: string, size: Vector2): Window {
         const window = Window.instance;
-        Window.createWindow(title, width, height);
+        Window.createWindow(title, size);
         Renderer.createRenderer();
 
         return window;
