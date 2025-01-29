@@ -1,65 +1,27 @@
-import { libimage, libsdl, libttf } from "./ffi";
-import { initLibraries } from "./engine";
-import Global from "./global";
-import { ptr } from "bun:ffi";
+import { libsdl } from "./ffi";
 import Graphics from "./modules/graphics";
 import Keyboard from "./modules/keyboard";
 import Mouse from "./modules/mouse";
+import Audio from "./modules/audio";
+import Window from "./engine/window";
+import Renderer from "./engine/renderer";
+import Vector2 from "./engine/vector";
+import Time from "./engine/time";
+import { ptr } from "bun:ffi";
+import { initLibraries } from "./engine";
 import { version } from "../package.json";
-
-/** @internal */
-class Window {
-    public width: number;
-    public height: number;
-    public title: string;
-
-    constructor(title: string, width: number, height: number) {
-        this.width = width;
-        this.height = height;
-        this.title = title;
-    }
-
-    setSize(width: number, height: number): void {
-        libsdl.symbols.SDL_SetWindowSize(Global.ptrWindow, width, height);
-    }
-
-    setTitle(title: string): void {
-        libsdl.symbols.SDL_SetWindowTitle(
-            Global.ptrWindow,
-            Buffer.from(title + "\x00")
-        );
-    }
-
-    setFullscreen(flag: boolean): void {
-        libsdl.symbols.SDL_SetWindowFullscreen(Global.ptrWindow, Number(flag));
-    }
-
-    centerWindow(): void {
-        libsdl.symbols.SDL_SetWindowPosition(
-            Global.ptrWindow,
-            0x2fff0000,
-            0x2fff0000
-        );
-    }
-
-    setPosition(x: number, y: number): void {
-        libsdl.symbols.SDL_SetWindowPosition(Global.ptrWindow, x, y);
-    }
-}
 
 /** @interal */
 export class SliferClass {
-    private isRunning: boolean = true;
-    private lastFrame: number = 0;
-    private firstFrame: number = 0;
-
     // Modules
-    Graphics = new Graphics();
-    Keyboard = new Keyboard();
-    Mouse = new Mouse();
+    Graphics = Graphics.instance;
+    Keyboard = Keyboard.instance;
+    Mouse = Mouse.instance;
+    Audio = Audio.instance;
 
     // Public Variables
     public dt: number = 0;
+    public isRunning: boolean = true;
 
     constructor() {
         initLibraries();
@@ -70,35 +32,19 @@ export class SliferClass {
      * @param width Width of window
      * @param height Height of window
      */
-    createWindow(title: string, width: number, height: number): Window {
-        // Creating cstring buffer from string
-        const _title = Buffer.from(title + "\x00");
+    createWindow(title: string, size: Vector2): Window {
+        // Create the window
+        const window = Window.instance;
+        Window.createWindow(title, size);
 
-        // Creating window pointer
-        const _win = libsdl.symbols.SDL_CreateWindow(
-            _title,
-            0x2fff0000,
-            0x2fff0000,
-            width,
-            height,
-            0
-        );
-        if (_win == null) throw `Window creation failed`;
-        Global.ptrWindow = _win;
+        // Create the renderer
+        Renderer.createRenderer();
 
-        // Creating renderer pointer
-        const vsyncHint = 0x00000004;
-        const _ren = libsdl.symbols.SDL_CreateRenderer(
-            Global.ptrWindow,
-            -1,
-            vsyncHint
-        );
-        if (_ren == null) throw `Renderer Creation failed`;
-        Global.ptrRenderer = _ren;
+        // Start delta time calculations
+        Time.instance.init();
 
-        this.firstFrame = Number(libsdl.symbols.SDL_GetPerformanceCounter());
-
-        return new Window(title, width, height);
+        // Return the window object
+        return window;
     }
 
     /**
@@ -106,15 +52,10 @@ export class SliferClass {
      */
     shouldClose(): boolean {
         // Clear the renderer
-        libsdl.symbols.SDL_RenderClear(Global.ptrRenderer);
+        Renderer.clear();
 
-        // Setup deltatime
-        this.lastFrame = this.firstFrame;
-        this.firstFrame = Number(libsdl.symbols.SDL_GetPerformanceCounter());
-
-        this.dt =
-            ((this.firstFrame - this.lastFrame) * 1000) /
-            Number(libsdl.symbols.SDL_GetPerformanceFrequency());
+        // Calculate delta time
+        this.dt = Time.instance.calcDelta();
 
         // Poll Events
         const eventArray = new Uint16Array(32);
@@ -128,19 +69,13 @@ export class SliferClass {
                     break;
                 // Keydown event
                 case 768:
-                    const _dscancode = eventArray[8];
-                    const _dkey =
-                        libsdl.symbols.SDL_GetKeyFromScancode(_dscancode);
-                    const _dname = libsdl.symbols.SDL_GetKeyName(_dkey);
-                    Keyboard.setKeyDown(_dname.toString().toLowerCase());
+                    var scancode = eventArray[8];
+                    Keyboard.setKeyDown(scancode);
                     break;
                 // Keyup event
                 case 769:
-                    const _uscancode = eventArray[8];
-                    const _ukey =
-                        libsdl.symbols.SDL_GetKeyFromScancode(_uscancode);
-                    const _uname = libsdl.symbols.SDL_GetKeyName(_ukey);
-                    Keyboard.setKeyUp(_uname.toString().toLowerCase());
+                    var scancode = eventArray[8];
+                    Keyboard.setKeyUp(scancode);
                     break;
                 // Mouse down event
                 case 1025:
@@ -162,9 +97,8 @@ export class SliferClass {
      * Slifers quit method
      */
     quit() {
-        libttf.symbols.TTF_CloseFont(Global.ptrFont);
-        libsdl.symbols.SDL_DestroyRenderer(Global.ptrRenderer);
-        libsdl.symbols.SDL_DestroyWindow(Global.ptrWindow);
+        libsdl.symbols.SDL_DestroyRenderer(Renderer.pointer);
+        libsdl.symbols.SDL_DestroyWindow(Window.pointer);
         libsdl.symbols.SDL_Quit();
     }
 
@@ -172,4 +106,3 @@ export class SliferClass {
         return version;
     }
 }
-
