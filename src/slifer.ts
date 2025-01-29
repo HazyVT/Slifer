@@ -2,6 +2,7 @@ import { libsdl } from "./ffi";
 import Graphics from "./modules/graphics";
 import Keyboard from "./modules/keyboard";
 import Mouse from "./modules/mouse";
+import Audio from "./modules/audio";
 import Window from "./engine/window";
 import Renderer from "./engine/renderer";
 import Vector2 from "./engine/vector";
@@ -16,6 +17,7 @@ export class SliferClass {
     Graphics = Graphics.instance;
     Keyboard = Keyboard.instance;
     Mouse = Mouse.instance;
+    Audio = Audio.instance;
 
     // Public Variables
     public dt: number = 0;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { initSDL, initSDLImage, initSDLTypeFont } from "./engine";
+import { initSDL, initSDLImage, initSDLTypeFont, initSDLMixer } from "./engine";
 import Vector2 from "./engine/vector";
 import Window from "./engine/window";
 import Renderer from "./engine/renderer";
@@ -19,6 +19,12 @@ describe("Initializing SDL Image ", () => {
 describe("Initializing SDL TTF ", () => {
     it("Should initialize without error ", () => {
         expect(() => initSDLTypeFont()).not.toThrow(Error);
+    });
+});
+
+describe("Initializing SDL Mixer ", () => {
+    it("Should initialize without error ", () => {
+        expect(() => initSDLMixer()).not.toThrow(Error);
     });
 });
 
