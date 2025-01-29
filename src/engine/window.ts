@@ -11,6 +11,8 @@ class Window {
 
     private static readonly centerPos = 0x2fff0000;
 
+    private constructor() {}
+
     public static get instance() {
         if (!Window.#instance) {
             Window.#instance = new Window();

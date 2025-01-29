@@ -6,6 +6,8 @@ class Renderer {
     static #instance: Renderer;
     static #pointer: Pointer;
 
+    private constructor() {}
+
     public static get instance() {
         if (!Renderer.#instance) {
             Renderer.#instance = new Renderer();
@@ -28,6 +30,10 @@ class Renderer {
 
         if (_ren == null) throw `Renderer Creation Failed`;
         Renderer.#pointer = _ren;
+    }
+
+    static clear() {
+        libsdl.symbols.SDL_RenderClear(Renderer.pointer);
     }
 }
 

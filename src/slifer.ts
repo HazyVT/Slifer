@@ -1,14 +1,14 @@
 import { libimage, libsdl, libttf } from "./ffi";
-import { initLibraries } from "./engine";
-import Global from "./global";
-import { ptr } from "bun:ffi";
 import Graphics from "./modules/graphics";
 import Keyboard from "./modules/keyboard";
 import Mouse from "./modules/mouse";
-import { version } from "../package.json";
 import Window from "./engine/window";
 import Renderer from "./engine/renderer";
 import Vector2 from "./engine/vector";
+import Time from "./engine/time";
+import { ptr } from "bun:ffi";
+import { initLibraries } from "./engine";
+import { version } from "../package.json";
 
 /** @interal */
 export class SliferClass {
@@ -34,9 +34,15 @@ export class SliferClass {
      * @param height Height of window
      */
     createWindow(title: string, size: Vector2): Window {
+        // Create the window
         const window = Window.instance;
         Window.createWindow(title, size);
+
+        // Create the renderer
         Renderer.createRenderer();
+
+        // Start delta time calculations
+        Time.instance.init();
 
         return window;
     }
@@ -46,15 +52,10 @@ export class SliferClass {
      */
     shouldClose(): boolean {
         // Clear the renderer
-        libsdl.symbols.SDL_RenderClear(Global.ptrRenderer);
+        Renderer.clear();
 
-        // Setup deltatime
-        this.lastFrame = this.firstFrame;
-        this.firstFrame = Number(libsdl.symbols.SDL_GetPerformanceCounter());
-
-        this.dt =
-            ((this.firstFrame - this.lastFrame) * 1000) /
-            Number(libsdl.symbols.SDL_GetPerformanceFrequency());
+        // Calculate delta time
+        this.dt = Time.instance.calcDelta();
 
         // Poll Events
         const eventArray = new Uint16Array(32);
@@ -102,9 +103,8 @@ export class SliferClass {
      * Slifers quit method
      */
     quit() {
-        libttf.symbols.TTF_CloseFont(Global.ptrFont);
-        libsdl.symbols.SDL_DestroyRenderer(Global.ptrRenderer);
-        libsdl.symbols.SDL_DestroyWindow(Global.ptrWindow);
+        libsdl.symbols.SDL_DestroyRenderer(Renderer.pointer);
+        libsdl.symbols.SDL_DestroyWindow(Window.pointer);
         libsdl.symbols.SDL_Quit();
     }
 
