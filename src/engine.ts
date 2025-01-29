@@ -1,5 +1,4 @@
 import { libsdl, libimage, libttf } from "./ffi";
-import Global from "./global";
 
 //@ts-expect-error
 const fontFile = await import("./Jost-Bold.ttf");

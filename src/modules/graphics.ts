@@ -1,13 +1,39 @@
 import { libimage, libsdl, libttf } from "../ffi";
 import { type Pointer, ptr } from "bun:ffi";
-import Global from "../global";
 import Rectangle from "../engine/rectangle";
 import Color from "../color";
 import Vector2 from "../engine/vector";
 import Renderer from "../engine/renderer";
 
-/** @internal */
+//@ts-expect-error Font file is not a type declaration
+const defaultFontFile = await import("../Jost-Bold.ttf");
+
 class Graphics {
+    static #instance: Graphics;
+
+    static #fontPointer: Pointer;
+
+    public static get instance() {
+        if (!Graphics.#instance) {
+            Graphics.#instance = new Graphics();
+        }
+
+        return Graphics.#instance;
+    }
+
+    public static get font() {
+        if (!Graphics.#fontPointer) {
+            const tempFontPointer = libttf.symbols.TTF_OpenFont(
+                Buffer.from(defaultFontFile.default + "\x00"),
+                24
+            );
+
+            if (tempFontPointer == null) throw `Font Failed to Load`;
+        }
+
+        return Graphics.#fontPointer;
+    }
+
     /**
      * Slifers draw function. Used to draw everything to the screen.
      */
@@ -134,75 +160,6 @@ class Graphics {
             ptr(_center),
             flip ? Number(flip) : 0
         );
-    }
-
-    /**
-     * Method to draw text to the screen
-     *
-     * @param text the string of text to print
-     * @param x x position
-     * @param y y position
-     * @param color color of text. Made using Slifer.Graphics.makeColor.
-     */
-    print(text: string, x: number, y: number, color: Color) {
-        // Create text buffer
-        const textBuffer = Buffer.from(text + "\x00");
-
-        // Get width and height of text
-        const wArr = new Uint32Array(1);
-        const hArr = new Uint32Array(1);
-        libttf.symbols.TTF_SizeText(
-            Global.ptrFont,
-            textBuffer,
-            ptr(wArr),
-            ptr(hArr)
-        );
-
-        // Define color
-        const _col = (color.r << 0) + (color.g << 8) + (color.b << 16);
-
-        // Create texture
-        const surface = libttf.symbols.TTF_RenderText_Solid(
-            Global.ptrFont,
-            textBuffer,
-            _col
-        );
-        if (surface == null) throw `Surface creation failed on print`;
-        const texture = libsdl.symbols.SDL_CreateTextureFromSurface(
-            Renderer.pointer,
-            surface
-        );
-        if (texture == null) throw `Texture creation failed on print`;
-
-        // Create destination
-        const destArr = new Uint32Array(4);
-        destArr[0] = x;
-        destArr[1] = y;
-        destArr[2] = wArr[0];
-        destArr[3] = hArr[0];
-
-        // Draw text
-        libsdl.symbols.SDL_RenderCopy(
-            Renderer.pointer,
-            texture,
-            null,
-            ptr(destArr)
-        );
-    }
-
-    /**
-     * Sets the font to a ttf file in your project
-     *
-     * @param path relative path to font
-     * @param pt size of text
-     */
-    setFont(path: string, pt: number) {
-        const tempFont = libttf.symbols.TTF_OpenFont(
-            Buffer.from(path + "\x00"),
-            pt
-        );
-        if (tempFont == null) throw `Font loading failed`;
-        Global.ptrFont = tempFont;
     }
 }
 

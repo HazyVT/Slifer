@@ -17,8 +17,8 @@ export class SliferClass {
     private firstFrame: number = 0;
 
     // Modules
-    Graphics = new Graphics();
-    Keyboard = new Keyboard();
+    Graphics = Graphics.instance;
+    Keyboard = Keyboard.instance;
     Mouse = new Mouse();
 
     // Public Variables
@@ -44,6 +44,7 @@ export class SliferClass {
         // Start delta time calculations
         Time.instance.init();
 
+        // Return the window object
         return window;
     }
 
@@ -69,19 +70,13 @@ export class SliferClass {
                     break;
                 // Keydown event
                 case 768:
-                    const _dscancode = eventArray[8];
-                    const _dkey =
-                        libsdl.symbols.SDL_GetKeyFromScancode(_dscancode);
-                    const _dname = libsdl.symbols.SDL_GetKeyName(_dkey);
-                    Keyboard.setKeyDown(_dname.toString().toLowerCase());
+                    var scancode = eventArray[8];
+                    Keyboard.setKeyDown(scancode);
                     break;
                 // Keyup event
                 case 769:
-                    const _uscancode = eventArray[8];
-                    const _ukey =
-                        libsdl.symbols.SDL_GetKeyFromScancode(_uscancode);
-                    const _uname = libsdl.symbols.SDL_GetKeyName(_ukey);
-                    Keyboard.setKeyUp(_uname.toString().toLowerCase());
+                    var scancode = eventArray[8];
+                    Keyboard.setKeyUp(scancode);
                     break;
                 // Mouse down event
                 case 1025:
