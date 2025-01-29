@@ -133,3 +133,5 @@ dist
 .pnp.*
 test.ts
 char.png
+
+.wakatime-project
