@@ -1,9 +1,10 @@
 import { libimage, libsdl, libttf } from "../ffi";
-import Global from "../global";
 import { type Pointer, ptr } from "bun:ffi";
+import Global from "../global";
 import Rectangle from "../engine/rectangle";
 import Color from "../color";
 import Vector2 from "../engine/vector";
+import Renderer from "../engine/renderer";
 
 /** @internal */
 class Graphics {
@@ -11,7 +12,7 @@ class Graphics {
      * Slifers draw function. Used to draw everything to the screen.
      */
     render() {
-        libsdl.symbols.SDL_RenderPresent(Global.ptrRenderer);
+        libsdl.symbols.SDL_RenderPresent(Renderer.pointer);
     }
 
     /**
@@ -38,13 +39,13 @@ class Graphics {
      */
     setBackground(color: Color) {
         libsdl.symbols.SDL_SetRenderDrawColor(
-            Global.ptrRenderer,
+            Renderer.pointer,
             color.r,
             color.g,
             color.b,
             color.a
         );
-        libsdl.symbols.SDL_RenderClear(Global.ptrRenderer);
+        libsdl.symbols.SDL_RenderClear(Renderer.pointer);
     }
 
     /**
@@ -58,7 +59,7 @@ class Graphics {
         const surface = libimage.symbols.IMG_Load(_path);
         if (surface == null) throw `Image failed to load`;
         const texture = libsdl.symbols.SDL_CreateTextureFromSurface(
-            Global.ptrRenderer,
+            Renderer.pointer,
             surface
         );
         if (texture == null) throw `Image failed to be created`;
@@ -79,7 +80,7 @@ class Graphics {
         dstRect[3] = image.height;
 
         libsdl.symbols.SDL_RenderCopy(
-            Global.ptrRenderer,
+            Renderer.pointer,
             (image as any).pointer,
             null,
             dstRect
@@ -125,7 +126,7 @@ class Graphics {
         _center[0] = _dest[2] / 2;
         _center[1] = _dest[3] / 2;
         libsdl.symbols.SDL_RenderCopyEx(
-            Global.ptrRenderer,
+            Renderer.pointer,
             (image as any).pointer,
             srcRect,
             ptr(_dest),
@@ -168,7 +169,7 @@ class Graphics {
         );
         if (surface == null) throw `Surface creation failed on print`;
         const texture = libsdl.symbols.SDL_CreateTextureFromSurface(
-            Global.ptrRenderer,
+            Renderer.pointer,
             surface
         );
         if (texture == null) throw `Texture creation failed on print`;
@@ -182,7 +183,7 @@ class Graphics {
 
         // Draw text
         libsdl.symbols.SDL_RenderCopy(
-            Global.ptrRenderer,
+            Renderer.pointer,
             texture,
             null,
             ptr(destArr)

@@ -6,8 +6,11 @@ import Graphics from "./modules/graphics";
 import Keyboard from "./modules/keyboard";
 import Mouse from "./modules/mouse";
 import { version } from "../package.json";
+import Window from "./engine/window";
+import Renderer from "./engine/renderer";
 
 /** @internal */
+/*
 class Window {
     public width: number;
     public height: number;
@@ -46,6 +49,7 @@ class Window {
         libsdl.symbols.SDL_SetWindowPosition(Global.ptrWindow, x, y);
     }
 }
+*/
 
 /** @interal */
 export class SliferClass {
@@ -71,34 +75,11 @@ export class SliferClass {
      * @param height Height of window
      */
     createWindow(title: string, width: number, height: number): Window {
-        // Creating cstring buffer from string
-        const _title = Buffer.from(title + "\x00");
+        const window = Window.instance;
+        Window.createWindow(title, width, height);
+        Renderer.createRenderer();
 
-        // Creating window pointer
-        const _win = libsdl.symbols.SDL_CreateWindow(
-            _title,
-            0x2fff0000,
-            0x2fff0000,
-            width,
-            height,
-            0
-        );
-        if (_win == null) throw `Window creation failed`;
-        Global.ptrWindow = _win;
-
-        // Creating renderer pointer
-        const vsyncHint = 0x00000004;
-        const _ren = libsdl.symbols.SDL_CreateRenderer(
-            Global.ptrWindow,
-            -1,
-            vsyncHint
-        );
-        if (_ren == null) throw `Renderer Creation failed`;
-        Global.ptrRenderer = _ren;
-
-        this.firstFrame = Number(libsdl.symbols.SDL_GetPerformanceCounter());
-
-        return new Window(title, width, height);
+        return window;
     }
 
     /**
