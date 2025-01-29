@@ -1,6 +1,8 @@
 import { describe, expect, it } from "bun:test";
 import { initSDL, initSDLImage, initSDLTypeFont } from "./engine";
-import Graphics from "./modules/graphics";
+import Vector2 from "./engine/vector";
+import Window from "./engine/window";
+import Renderer from "./engine/renderer";
 
 describe("Initializing SDL ", () => {
     it("Should initialize without error ", () => {
@@ -14,14 +16,22 @@ describe("Initializing SDL Image ", () => {
     });
 });
 
-describe("Initializing SDL TTF", () => {
+describe("Initializing SDL TTF ", () => {
     it("Should initialize without error ", () => {
         expect(() => initSDLTypeFont()).not.toThrow(Error);
     });
 });
 
-describe("Loading default font", () => {
-    it("Should load default font without error", () => {
-        expect(() => Graphics.font).not.toThrow(Error);
+describe("Window Creation ", () => {
+    it("Should create window without error", () => {
+        expect(() =>
+            Window.createWindow("Game", new Vector2(1, 1))
+        ).not.toThrow(Error);
+    });
+});
+
+describe("Renderer Creation ", () => {
+    it("Should create renderer without error", () => {
+        expect(() => Renderer.createRenderer()).not.toThrow(Error);
     });
 });

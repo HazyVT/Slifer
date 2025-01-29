@@ -1,7 +1,5 @@
 import { libsdl, libimage, libttf } from "./ffi";
-
-//@ts-expect-error
-const fontFile = await import("./Jost-Bold.ttf");
+import Graphics from "./modules/graphics";
 
 export function initSDL() {
     const baseInit = libsdl.symbols.SDL_Init(0x00000020);

@@ -5,9 +5,6 @@ import Color from "../color";
 import Vector2 from "../engine/vector";
 import Renderer from "../engine/renderer";
 
-//@ts-expect-error Font file is not a type declaration
-const defaultFontFile = await import("../Jost-Bold.ttf");
-
 class Graphics {
     static #instance: Graphics;
 
@@ -20,20 +17,6 @@ class Graphics {
 
         return Graphics.#instance;
     }
-
-    public static get font() {
-        if (!Graphics.#fontPointer) {
-            const tempFontPointer = libttf.symbols.TTF_OpenFont(
-                Buffer.from(defaultFontFile.default + "\x00"),
-                24
-            );
-
-            if (tempFontPointer == null) throw `Font Failed to Load`;
-        }
-
-        return Graphics.#fontPointer;
-    }
-
     /**
      * Slifers draw function. Used to draw everything to the screen.
      */

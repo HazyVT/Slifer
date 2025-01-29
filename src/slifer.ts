@@ -1,4 +1,4 @@
-import { libimage, libsdl, libttf } from "./ffi";
+import { libsdl } from "./ffi";
 import Graphics from "./modules/graphics";
 import Keyboard from "./modules/keyboard";
 import Mouse from "./modules/mouse";
@@ -12,17 +12,14 @@ import { version } from "../package.json";
 
 /** @interal */
 export class SliferClass {
-    public isRunning: boolean = true;
-    private lastFrame: number = 0;
-    private firstFrame: number = 0;
-
     // Modules
     Graphics = Graphics.instance;
     Keyboard = Keyboard.instance;
-    Mouse = new Mouse();
+    Mouse = Mouse.instance;
 
     // Public Variables
     public dt: number = 0;
+    public isRunning: boolean = true;
 
     constructor() {
         initLibraries();
