@@ -28,6 +28,9 @@ if (process.platform == "win32") {
     libImageImport = await import("../libs/libSDL2_image.so");
     //@ts-expect-error
     libTTFImport = await import("../libs/libSDL2_ttf.so");
+    //@ts-expect-error
+    libMixerImport = await import("../libs/libSDL2_mixer.so");
+
 }
 
 /** @internal */

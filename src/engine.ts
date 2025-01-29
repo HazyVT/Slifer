@@ -25,7 +25,7 @@ export function initSDLMixer() {
 
 export function initLibraries(): void {
     initSDL();
-    initSDLImage();
-    initSDLTypeFont();
-    initSDLMixer();
+	initSDLImage();
+	initSDLTypeFont();
+	initSDLMixer();
 }
