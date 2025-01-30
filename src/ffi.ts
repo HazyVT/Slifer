@@ -206,10 +206,6 @@ export const libsdl = dlopen(libSDLImport.default, {
         args: ["pointer", "cstring"],
         returns: "void",
     },
-    SDL_LoadWAV_RW: {
-        args: ["cstring", "pointer", "pointer", "pointer"],
-        returns: "pointer",
-    },
 });
 
 /** @internal */

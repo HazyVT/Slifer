@@ -131,6 +131,20 @@ class Graphics {
           	flipH ? Number(flipH) : 0
         );
     }
+
+    public drawRect(rectangle: Rectangle, color: Color) {
+    	libsdl.symbols.SDL_SetRenderDrawColor(
+			Renderer.pointer,
+			color.r,
+			color.g,
+			color.b,
+			color.a
+    	);
+    	libsdl.symbols.SDL_RenderFillRect(
+    		Renderer.pointer,
+    		rectangle.pointer
+    	)
+    }
 }
 
 
