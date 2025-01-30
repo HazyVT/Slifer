@@ -206,6 +206,12 @@ export const libsdl = dlopen(libSDLImport.default, {
         args: ["pointer", "cstring"],
         returns: "void",
     },
+    SDL_GetTicks: {
+    	returns: 'uint32_t'
+    },
+    SDL_Delay: {
+    	args: ['uint32_t'],
+    }
 });
 
 /** @internal */

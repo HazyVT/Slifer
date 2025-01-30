@@ -1,34 +1,79 @@
 import { libsdl } from "../ffi";
 
-class Time {
-    static #instance: Time;
+export class Timer {
 
-    private lastframe: number = 0;
-    private firstFrame: number = 0;
-
-    private constructor() {}
-
-    public static get instance() {
-        if (!Time.#instance) {
-            Time.#instance = new Time();
-        }
-
-        return Time.#instance;
+	private mStartTicks;
+	private mPausedTicks;
+	private mPaused;
+	private mStarted;
+	
+    
+    constructor() {
+    	this.mStartTicks = 0;
+    	this.mPausedTicks = 0;
+    	this.mPaused = false;
+    	this.mStarted = false;
     }
+    
+   	public start() {
+   		this.mStarted = true;
 
-    public init() {
-        this.firstFrame = Number(libsdl.symbols.SDL_GetPerformanceCounter());
-    }
+   		this.mPaused = false;
 
-    public calcDelta(): number {
-        this.lastframe = this.firstFrame;
-        this.firstFrame = Number(libsdl.symbols.SDL_GetPerformanceCounter());
-        const deltaTime =
-            ((this.firstFrame - this.lastframe) * 10) /
-            Number(libsdl.symbols.SDL_GetPerformanceFrequency());
+   		this.mStartTicks = libsdl.symbols.SDL_GetTicks();
+		this.mPausedTicks = 0;
+   	}
 
-        return deltaTime;
-    }
+   	public stop() {
+   		this.mStarted = false;
+   		this.mPaused = true;
+
+   		this.mStartTicks = 0;
+   		this.mPausedTicks = 0;
+   	}
+
+   	public pause() {
+		if (this.mStarted && !this.mPaused) {
+			this.mPaused = true;
+
+			this.mPausedTicks = libsdl.symbols.SDL_GetTicks() - this.mStartTicks;
+			this.mStartTicks = 0;
+		}
+   	}
+
+   	public unpause() {
+		if (this.mStarted && this.mPaused) {
+			this.mPaused = false;
+
+			this.mStartTicks = libsdl.symbols.SDL_GetTicks() - this.mPausedTicks;
+			this.mPausedTicks = 0;
+		}
+   	}
+
+   	public getTicks() {
+   		let time = 0;
+
+   		if (this.mStarted) {
+   			if (this.mPaused) {
+   				time = this.mPausedTicks;
+   			} else {
+   				time = libsdl.symbols.SDL_GetTicks() - this.mStartTicks;
+   			}
+   		}
+
+   		return time;
+   	}
+
+   	public isStarted() {
+   		return this.mStarted;
+   	}
+
+   	public isPaused() {
+   		return (this.mPaused && this.mStarted);
+   	}
+
+   	
+
+    
 }
 
-export default Time;
