@@ -13,7 +13,7 @@ if (process.platform == "win32") {
     //@ts-expect-error
     libTTFImport = await import("../libs/libSDL2_ttf.dll");
 	//@ts-expect-error
-	libMixerImport = await import('../libs/libSDL2_mixer.dll');
+	libMixerImport = await import("../libs/libSDL2_mixer.dll");
 } else if (process.platform == "darwin") {
     //@ts-expect-error
     libSDLImport = await import("../libs/libSDL2.dylib");
