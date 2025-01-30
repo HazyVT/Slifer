@@ -1,7 +1,7 @@
 import { ptr } from "bun:ffi";
-import Vector2 from "./vector";
+import { Vector2 } from "./vector";
 
-class Rectangle {
+export class Rectangle {
     private readonly pointer;
     public position: Vector2;
     public size: Vector2;
@@ -22,4 +22,3 @@ class Rectangle {
     }
 }
 
-export default Rectangle;

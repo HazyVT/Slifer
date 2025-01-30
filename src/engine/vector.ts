@@ -1,4 +1,4 @@
-class Vector2 {
+export class Vector2 {
     public x;
     public y;
 
@@ -45,5 +45,3 @@ class Vector2 {
         return new Vector2(vec1.x + vec2.x, vec1.y + vec2.y);
     }
 }
-
-export default Vector2;

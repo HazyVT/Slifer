@@ -24,7 +24,7 @@ class Time {
         this.lastframe = this.firstFrame;
         this.firstFrame = Number(libsdl.symbols.SDL_GetPerformanceCounter());
         const deltaTime =
-            ((this.firstFrame - this.lastframe) * 1000) /
+            ((this.firstFrame - this.lastframe) * 10) /
             Number(libsdl.symbols.SDL_GetPerformanceFrequency());
 
         return deltaTime;

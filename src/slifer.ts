@@ -5,7 +5,7 @@ import Mouse from "./modules/mouse";
 import Audio from "./modules/audio";
 import Window from "./engine/window";
 import Renderer from "./engine/renderer";
-import Vector2 from "./engine/vector";
+import { Vector2 } from "./engine/vector";
 import Time from "./engine/time";
 import { ptr } from "bun:ffi";
 import { initLibraries } from "./engine";

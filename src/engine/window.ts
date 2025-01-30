@@ -1,5 +1,5 @@
 import { type Pointer } from "bun:ffi";
-import Vector2 from "./vector";
+import { Vector2 } from "./vector";
 import { libsdl } from "../ffi";
 
 class Window {
