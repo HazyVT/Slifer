@@ -17,7 +17,7 @@ class Audio {
     }
 }
 
-class AudioSource {
+export class AudioSource {
     public readonly pointer;
 
     constructor(path: string) {
