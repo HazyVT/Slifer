@@ -12,11 +12,13 @@
 > window customization. As such, I recommend waiting for a beta release of
 > Slifer before using it for a long term project.
 
+For up to date docs, please head over to the [Slifer Webpage](https://slifer.hazyvt.com).
+
+## Introduction
+
 Slifer is a game framework made to allow users to code games in typescript. The
 framework uses bun and SDL2 under the hood to allow your game to render and
 build natively to desktop.
-
-If you'd like to learn more about Slifer, feel free to head to [Slifers Webpage](https://slifer.hazyvt.com).
 
 ## Contents
 
@@ -38,19 +40,19 @@ If you'd like to learn more about Slifer, feel free to head to [Slifers Webpage]
 - Create a native desktop window with custom title and size.
 - Handle both keyboard and mouse inputs
 - Load and draw images onto the window
+- Play Audio
 
 ## Future Features
 
-- Audio Implementation
 - Animation library
 - Save file library
 
 ## Example
 
 ```ts
-import Slifer from "slifer";
+import Slifer, { Vector2 } from "slifer";
 
-Slifer.createWindow("Example Window", 640, 480);
+Slifer.createWindow("Example Window", new Vector2(640, 480));
 
 const bg = Slifer.Graphics.makeColor(36, 36, 36, 255);
 
