@@ -1,9 +1,38 @@
 import { dlopen, FFIType, suffix } from "bun:ffi";
 
-const libSDLImport = await import(`../libs/libSDL2.${suffix}`);
-const libImageImport = await import(`../libs/libSDL2_image.${suffix}`);
-const libTTFImport = await import(`../libs/libSDL2_ttf.${suffix}`);
-const libMixerImport = await import(`../libs/libSDL2_mixer.${suffix}`);
+let libSDLImport;
+let libImageImport;
+let libTTFImport;
+let libMixerImport;
+
+if (process.platform == "win32") {
+    //@ts-expect-error
+    libSDLImport = await import("../libs/libSDL2.dll");
+    //@ts-expect-error
+    libImageImport = await import("../libs/libSDL2_image.dll");
+    //@ts-expect-error
+    libTTFImport = await import("../libs/libSDL2_ttf.dll");
+    //@ts-expect-error
+    libMixerImport = await import("../libs/libSDL2_mixer.dll");
+} else if (process.platform == "darwin") {
+    //@ts-expect-error
+    libSDLImport = await import("../libs/libSDL2.dylib");
+    //@ts-expect-error
+    libImageImport = await import("../libs/libSDL2_image.dylib");
+    //@ts-expect-error
+    libTTFImport = await import("../libs/libSDL2_ttf.dylib");
+    //@ts-expect-error
+    libMixerImport = await import("../libs/libSDL2_mixer.dylib");
+} else if (process.platform == "linux") {
+    //@ts-expect-error
+    libSDLImport = await import("../libs/libSDL2.so");
+    //@ts-expect-error
+    libImageImport = await import("../libs/libSDL2_image.so");
+    //@ts-expect-error
+    libTTFImport = await import("../libs/libSDL2_ttf.so");
+    //@ts-expect-error
+    libMixerImport = await import("../libs/libSDL2_mixer.so");
+}
 
 /** @internal */
 export const libsdl = dlopen(libSDLImport.default, {
