@@ -1,12 +1,12 @@
 import { libsdl } from "../ffi";
+import { toArrayBuffer } from "bun:ffi";
 
 /** @internal */
 class Keyboard {
     static #instance: Keyboard;
 
-    static downKeyMap = new Map<string, boolean>();
-    static pressedKeyMap = new Map<string, boolean>();
-    static releasedKeyMap = new Map<string, boolean>();
+    static keyState: DataView;
+    static pressMap = new Map<string, number>();
 
     private constructor() {}
 
@@ -27,63 +27,49 @@ class Keyboard {
         return keyName;
     }
 
-    static setKeyDown(key: number): void {
-        const keyName = Keyboard.convertScancodeToKey(key);
-        this.downKeyMap.set(keyName.toLowerCase(), true);
-        this.releasedKeyMap.set(keyName.toLowerCase(), false);
-    }
-
-    static setKeyUp(key: number) {
-        const keyName = Keyboard.convertScancodeToKey(key);
-        this.downKeyMap.set(keyName.toLowerCase(), false);
-        this.pressedKeyMap.set(keyName.toLowerCase(), false);
-    }
-
-    /**
-     *
-     * @param key string of key
-     * @returns if the key is being held down
-     */
-    isDown(key: keys) {
-        const _state = Keyboard.downKeyMap.get(key);
-        if (_state == undefined) return false;
-
-        return _state;
-    }
-
-    /**
-     *
-     * @param key string of key
-     * @returns if key is pressed. Returns only once
-     */
-    isPressed(key: keys) {
-        const _pressedState = Keyboard.pressedKeyMap.get(key);
-        const _downState = Keyboard.downKeyMap.get(key);
-
-        if (_downState == true) {
-            if (_pressedState == false || _pressedState == undefined) {
-                Keyboard.pressedKeyMap.set(key, true);
-                return true;
+    static getStates() {
+        const state = libsdl.symbols.SDL_GetKeyboardState(null);
+        if (state == null) return;
+        const myArr = new DataView(toArrayBuffer(state, 0, 512));
+        
+        for (let i = 0; i < 512; ++i) {
+            if (myArr.getUint8(i) == 1) {
+                const keyName = this.convertScancodeToKey(i).toLowerCase();
+                const kmGet = this.pressMap.get(keyName);
+                if (kmGet == undefined || kmGet == 0) {
+                    this.pressMap.set(keyName, 1);
+                } else if (kmGet == 1) {
+                    this.pressMap.set(keyName, 2);
+                }
+            } else if (myArr.getUint8(i) == 0) {
+                const keyName = this.convertScancodeToKey(i).toLowerCase();
+                this.pressMap.set(keyName, 0);
             }
         }
+    }
+
+    public isPressed(key: keys) {
+        /*
+        const scancode = libsdl.symbols.SDL_GetScancodeFromName(
+            Buffer.from(key + "\x00")
+        );
+        const thisval = Keyboard.keyState.getUint8(scancode);
+        */
+
+        const kmGet = Keyboard.pressMap.get(key);
+        if (kmGet == 1) {
+            return true;
+        }
+
 
         return false;
     }
 
-    /**
-     *
-     * @param key string of key
-     * @returns if key is released. Returns only once
-     */
-    isReleased(key: keys) {
-        const _releasedState = Keyboard.releasedKeyMap.get(key);
-        const _downState = Keyboard.downKeyMap.get(key);
 
-        if (_downState == false) {
-            if (_releasedState == false || undefined) {
-                Keyboard.releasedKeyMap.set(key, true);
-                return true;
-            }
+    public isDown(key: keys) {
+        const kmGet = Keyboard.pressMap.get(key);
+        if (kmGet == 1 || kmGet == 2) {
+            return true;
         }
 
         return false;

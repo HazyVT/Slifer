@@ -6,8 +6,8 @@ import Audio from "./modules/audio";
 import Window from "./engine/window";
 import Renderer from "./engine/renderer";
 import { Vector2 } from "./engine/vector";
-import { Timer } from './engine/time';
-import { ptr } from "bun:ffi";
+import { Timer } from "./engine/time";
+import { ptr, toArrayBuffer } from "bun:ffi";
 import { initLibraries } from "./engine";
 import { version } from "../package.json";
 
@@ -43,7 +43,7 @@ export class SliferClass {
         Window.createWindow(title, size);
 
         // Create the renderer
-        Renderer.createRenderer();        
+        Renderer.createRenderer();
 
         // Return the window object
         return window;
@@ -53,8 +53,8 @@ export class SliferClass {
      * @returns if the window should close
      */
     shouldClose(): boolean {
-		this.capTimer.start();
-    
+        this.capTimer.start();
+
         // Clear the renderer
         Renderer.clear();
 
@@ -71,16 +71,6 @@ export class SliferClass {
                 case 256:
                     this.isRunning = false;
                     break;
-                // Keydown event
-                case 768:
-                    var scancode = eventArray[8];
-                    Keyboard.setKeyDown(scancode);
-                    break;
-                // Keyup event
-                case 769:
-                    var scancode = eventArray[8];
-                    Keyboard.setKeyUp(scancode);
-                    break;
                 // Mouse down event
                 case 1025:
                     const _dbtn = eventArray[8] - 256;
@@ -94,9 +84,11 @@ export class SliferClass {
             }
         }
 
+        Keyboard.getStates();
+
         const frameTicks = this.capTimer.getTicks();
         if (frameTicks < this.ticksPerFrame) {
-        	libsdl.symbols.SDL_Delay(this.ticksPerFrame - frameTicks);
+            libsdl.symbols.SDL_Delay(this.ticksPerFrame - frameTicks);
         }
 
         return !this.isRunning;

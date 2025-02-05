@@ -1,6 +1,6 @@
-import { libimage, libsdl, libttf } from "../ffi";
+import { libimage, libsdl } from "../ffi";
 import { type Pointer, ptr } from "bun:ffi";
-import { Image } from '../engine/image';
+import { Image } from "../engine/image";
 import { Rectangle } from "../engine/rectangle";
 import Color from "../color";
 import { Vector2 } from "../engine/vector";
@@ -128,26 +128,21 @@ class Graphics {
             ptr(dstRect),
             rotation ? rotation : 0,
             null,
-          	flipH ? Number(flipH) : 0
+            flipH ? Number(flipH) : 0
         );
     }
 
     public drawRect(rectangle: Rectangle, color: Color) {
-    	libsdl.symbols.SDL_SetRenderDrawColor(
-			Renderer.pointer,
-			color.r,
-			color.g,
-			color.b,
-			color.a
-    	);
-    	libsdl.symbols.SDL_RenderFillRect(
-    		Renderer.pointer,
-    		rectangle.pointer
-    	)
+        libsdl.symbols.SDL_SetRenderDrawColor(
+            Renderer.pointer,
+            color.r,
+            color.g,
+            color.b,
+            color.a
+        );
+        libsdl.symbols.SDL_RenderFillRect(Renderer.pointer, rectangle.pointer);
     }
 }
-
-
 
 /** @internal */
 export default Graphics;
