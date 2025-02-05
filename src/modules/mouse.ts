@@ -1,6 +1,6 @@
 import { libsdl } from "../ffi";
 import { ptr } from "bun:ffi";
-import Vector2 from "../engine/vector";
+import {Vector2} from "../engine/vector";
 
 /** @internal */
 class Mouse {

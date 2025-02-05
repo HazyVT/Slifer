@@ -5,9 +5,9 @@ import Mouse from "./modules/mouse";
 import Audio from "./modules/audio";
 import Window from "./engine/window";
 import Renderer from "./engine/renderer";
-import Vector2 from "./engine/vector";
-import Time from "./engine/time";
-import { ptr } from "bun:ffi";
+import { Vector2 } from "./engine/vector";
+import { Timer } from "./engine/time";
+import { ptr, toArrayBuffer } from "bun:ffi";
 import { initLibraries } from "./engine";
 import { version } from "../package.json";
 
@@ -23,8 +23,13 @@ export class SliferClass {
     public dt: number = 0;
     public isRunning: boolean = true;
 
+    private fps = 60;
+    private ticksPerFrame = 1000 / this.fps;
+    private capTimer: Timer;
+
     constructor() {
         initLibraries();
+        this.capTimer = new Timer();
     }
 
     /**
@@ -40,9 +45,6 @@ export class SliferClass {
         // Create the renderer
         Renderer.createRenderer();
 
-        // Start delta time calculations
-        Time.instance.init();
-
         // Return the window object
         return window;
     }
@@ -51,11 +53,13 @@ export class SliferClass {
      * @returns if the window should close
      */
     shouldClose(): boolean {
+        this.capTimer.start();
+
         // Clear the renderer
         Renderer.clear();
 
         // Calculate delta time
-        this.dt = Time.instance.calcDelta();
+        // this.dt = Time.instance.calcDelta();
 
         // Poll Events
         const eventArray = new Uint16Array(32);
@@ -66,16 +70,6 @@ export class SliferClass {
                 // Quit event
                 case 256:
                     this.isRunning = false;
-                    break;
-                // Keydown event
-                case 768:
-                    var scancode = eventArray[8];
-                    Keyboard.setKeyDown(scancode);
-                    break;
-                // Keyup event
-                case 769:
-                    var scancode = eventArray[8];
-                    Keyboard.setKeyUp(scancode);
                     break;
                 // Mouse down event
                 case 1025:
@@ -88,6 +82,13 @@ export class SliferClass {
                     Mouse.setButtonUp(_ubtn);
                     break;
             }
+        }
+
+        Keyboard.getStates();
+
+        const frameTicks = this.capTimer.getTicks();
+        if (frameTicks < this.ticksPerFrame) {
+            libsdl.symbols.SDL_Delay(this.ticksPerFrame - frameTicks);
         }
 
         return !this.isRunning;

@@ -12,6 +12,8 @@ if (process.platform == "win32") {
     libImageImport = await import("../libs/libSDL2_image.dll");
     //@ts-expect-error
     libTTFImport = await import("../libs/libSDL2_ttf.dll");
+    //@ts-expect-error
+    libMixerImport = await import("../libs/libSDL2_mixer.dll");
 } else if (process.platform == "darwin") {
     //@ts-expect-error
     libSDLImport = await import("../libs/libSDL2.dylib");
@@ -30,7 +32,6 @@ if (process.platform == "win32") {
     libTTFImport = await import("../libs/libSDL2_ttf.so");
     //@ts-expect-error
     libMixerImport = await import("../libs/libSDL2_mixer.so");
-
 }
 
 /** @internal */
@@ -206,9 +207,19 @@ export const libsdl = dlopen(libSDLImport.default, {
         args: ["pointer", "cstring"],
         returns: "void",
     },
-    SDL_LoadWAV_RW: {
-        args: ["cstring", "pointer", "pointer", "pointer"],
+    SDL_GetTicks: {
+        returns: "uint32_t",
+    },
+    SDL_Delay: {
+        args: ["uint32_t"],
+    },
+    SDL_GetKeyboardState: {
+        args: ["pointer"],
         returns: "pointer",
+    },
+    SDL_GetScancodeFromName: {
+        args: ["cstring"],
+        returns: "int",
     },
 });
 

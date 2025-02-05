@@ -1,8 +1,9 @@
-import { libimage, libsdl, libttf } from "../ffi";
+import { libimage, libsdl } from "../ffi";
 import { type Pointer, ptr } from "bun:ffi";
-import Rectangle from "../engine/rectangle";
+import { Image } from "../engine/image";
+import { Rectangle } from "../engine/rectangle";
 import Color from "../color";
-import Vector2 from "../engine/vector";
+import { Vector2 } from "../engine/vector";
 import Renderer from "../engine/renderer";
 
 class Graphics {
@@ -109,7 +110,8 @@ class Graphics {
         image: Image,
         position: Vector2,
         rotation?: number,
-        scale?: Vector2
+        scale?: Vector2,
+        flipH?: boolean
     ) {
         // Define destination rect
         const dstRect = new Uint32Array(4);
@@ -126,30 +128,19 @@ class Graphics {
             ptr(dstRect),
             rotation ? rotation : 0,
             null,
-            null
+            flipH ? Number(flipH) : 0
         );
     }
-}
 
-class Image {
-    public readonly pointer: Pointer;
-    public readonly size: Vector2;
-
-    constructor(texture: Pointer) {
-        this.pointer = texture;
-
-        const _wArr = new Uint32Array(1);
-        const _hArr = new Uint32Array(1);
-
-        libsdl.symbols.SDL_QueryTexture(
-            texture,
-            null,
-            null,
-            ptr(_wArr),
-            ptr(_hArr)
+    public drawRect(rectangle: Rectangle, color: Color) {
+        libsdl.symbols.SDL_SetRenderDrawColor(
+            Renderer.pointer,
+            color.r,
+            color.g,
+            color.b,
+            color.a
         );
-
-        this.size = new Vector2(_wArr[0], _hArr[0]);
+        libsdl.symbols.SDL_RenderFillRect(Renderer.pointer, rectangle.pointer);
     }
 }
 
