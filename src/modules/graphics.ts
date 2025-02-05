@@ -1,6 +1,5 @@
 import { libimage, libsdl } from "../ffi";
 import { type Pointer, ptr } from "bun:ffi";
-import { Image } from "../engine/image";
 import { Rectangle } from "../engine/rectangle";
 import Color from "../color";
 import { Vector2 } from "../engine/vector";
@@ -66,6 +65,7 @@ class Graphics {
      */
     public loadImage(path: string): Image {
         const _path = Buffer.from(path + "\x00");
+        //@ts-expect-error
         const surface = libimage.symbols.IMG_Load(_path);
         if (surface == null) throw `Image failed to load`;
         const texture = libsdl.symbols.SDL_CreateTextureFromSurface(
@@ -143,6 +143,31 @@ class Graphics {
         libsdl.symbols.SDL_RenderFillRect(Renderer.pointer, rectangle.pointer);
     }
 }
+
+class Image {
+    public readonly pointer: Pointer;
+    public readonly size: Vector2;
+    public flipH: boolean = false;
+
+    constructor(texture: Pointer) {
+        this.pointer = texture;
+
+        const _wArr = new Uint32Array(1);
+        const _hArr = new Uint32Array(1);
+
+        libsdl.symbols.SDL_QueryTexture(
+            texture,
+            null,
+            null,
+            ptr(_wArr),
+            ptr(_hArr)
+        );
+
+        this.size = new Vector2(_wArr[0], _hArr[0]);
+    }
+}
+
+export type ImageType = Image;
 
 /** @internal */
 export default Graphics;
