@@ -1,7 +1,7 @@
 # Slifer : Native Typescript Game Framework
 
 <p align="center">
-    <img width="80%" src="./logo-alpha.png">
+    <img width="80%" src="https://ucarecdn.com/288f053f-61e0-42e6-804a-8c1d48a41aac/-/preview/1000x562/">
 </p>
 
 > [!CAUTION]
