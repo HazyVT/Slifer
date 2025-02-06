@@ -25,7 +25,7 @@ class Renderer {
         const _ren = libsdl.symbols.SDL_CreateRenderer(
             Window.pointer,
             -1,
-            vsyncHint
+            0
         );
 
         if (_ren == null) throw `Renderer Creation Failed`;

@@ -7,7 +7,7 @@ import Window from "./engine/window";
 import Renderer from "./engine/renderer";
 import { Vector2 } from "./engine/vector";
 import { Timer } from "./engine/time";
-import { ptr, toArrayBuffer } from "bun:ffi";
+import { ptr } from "bun:ffi";
 import { initLibraries } from "./engine";
 import { version } from "../package.json";
 
@@ -58,6 +58,7 @@ export class SliferClass {
         // Clear the renderer
         Renderer.clear();
 
+
         // Calculate delta time
         // this.dt = Time.instance.calcDelta();
 
@@ -91,6 +92,7 @@ export class SliferClass {
             libsdl.symbols.SDL_Delay(this.ticksPerFrame - frameTicks);
         }
 
+        
         return !this.isRunning;
     }
 
@@ -105,5 +107,10 @@ export class SliferClass {
 
     getVersion() {
         return version;
+    }
+
+    setFps(fps: number) {
+        this.fps = fps;
+        this.ticksPerFrame = 1000 / fps;
     }
 }
