@@ -1,11 +1,10 @@
 {
     "name": "slifer",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "description": "A game framework made for bun and typescript",
     "module": "index.ts",
     "devDependencies": {
-        "@types/bun": "latest",
-        "typedoc": "^0.26.7"
+        "@types/bun": "latest"
     },
     "peerDependencies": {
         "typescript": "^5.0.0"
