@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import { initSDL, initSDLImage, initSDLTypeFont, initSDLMixer } from "./engine";
-import Vector2 from "./engine/vector";
+import {Vector2} from "./engine/vector";
 import Window from "./engine/window";
 import Renderer from "./engine/renderer";
 
