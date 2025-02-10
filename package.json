@@ -11,7 +11,7 @@
     },
     "type": "module",
     "scripts": {
-        "postinstall": "bun run download.ts"
+        "postinstall": "bun run src/download.ts"
     },
     "exports": "./index.ts"
 }
