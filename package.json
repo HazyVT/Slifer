@@ -10,5 +10,8 @@
         "typescript": "^5.0.0"
     },
     "type": "module",
+    "scripts": {
+        "postinstall": "bun run download.ts"
+    },
     "exports": "./index.ts"
 }
