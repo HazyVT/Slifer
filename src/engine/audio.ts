@@ -1,27 +1,12 @@
-import { ptr } from "bun:ffi";
 import { libmixer } from "../ffi";
 
-class Audio {
-    static #instance: Audio;
-
-    private constructor() {}
-
-    public static get instance() {
-        if (!Audio.#instance) Audio.#instance = new Audio();
-
-        return Audio.#instance;
-    }
-
-    public loadAudio(path: string): AudioSource {
-        return new AudioSource(path);
-    }
-}
-
-export class AudioSource {
-    public readonly pointer;
+/** @internal */
+export default class Audio {
+    private readonly pointer;
 
     constructor(path: string) {
         const audiomix = libmixer.symbols.Mix_LoadWAV(
+            //@ts-expect-error Buffer error
             Buffer.from(path + "\x00")
         );
 
@@ -37,5 +22,3 @@ export class AudioSource {
         libmixer.symbols.Mix_FreeChunk(this.pointer);
     }
 }
-
-export default Audio;

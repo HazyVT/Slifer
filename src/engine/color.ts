@@ -1,4 +1,5 @@
-class Color {
+/** @internal */
+export default class Color {
     readonly r;
     readonly g;
     readonly b;
@@ -11,5 +12,3 @@ class Color {
         this.a = a;
     }
 }
-
-export default Color;

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "bun:test";
 import { initSDL, initSDLImage, initSDLTypeFont, initSDLMixer } from "./engine";
-import {Vector2} from "./engine/vector";
+import Vector2 from "./engine/vector2";
+import Render from "./engine/render";
 import Window from "./engine/window";
-import Renderer from "./engine/renderer";
 
 describe("Initializing SDL ", () => {
     it("Should initialize without error ", () => {
@@ -38,6 +38,6 @@ describe("Window Creation ", () => {
 
 describe("Renderer Creation ", () => {
     it("Should create renderer without error", () => {
-        expect(() => Renderer.createRenderer()).not.toThrow(Error);
+        expect(() => Render.createRenderer()).not.toThrow(Error);
     });
 });

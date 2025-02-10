@@ -1,5 +1,4 @@
 import { libsdl, libimage, libttf, libmixer } from "./ffi";
-import Graphics from "./modules/graphics";
 
 export function initSDL() {
     const initVideo = 0x00000020;

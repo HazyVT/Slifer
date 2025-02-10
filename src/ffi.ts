@@ -221,6 +221,10 @@ export const libsdl = dlopen(libSDLImport.default, {
         args: ["cstring"],
         returns: "int",
     },
+    SDL_GetMouseState: {
+        args: ['pointer', 'pointer'],
+        returns: 'u32'
+    }
 });
 
 /** @internal */
@@ -233,6 +237,10 @@ export const libimage = dlopen(libImageImport.default, {
         args: ["cstring"],
         returns: "pointer",
     },
+    IMG_LoadTexture: {
+        args: ['pointer', 'cstring'],
+        returns: 'pointer'
+    }
 });
 
 /** @internal */

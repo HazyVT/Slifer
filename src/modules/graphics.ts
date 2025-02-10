@@ -1,173 +1,78 @@
-import { libimage, libsdl } from "../ffi";
-import { type Pointer, ptr } from "bun:ffi";
-import { Rectangle } from "../engine/rectangle";
-import Color from "../color";
-import { Vector2 } from "../engine/vector";
-import Renderer from "../engine/renderer";
+import Vector2 from "../engine/vector2";
+import { libsdl } from "../ffi";
+import { ptr } from 'bun:ffi';
 
-class Graphics {
-    static #instance: Graphics;
+import type Image from "../engine/image";
+import Render from "../engine/render";
+import type Color from "../engine/color";
+import type Rectangle from "../engine/rectangle";
 
-    static #fontPointer: Pointer;
+/** @internal */
+export default class Graphics {
 
-    public static get instance() {
-        if (!Graphics.#instance) {
-            Graphics.#instance = new Graphics();
-        }
-
-        return Graphics.#instance;
+    render() : void {
+        libsdl.symbols.SDL_RenderPresent(Render.pointer);
     }
-    /**
-     * Slifers draw function. Used to draw everything to the screen.
-     */
-    public render() {
-        libsdl.symbols.SDL_RenderPresent(Renderer.pointer);
-    }
+    
+    draw(image: Image, position: Vector2) : void {
 
-    /**
-     * Create a new color. All values are from 0-255
-     *
-     * @param r red value
-     * @param g green value
-     * @param b blue value
-     * @param a alpha value
-     * @returns Color object
-     */
-    public makeColor(r: number, g: number, b: number, a: number) {
-        const _color = new Color(r, g, b, a);
-        return _color;
+        (image as any).destArr[0] = position.x;
+        (image as any).destArr[1] = position.y;
+        
+        libsdl.symbols.SDL_RenderCopy(
+            Render.pointer,
+            (image as any).pointer,
+            null,
+            ptr((image as any).destArr)
+        );
     }
 
-    /**
-     * Sets the background of the window to a color of choice.
-     *
-     * Make sure this is put in the top level of the while loop
-     * as it will clear the renderer.
-     *
-     * @param color Color object. Make using Slifer.Graphics.makeColor
-     */
-    public setBackground(color: Color) {
-        libsdl.symbols.SDL_SetRenderDrawColor(
-            Renderer.pointer,
+    drawEx(image: Image, position: Vector2, rotation?: number, scale?: Vector2, flipH?: boolean) {
+        
+        const destArr = (image as any).destArr;
+        destArr[0] = position.x;
+        destArr[1] = position.y;
+        destArr[2] = image.width * (scale ? scale.x : 1);
+        destArr[3] = image.height * (scale ? scale.y : 1);
+
+        libsdl.symbols.SDL_RenderCopyEx(
+            Render.pointer,
+            (image as any).pointer,
+            null,
+            ptr(destArr),
+            rotation ? rotation : 0,
+            null,
+            Number(flipH)
+        );
+
+
+    }
+
+    setBackground(color: Color) : void {
+        libsdl.symbols.SDL_SetRenderDrawColor(Render.pointer,
             color.r,
             color.g,
             color.b,
             color.a
         );
-        libsdl.symbols.SDL_RenderClear(Renderer.pointer);
-    }
-
-    /**
-     * Loads a new image
-     *
-     * @param path string path to image
-     * @returns Image ready to draw
-     */
-    public loadImage(path: string): Image {
-        const _path = Buffer.from(path + "\x00");
-        //@ts-expect-error
-        const surface = libimage.symbols.IMG_Load(_path);
-        if (surface == null) throw `Image failed to load`;
-        const texture = libsdl.symbols.SDL_CreateTextureFromSurface(
-            Renderer.pointer,
-            surface
-        );
-        if (texture == null) throw `Image failed to be created`;
-        return new Image(texture);
-    }
-
-    /**
-     * Method to draw to the screen simply
-     *
-     * @param image Image object to draw. Made using Slifer.Graphics.loadImage
-     * @param position position to draw the image
-     *
-     */
-    public draw(image: Image, position: Vector2) {
-        const dstRect = new Uint32Array(4);
-        dstRect[0] = position.x;
-        dstRect[1] = position.y;
-        dstRect[2] = image.size.x;
-        dstRect[3] = image.size.y;
-
-        libsdl.symbols.SDL_RenderCopy(
-            Renderer.pointer,
-            (image as any).pointer,
-            null,
-            dstRect
-        );
-    }
-
-    /*
-     * Method to draw to the screen with extended arguments
-     *
-     * @param image Image object to draw. Made using Slifer.Graphics.loadImage
-     * @param position Position to draw the image.
-     * @param rotation Optional argument angle of rotation
-     * @param scale Optional What to multiply the width and height of image by
-     */
-    public drawEx(
-        image: Image,
-        position: Vector2,
-        rotation?: number,
-        scale?: Vector2,
-        flipH?: boolean
-    ) {
-        // Define destination rect
-        const dstRect = new Uint32Array(4);
-        dstRect[0] = position.x;
-        dstRect[1] = position.y;
-        dstRect[2] = image.size.x * (scale ? scale.x : 1);
-        dstRect[3] = image.size.y * (scale ? scale.y : 1);
-
-        // Draw to screen
-        libsdl.symbols.SDL_RenderCopyEx(
-            Renderer.pointer,
-            image.pointer,
-            null,
-            ptr(dstRect),
-            rotation ? rotation : 0,
-            null,
-            flipH ? Number(flipH) : 0
-        );
+        libsdl.symbols.SDL_RenderClear(Render.pointer);
     }
 
     public drawRect(rectangle: Rectangle, color: Color) {
         libsdl.symbols.SDL_SetRenderDrawColor(
-            Renderer.pointer,
+            Render.pointer,
             color.r,
             color.g,
             color.b,
             color.a
         );
-        libsdl.symbols.SDL_RenderFillRect(Renderer.pointer, rectangle.pointer);
+
+        const rect = new Uint32Array(4);
+        rect[0] = rectangle.position.x;
+        rect[1] = rectangle.position.y;
+        rect[2] = rectangle.size.x;
+        rect[3] = rectangle.size.y;
+
+        libsdl.symbols.SDL_RenderFillRect(Render.pointer, ptr(rect));
     }
 }
-
-class Image {
-    public readonly pointer: Pointer;
-    public readonly size: Vector2;
-    public flipH: boolean = false;
-
-    constructor(texture: Pointer) {
-        this.pointer = texture;
-
-        const _wArr = new Uint32Array(1);
-        const _hArr = new Uint32Array(1);
-
-        libsdl.symbols.SDL_QueryTexture(
-            texture,
-            null,
-            null,
-            ptr(_wArr),
-            ptr(_hArr)
-        );
-
-        this.size = new Vector2(_wArr[0], _hArr[0]);
-    }
-}
-
-export type ImageType = Image;
-
-/** @internal */
-export default Graphics;

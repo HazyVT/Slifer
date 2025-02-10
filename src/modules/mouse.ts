@@ -1,106 +1,62 @@
 import { libsdl } from "../ffi";
 import { ptr } from "bun:ffi";
-import {Vector2} from "../engine/vector";
+import Vector2 from "../engine/vector2";
 
 /** @internal */
 class Mouse {
-    static #instance: Mouse;
 
-    static downKeyMap = new Map<string, boolean>();
-    static pressedKeyMap = new Map<string, boolean>();
-    static releasedKeyMap = new Map<string, boolean>();
+    private static x : number;
+    private static y : number;
 
-    private constructor() {}
-
-    public static get instance() {
-        if (!Mouse.#instance) Mouse.#instance = new Mouse();
-
-        return Mouse.#instance;
+    private static buttonMap = new Map<number, number>();
+    
+    static onRelease(button: number) {
+        this.buttonMap.set(button, 0);
     }
 
-    static setButtonDown(button: number) {
-        let key: string = "";
-        if (button == 1) {
-            key = "left";
-        } else if (button == 2) {
-            key = "middle";
-        } else {
-            key = "right";
+    static handleState() {
+        const down = libsdl.symbols.SDL_GetMouseState();
+        const bmGet = this.buttonMap.get(down);
+
+        if (bmGet == undefined || bmGet == 0) {
+            this.buttonMap.set(down, 1);
+        } else if (bmGet == 1) {
+            this.buttonMap.set(down, 2);
         }
-
-        this.downKeyMap.set(key, true);
-        this.releasedKeyMap.set(key, false);
     }
 
-    static setButtonUp(button: number) {
-        let key: string = "";
-        if (button == 1) {
-            key = "left";
-        } else if (button == 2) {
-            key = "middle";
-        } else {
-            key = "right";
-        }
-
-        this.downKeyMap.set(key, false);
-        this.pressedKeyMap.set(key, false);
-    }
-
-    /**
-     *
-     * @param button string of button
-     * @returns if the button is being held down
-     */
-    isDown(button: buttons) {
-        const _state = Mouse.downKeyMap.get(button);
-        if (_state == undefined) return false;
-
-        return _state;
-    }
-
-    /**
-     *
-     * @param button string of button
-     * @returns if button is pressed. Returns only once
-     */
-    isPressed(button: buttons) {
-        const _pressedState = Mouse.pressedKeyMap.get(button);
-        const _downState = Mouse.downKeyMap.get(button);
-
-        if (_downState == true) {
-            if (_pressedState == false || _pressedState == undefined) {
-                Mouse.pressedKeyMap.set(button, true);
-                return true;
-            }
-        }
-
+    private static getPressMap(button: number) {
+        const bmGet = this.buttonMap.get(button);
+        if (bmGet == 1) return true;
         return false;
     }
 
-    /**
-     *
-     * @param button string of button
-     * @returns if button is released. Returns only once
-     */
-    isReleased(button: buttons) {
-        const _releasedState = Mouse.releasedKeyMap.get(button);
-        const _downState = Mouse.downKeyMap.get(button);
-
-        if (_downState == false) {
-            if (_releasedState == false || undefined) {
-                Mouse.releasedKeyMap.set(button, true);
-                return true;
-            }
-        }
-
+    private static getDownMap(button: number) {
+        const bmGet = this.buttonMap.get(button);
+        if (bmGet == 1 || bmGet == 2) return true;
         return false;
     }
 
-    getPosition() {
-        const xArr = new Uint32Array(1);
-        const yArr = new Uint32Array(1);
-        libsdl.symbols.SDL_GetMouseState(ptr(xArr), ptr(yArr));
-        return new Vector2(xArr[0], yArr[0]);
+    isPressed(button: buttons) : boolean {
+        switch (button) {
+            case 'left':
+                return Mouse.getPressMap(1);
+            case 'middle':
+                return Mouse.getPressMap(2);
+            case 'right':
+                return Mouse.getPressMap(3);
+        }
+    }
+
+    isDown(button: buttons) : boolean {
+        switch (button) {
+            case 'left':
+                return Mouse.getDownMap(1);
+            case 'middle':
+                return Mouse.getDownMap(2);
+            case 'right':
+                return Mouse.getDownMap(3);
+        }
     }
 }
 

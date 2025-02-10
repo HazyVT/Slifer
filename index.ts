@@ -1,10 +1,8 @@
-import { SliferClass } from "./src/slifer";
+import Slifer from "./src/slifer";
+import Image from "./src/engine/image";
+import Vector2 from "./src/engine/vector2";
+import Color from "./src/engine/color";
+import Audio from "./src/engine/audio";
 
-export type { ImageType as Image } from "./src/modules/graphics";
-export { Vector2 } from "./src/engine/vector";
-export { Rectangle } from "./src/engine/rectangle";
-export { Timer } from "./src/engine/time";
-export { AudioSource } from "./src/modules/audio";
-
-const Slifer = new SliferClass();
-export default Slifer;
+const slf = new Slifer();
+export { Vector2, Color, Image, Audio, slf as Slifer };
