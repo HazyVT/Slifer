@@ -1,5 +1,6 @@
 import { libsdl } from "../ffi";
 import { toArrayBuffer } from "bun:ffi";
+
 /** @internal */
 export default class Keyboard {
 

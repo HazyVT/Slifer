@@ -220,10 +220,6 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_GetScancodeFromName: {
         args: ["cstring"],
         returns: "int",
-    },
-    SDL_GetMouseState: {
-        args: ['pointer', 'pointer'],
-        returns: 'u32'
     }
 });
 
