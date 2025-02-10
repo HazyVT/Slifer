@@ -7,13 +7,13 @@ let libMixerImport;
 
 if (process.platform == "win32") {
     //@ts-expect-error
-    libSDLImport = await import("../libs/libSDL2.dll");
+    libSDLImport = await import("../libs/SDL2.dll");
     //@ts-expect-error
-    libImageImport = await import("../libs/libSDL2_image.dll");
+    libImageImport = await import("../libs/SDL2_image.dll");
     //@ts-expect-error
-    libTTFImport = await import("../libs/libSDL2_ttf.dll");
+    libTTFImport = await import("../libs/SDL2_ttf.dll");
     //@ts-expect-error
-    libMixerImport = await import("../libs/libSDL2_mixer.dll");
+    libMixerImport = await import("../libs/SDL2_mixer.dll");
 } else if (process.platform == "darwin") {
     //@ts-expect-error
     libSDLImport = await import("../libs/libSDL2.dylib");
