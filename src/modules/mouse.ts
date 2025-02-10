@@ -15,7 +15,9 @@ class Mouse {
     }
 
     static handleState() {
-        const down = libsdl.symbols.SDL_GetMouseState();
+        const xArr = new Uint32Array(1);
+        const yArr = new Uint32Array(1);
+        const down = libsdl.symbols.SDL_GetMouseState(ptr(xArr), ptr(yArr));
         const bmGet = this.buttonMap.get(down);
 
         if (bmGet == undefined || bmGet == 0) {
@@ -23,6 +25,9 @@ class Mouse {
         } else if (bmGet == 1) {
             this.buttonMap.set(down, 2);
         }
+
+        this.x = xArr[0];
+        this.y = yArr[0];
     }
 
     private static getPressMap(button: number) {
@@ -57,6 +62,10 @@ class Mouse {
             case 'right':
                 return Mouse.getDownMap(3);
         }
+    }
+
+    getPosition() : Vector2 {
+        return new Vector2(Mouse.x, Mouse.y);
     }
 }
 

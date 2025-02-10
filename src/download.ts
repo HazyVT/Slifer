@@ -1,5 +1,3 @@
-import * as https from 'https';
-import * as fs from 'fs';
 import * as path from 'path';
 
 const libDir = path.join(__dirname, '../libs/');

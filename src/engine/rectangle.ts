@@ -1,4 +1,4 @@
-import type Vector2 from "./vector2";
+import Vector2 from "./vector2";
 import { ptr, type Pointer } from 'bun:ffi';
 
 /** @internal */
@@ -11,6 +11,10 @@ export default class Rectangle {
         this.position = position;
         this.size = size;
     }
+
+	static empty() : Rectangle {
+		return new Rectangle(new Vector2(0, 0), new Vector2(0, 0));
+	}
 
     public isColliding(rectangle: Rectangle) : boolean {
     	if (

@@ -59,6 +59,12 @@ class Slifer {
     public getVersion() : string {
         return 'v' + version;
     }
+
+    public quit() : void {
+        libsdl.symbols.SDL_DestroyRenderer(Render.pointer);
+        libsdl.symbols.SDL_DestroyWindow(Window.pointer);
+        libsdl.symbols.SDL_Quit();
+    }
 }
 
 
