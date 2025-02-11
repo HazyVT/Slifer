@@ -14,10 +14,10 @@ export default class Graphics {
         libsdl.symbols.SDL_RenderPresent(Render.pointer);
     }
     
-    draw(image: Image, position: Vector2) : void {
+    draw(image: Image, x: number, y: number) : void {
 
-        (image as any).destArr[0] = position.x;
-        (image as any).destArr[1] = position.y;
+        (image as any).destArr[0] = x;
+        (image as any).destArr[1] = y;
         
         libsdl.symbols.SDL_RenderCopy(
             Render.pointer,
@@ -27,13 +27,13 @@ export default class Graphics {
         );
     }
 
-    drawEx(image: Image, position: Vector2, rotation?: number, scale?: Vector2, flipH?: boolean) {
+    drawEx(image: Image, x: number, y: number, rotation?: number, scaleX?: number, scaleY?: number, flipH?: boolean) {
         
         const destArr = (image as any).destArr;
-        destArr[0] = position.x;
-        destArr[1] = position.y;
-        destArr[2] = image.width * (scale ? scale.x : 1);
-        destArr[3] = image.height * (scale ? scale.y : 1);
+        destArr[0] = x;
+        destArr[1] = y;
+        destArr[2] = image.width * (scaleX ? scaleX : 1)
+        destArr[3] = image.height * (scaleY ? scaleY : 1);
 
         libsdl.symbols.SDL_RenderCopyEx(
             Render.pointer,
