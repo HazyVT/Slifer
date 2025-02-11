@@ -11,7 +11,6 @@ import Mouse from "./modules/mouse";
 import Render from "./engine/render";
 
 class Slifer {
-    
     public isRunning: boolean;
 
     // Modules
@@ -24,15 +23,14 @@ class Slifer {
         this.isRunning = true;
     }
 
-    public createWindow(title: string, size: Vector2) : Window {
+    public createWindow(title: string, size: Vector2): Window {
         Window.createWindow(title, size);
         Renderer.createRenderer();
 
         return new Window();
     }
 
-    public shouldClose() : boolean {
-
+    public shouldClose(): boolean {
         libsdl.symbols.SDL_RenderClear(Render.pointer);
 
         const eventArray = new Uint16Array(32);
@@ -41,6 +39,9 @@ class Slifer {
             switch (eventArray[0]) {
                 case 256:
                     this.isRunning = false;
+                    break;
+                case 1024:
+                    Mouse.onMove(eventArray[10], eventArray[12]);
                     break;
                 case 1026:
                     Mouse.onRelease(eventArray[8]);
@@ -51,21 +52,19 @@ class Slifer {
         Keyboard.handleStates();
 
         Mouse.handleState();
-        
-        
+
         return !this.isRunning;
     }
 
-    public getVersion() : string {
-        return 'v' + version;
+    public getVersion(): string {
+        return "v" + version;
     }
 
-    public quit() : void {
+    public quit(): void {
         libsdl.symbols.SDL_DestroyRenderer(Render.pointer);
         libsdl.symbols.SDL_DestroyWindow(Window.pointer);
         libsdl.symbols.SDL_Quit();
     }
 }
-
 
 export default Slifer;
