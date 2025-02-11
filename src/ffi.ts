@@ -220,6 +220,9 @@ export const libsdl = dlopen(libSDLImport.default, {
         args: ["cstring"],
         returns: "int",
     },
+    SDL_GetTicks64: {
+    	returns: 'u64'
+    }
 });
 
 /** @internal */

@@ -12,20 +12,27 @@ import Render from "./engine/render";
 
 class Slifer {
     public isRunning: boolean;
+	public deltaTime: number;
 
     // Modules
     public Graphics = new Graphics();
     public Keyboard = new Keyboard();
     public Mouse = new Mouse();
 
+    private start = 0;
+    private end = 0;
+
     constructor() {
         initLibraries();
         this.isRunning = true;
+        this.deltaTime = 0;
     }
 
     public createWindow(title: string, size: Vector2): Window {
         Window.createWindow(title, size);
         Renderer.createRenderer();
+
+        this.start = Number(libsdl.symbols.SDL_GetTicks64());
 
         return new Window();
     }
@@ -49,9 +56,17 @@ class Slifer {
             }
         }
 
+
         Keyboard.handleStates();
 
         Mouse.handleState();
+
+        this.end = Number(libsdl.symbols.SDL_GetTicks64());
+
+		this.deltaTime = (this.end - this.start) / 1000;
+
+        this.start = this.end;
+        
 
         return !this.isRunning;
     }
