@@ -34,6 +34,8 @@ if (process.platform == "win32") {
     libMixerImport = await import("../libs/libSDL2_mixer.so");
 }
 
+console.log(libSDLImport.default);
+
 /** @internal */
 export const libsdl = dlopen(libSDLImport.default, {
     SDL_Init: {
