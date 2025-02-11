@@ -18,7 +18,7 @@ if (process.platform == "darwin") {
     downloadLibrary("https://github.com/HazyVT/Slifer/releases/download/Libraries/SDL2.dll", "SDL2.dll");
     downloadLibrary("https://github.com/HazyVT/Slifer/releases/download/Libraries/SDL2_image.dll", "SDL2_image.dll");
     downloadLibrary("https://github.com/HazyVT/Slifer/releases/download/Libraries/SDL2_mixer.dll", "SDL2_mixer.dll");
-    downloadLibrary("https://github.com/HazyVT/Slifer/releases/download/Libraries/SDL2_ttf.dll", "SDL2_ttf");
+    downloadLibrary("https://github.com/HazyVT/Slifer/releases/download/Libraries/SDL2_ttf.dll", "SDL2_ttf.dll");
 } else if (process.platform == "linux") {
     downloadLibrary("https://github.com/HazyVT/Slifer/releases/download/Libraries/libSDL2.so", "libSDL2.so");
     downloadLibrary("https://github.com/HazyVT/Slifer/releases/download/Libraries/libSDL2_image.so", "libSDL2_image.so");
