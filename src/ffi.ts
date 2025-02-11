@@ -1,9 +1,12 @@
 import { dlopen, FFIType, suffix } from "bun:ffi";
+import * as path from "path";
 
 let libSDLImport;
 let libImageImport;
 let libTTFImport;
 let libMixerImport;
+
+const libDir = path.join(__dirname, "../libs/");
 
 if (process.platform == "win32") {
     //@ts-expect-error
@@ -24,17 +27,11 @@ if (process.platform == "win32") {
     //@ts-expect-error
     libMixerImport = await import("../libs/libSDL2_mixer.dylib");
 } else if (process.platform == "linux") {
-    //@ts-expect-error
-    libSDLImport = await import("../libs/libSDL2.so");
-    //@ts-expect-error
-    libImageImport = await import("../libs/libSDL2_image.so");
-    //@ts-expect-error
-    libTTFImport = await import("../libs/libSDL2_ttf.so");
-    //@ts-expect-error
-    libMixerImport = await import("../libs/libSDL2_mixer.so");
+    libSDLImport = await import(`${libDir}libSDL2.so`);
+    libImageImport = await import(`${libDir}libSDL2_image.so`);
+    libTTFImport = await import(`${libDir}libSDL2_ttf.so`);
+    libMixerImport = await import(`${libDir}libSDL2_mixer.so`);
 }
-
-console.log(libSDLImport.default);
 
 /** @internal */
 export const libsdl = dlopen(libSDLImport.default, {
@@ -222,7 +219,7 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_GetScancodeFromName: {
         args: ["cstring"],
         returns: "int",
-    }
+    },
 });
 
 /** @internal */
@@ -236,9 +233,9 @@ export const libimage = dlopen(libImageImport.default, {
         returns: "pointer",
     },
     IMG_LoadTexture: {
-        args: ['pointer', 'cstring'],
-        returns: 'pointer'
-    }
+        args: ["pointer", "cstring"],
+        returns: "pointer",
+    },
 });
 
 /** @internal */
