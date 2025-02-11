@@ -1,0 +1,18 @@
+name: Run Unit Tests
+
+on:
+  push:
+    branches:
+      - nightly
+
+jobs:
+  run-unit-tests:
+    runs-on: ubuntu-latest # Linux base image
+    steps:
+      - uses: actions/checkout@v3 # Checkout repo
+      - uses: oven-sh/setup-bun@v2 # Setup bun
+        with:
+            bun-version: latest # You can also use a specific version
+      - run: bun install # Only needed if you have any dependencies
+      - run: bun run src/download.ts # Change to your entrypoint!
+      - run: bun test
