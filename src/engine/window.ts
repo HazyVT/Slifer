@@ -12,19 +12,19 @@ export default class Window {
 
 	
 
-    public static createWindow(title: string, size: Vector2) : void {
+    public static createWindow(title: string, width: number, height: number) : void {
         const winPointer = libsdl.symbols.SDL_CreateWindow(
             Buffer.from(title + '\x00'),
             this.centerPos,
             this.centerPos,
-            size.x,
-            size.y,
+            width,
+            height,
             0
         );
 
         if (winPointer == null) throw `Window creation failed.`;
         this.pointer = winPointer;
-        this.size = size;
+        this.size = new Vector2(width, height);
     }
 
     public setTitle(title: string): void {
@@ -48,5 +48,9 @@ export default class Window {
 
     public centerWindow() {
         this.setPosition(new Vector2(Window.centerPos, Window.centerPos));
+    }
+
+    public setSize(width: number, height: number) {
+    	libsdl.symbols.SDL_SetWindowSize(Window.pointer, width, height);
     }
 }

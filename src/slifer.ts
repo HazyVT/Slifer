@@ -30,9 +30,9 @@ class Slifer {
 		this.black = new Color(0,0,0,0);
     }
 
-    public createWindow(title: string, size: Vector2): Window {
-        Window.createWindow(title, size);
-        Render.createRenderer(size.x, size.y);
+    public createWindow(title: string, width: number, height: number): Window {
+        Window.createWindow(title, width, height);
+        Render.createRenderer(width, height);
 
         this.start = Number(libsdl.symbols.SDL_GetTicks64());
 
