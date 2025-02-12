@@ -8,6 +8,7 @@ import Graphics from "./modules/graphics";
 import Keyboard from "./modules/keyboard";
 import Mouse from "./modules/mouse";
 import Render from "./engine/render";
+import Color from './engine/color';
 
 class Slifer {
     public isRunning: boolean;
@@ -20,11 +21,13 @@ class Slifer {
 
     private start = 0;
     private end = 0;
+    private black : Color;
 
     constructor() {
         initLibraries();
         this.isRunning = true;
         this.deltaTime = 0;
+		this.black = new Color(0,0,0,0);
     }
 
     public createWindow(title: string, size: Vector2): Window {
@@ -39,6 +42,8 @@ class Slifer {
     public shouldClose(): boolean {
         libsdl.symbols.SDL_RenderClear(Render.pointer);
 
+		this.Graphics.setBackground(this.black);
+		
         const eventArray = new Uint16Array(32);
         const event = libsdl.symbols.SDL_PollEvent(ptr(eventArray));
         if (event) {

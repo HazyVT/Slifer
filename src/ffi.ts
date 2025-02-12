@@ -230,6 +230,18 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_UpperBlit: {
     	args: ['pointer', 'pointer','pointer','pointer'],
     	returns: 'int'
+    },
+    SDL_FillRect: {
+    	args: ['pointer', 'pointer', 'int'],
+    	returns: 'int'
+    },
+    SDL_DestroyTexture : {
+    	args: ['pointer'],
+    	returns: 'void'
+    },
+    SDL_MapRGB: {
+    	args: ['pointer', 'int', 'int', 'int'],
+    	returns: 'u32'
     }
 });
 

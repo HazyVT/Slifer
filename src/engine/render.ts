@@ -13,7 +13,7 @@ export default class Render {
         if (renPointer == null) throw `Renderer creation failed.`;
         this.pointer = renPointer;
         const surPointer = libsdl.symbols.SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0)
-				if (surPointer == null) throw `Surface creation failed`;
-				this.surface = surPointer;
+		if (surPointer == null) throw `Surface creation failed`;
+		this.surface = surPointer;
     }
 }
