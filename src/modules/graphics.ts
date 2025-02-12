@@ -89,7 +89,7 @@ export default class Graphics {
 		destRect[2] = wArr[0];
 		destRect[3] = hArr[0];
 
-    	libsdl.symbols.SDL_UpperBlit(
+    	libsdl.symbols.SDL_UpperBlitScaled(
 			surface,
 			null,
 			Render.surface,
