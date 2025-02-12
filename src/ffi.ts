@@ -222,6 +222,14 @@ export const libsdl = dlopen(libSDLImport.default, {
     },
     SDL_GetTicks64: {
     	returns: 'u64'
+    },
+    SDL_CreateRGBSurface: {
+    	args: ['int', 'int', 'int', 'int', 'int', 'int', 'int', 'int'],
+    	returns: 'pointer'
+    },
+    SDL_UpperBlit: {
+    	args: ['pointer', 'pointer','pointer','pointer'],
+    	returns: 'int'
     }
 });
 

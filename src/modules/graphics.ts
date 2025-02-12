@@ -11,6 +11,14 @@ import type Rectangle from "../engine/rectangle";
 export default class Graphics {
 
     public render() : void {
+    		const texture = libsdl.symbols.SDL_CreateTextureFromSurface(Render.pointer, Render.surface);
+    		if (texture == null) throw `Render texture creation failed`;
+    		libsdl.symbols.SDL_RenderCopy(
+    			Render.pointer,
+    			texture,
+    			null,
+    			null
+    		);
         libsdl.symbols.SDL_RenderPresent(Render.pointer);
     }
     
@@ -19,33 +27,12 @@ export default class Graphics {
         (image as any).destArr[0] = x;
         (image as any).destArr[1] = y;
         
-        libsdl.symbols.SDL_RenderCopy(
-            Render.pointer,
-            (image as any).pointer,
-            null,
-            ptr((image as any).destArr)
+        libsdl.symbols.SDL_UpperBlit(
+        	(image as any).pointer,
+        	null,
+        	Render.surface,
+        	null
         );
-    }
-
-    public drawEx(image: Image, x: number, y: number, rotation?: number, scaleX?: number, scaleY?: number, flipH?: boolean) {
-        
-        const destArr = (image as any).destArr;
-        destArr[0] = x;
-        destArr[1] = y;
-        destArr[2] = image.width * (scaleX ? scaleX : 1)
-        destArr[3] = image.height * (scaleY ? scaleY : 1);
-
-        libsdl.symbols.SDL_RenderCopyEx(
-            Render.pointer,
-            (image as any).pointer,
-            null,
-            ptr(destArr),
-            rotation ? rotation : 0,
-            null,
-            Number(flipH)
-        );
-
-
     }
 
     public setBackground(color: Color) : void {

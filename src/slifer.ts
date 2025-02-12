@@ -1,6 +1,5 @@
 import { libsdl } from "./ffi";
 import Window from "./engine/window";
-import Renderer from "./engine/render";
 import { ptr } from "bun:ffi";
 import { initLibraries } from "./engine";
 import { version } from "../package.json";
@@ -30,7 +29,7 @@ class Slifer {
 
     public createWindow(title: string, size: Vector2): Window {
         Window.createWindow(title, size);
-        Renderer.createRenderer();
+        Render.createRenderer(size.x, size.y);
 
         this.start = Number(libsdl.symbols.SDL_GetTicks64());
 
