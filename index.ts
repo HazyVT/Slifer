@@ -5,6 +5,7 @@ import Color from "./src/engine/color";
 import Audio from "./src/engine/audio";
 import Rectangle from "./src/engine/rectangle";
 import Font from "./src/engine/font";
+import Canvas from './src/engine/canvas';
 
 const slf = new Slifer();
-export { Vector2, Color, Image, Audio, Rectangle, Font, slf as Slifer };
+export { Vector2, Color, Image, Audio, Rectangle, Font, Canvas, slf as Slifer };

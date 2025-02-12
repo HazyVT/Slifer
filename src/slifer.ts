@@ -41,8 +41,6 @@ class Slifer {
 
     public shouldClose(): boolean {
         libsdl.symbols.SDL_RenderClear(Render.pointer);
-
-		this.Graphics.setBackground(this.black);
 		
         const eventArray = new Uint16Array(32);
         const event = libsdl.symbols.SDL_PollEvent(ptr(eventArray));

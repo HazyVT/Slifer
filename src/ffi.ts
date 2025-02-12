@@ -227,7 +227,7 @@ export const libsdl = dlopen(libSDLImport.default, {
     	args: ['int', 'int', 'int', 'int', 'int', 'int', 'int', 'int'],
     	returns: 'pointer'
     },
-    SDL_UpperBlit: {
+    SDL_UpperBlitScaled: {
     	args: ['pointer', 'pointer','pointer','pointer'],
     	returns: 'int'
     },
