@@ -10,7 +10,7 @@ export default class Render {
     public static destArray : Uint32Array;
 
     public static createRenderer(width: number, height: number) {
-        const renPointer = libsdl.symbols.SDL_CreateRenderer(Window.pointer, -1, 0);
+        const renPointer = libsdl.symbols.SDL_CreateRenderer(Window.pointer, -1, 0x00000004 + 0x00000002);
         if (renPointer == null) throw `Renderer creation failed.`;
         this.pointer = renPointer;
         const surPointer = libsdl.symbols.SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0)
