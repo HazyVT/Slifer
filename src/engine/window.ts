@@ -1,5 +1,6 @@
 import { type Pointer } from 'bun:ffi';
 import Vector2 from './vector2';
+import Image from './image';
 import { libsdl } from '../ffi';
 
 /** @internal */
@@ -53,4 +54,9 @@ export default class Window {
     public setSize(width: number, height: number) {
     	libsdl.symbols.SDL_SetWindowSize(Window.pointer, width, height);
     }
+
+    public setIcon(image: Image) {
+    	libsdl.symbols.SDL_SetWindowIcon(Window.pointer, (image as any).pointer);
+    }
+
 }
