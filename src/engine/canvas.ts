@@ -9,6 +9,7 @@ import Font from './font';
 export default class Canvas {
 
 	private pointer : Pointer;
+	private destArray: Uint32Array;
 
 	public readonly width;
 	public readonly height;
@@ -19,18 +20,15 @@ export default class Canvas {
 		this.pointer = surPointer;
 		this.width = width;
 		this.height = height;
+		this.destArray = new Uint32Array(4);
+		this.destArray[2] = this.width;
+		this.destArray[3] = this.height;
 	}
 
 	private drawBG(color: Color) {
-		const rect = new Uint32Array(4);
-		rect[0] = 0;
-		rect[1] = 0;
-		rect[2] = this.width;
-		rect[3] = this.height;
-
 		const _col = ((color.r << 16) + (color.g << 8) + (color.b << 0));
 
-		libsdl.symbols.SDL_FillRect(this.pointer, ptr(rect), _col);
+		libsdl.symbols.SDL_FillRect(this.pointer, ptr(this.destArray), _col);
 	}
 
 	clear() {
@@ -41,18 +39,15 @@ export default class Canvas {
 		this.drawBG(color);
 	}
 
-	draw(drawable: Image | Canvas, x: number, y: number, scaleX?: number, scaleY?: number) : void {
-		const destArray = new Uint32Array(4);
-		destArray[0] = x;
-		destArray[1] = y;
-		destArray[2] = drawable.width * (scaleX ? scaleX : 1);
-		destArray[3] = drawable.height * (scaleY ? scaleY : 1);
+	draw(drawable: Image | Canvas, x: number, y: number) : void {
+		(drawable as any).destArray[0] = x;
+		(drawable as any).destArray[1] = y;
 		        
         libsdl.symbols.SDL_UpperBlitScaled(
         	(drawable as any).pointer,
         	null,
         	this.pointer,
-        	ptr(destArray)
+        	ptr((drawable as any).destArray)
         );
 	}
 
@@ -62,7 +57,6 @@ export default class Canvas {
 	    	
 	    	libttf.symbols.TTF_SizeText(
 	    		(font as any).pointer,
-				//@ts-expect-error
 	    		Buffer.from(text+"\x00"),
 	    		ptr(wArr),
 	    		ptr(hArr)
@@ -72,7 +66,6 @@ export default class Canvas {
 	
 	    	const surface = libttf.symbols.TTF_RenderText_Solid(
 	    		(font as any).pointer,
-	    		//@ts-expect-error
 	    	  	Buffer.from(text+'\x00'),
 	    	   	_col
 	    	);

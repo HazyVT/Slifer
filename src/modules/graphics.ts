@@ -25,28 +25,24 @@ export default class Graphics {
         libsdl.symbols.SDL_DestroyTexture(texture);
     }
     
-    public draw(drawable: Image | Canvas, x: number, y: number, scaleX?: number, scaleY?: number) : void {
+    public draw(drawable: Image | Canvas, x: number, y: number) : void {
 
-		const destArray = new Uint32Array(4);
-		destArray[0] = x;
-		destArray[1] = y;
-		destArray[2] = drawable.width * (scaleX ? scaleX : 1);
-		destArray[3] = drawable.height * (scaleY ? scaleY : 1);
+		(drawable as any).destArray[0] = x;
+		(drawable as any).destArray[1] = y;
+		
 		        
         libsdl.symbols.SDL_UpperBlitScaled(
         	(drawable as any).pointer,
         	null,
         	Render.surface,
-        	ptr(destArray)
+        	ptr((drawable as any).destArray)
         );
     }
 
     public setBackground(color: Color) : void {
-		const rect = new Rectangle(
-			new Vector2(0, 0),
-			new Vector2(Window.size.x, Window.size.y)
-		);
-		this.drawRect(rect, color);
+		const _col = ((color.r << 16) + (color.g << 8) + (color.b << 0));
+		libsdl.symbols.SDL_FillRect(Render.surface, ptr(Render.destArray), _col);
+
    	}
 
     public drawRect(rectangle: Rectangle, color: Color) {
@@ -67,7 +63,6 @@ export default class Graphics {
     	
     	libttf.symbols.TTF_SizeText(
     		(font as any).pointer,
-			//@ts-expect-error
     		Buffer.from(text+"\x00"),
     		ptr(wArr),
     		ptr(hArr)
@@ -77,7 +72,6 @@ export default class Graphics {
 
     	const surface = libttf.symbols.TTF_RenderText_Solid(
     		(font as any).pointer,
-    		//@ts-expect-error
     	  	Buffer.from(text+'\x00'),
     	   	_col
     	);

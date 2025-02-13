@@ -6,6 +6,7 @@ import Render from "./render";
 export default class Image {
 
     private pointer:  Pointer;
+    private destArray: Uint32Array;
 
     public readonly width: number;
     public readonly height: number;
@@ -36,5 +37,9 @@ export default class Image {
 
 		this.width = wArr[0];
 		this.height = hArr[0];
+
+		this.destArray = new Uint32Array(4);
+		this.destArray[2] = this.width;
+		this.destArray[3] = this.height;
     }
 }
