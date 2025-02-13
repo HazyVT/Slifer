@@ -31,13 +31,13 @@ describe("Initializing SDL Mixer ", () => {
 describe("Window Creation ", () => {
     it("Should create window without error", () => {
         expect(() =>
-            Window.createWindow("Game", new Vector2(1, 1))
+            Window.createWindow("Game", 1, 1)
         ).not.toThrow(Error);
     });
 });
 
 describe("Renderer Creation ", () => {
     it("Should create renderer without error", () => {
-        expect(() => Render.createRenderer()).not.toThrow(Error);
+        expect(() => Render.createRenderer(1, 1)).not.toThrow(Error);
     });
 });

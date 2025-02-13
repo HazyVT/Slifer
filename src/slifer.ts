@@ -80,6 +80,7 @@ class Slifer {
     }
 
     public quit(): void {
+    	libsdl.symbols.SDL_FreeSurface(Render.surface);
         libsdl.symbols.SDL_DestroyRenderer(Render.pointer);
         libsdl.symbols.SDL_DestroyWindow(Window.pointer);
         libsdl.symbols.SDL_Quit();

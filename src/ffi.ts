@@ -246,6 +246,10 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_MapRGB: {
     	args: ['pointer', 'int', 'int', 'int'],
     	returns: 'u32'
+    },
+    SDL_FreeSurface: {
+    	args: ['pointer'],
+    	returns: 'void'
     }
 });
 
