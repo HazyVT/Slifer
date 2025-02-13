@@ -12,12 +12,29 @@ export default class Image {
 
     constructor(path: string) {
         const cs = Buffer.from(path+'\x00');
-        //@ts-expect-error
         const surface = libimage.symbols.IMG_Load(cs);
         if (surface == null) throw `Loading ${path} failed`;
         this.pointer = surface;
-		const dv = new DataView(toArrayBuffer(this.pointer, 0, 21));
-		this.width = dv.getUint8(16);
-		this.height = dv.getUint8(20);
+
+
+		// Convert to texture
+		const texture = libsdl.symbols.SDL_CreateTextureFromSurface(
+			Render.pointer,
+			this.pointer
+		)
+		if (texture == null) throw `Loading ${path} failed`;
+
+		const wArr = new Uint32Array(1);
+		const hArr = new Uint32Array(1);
+		libsdl.symbols.SDL_QueryTexture(
+			texture,
+			null,
+			null,
+			ptr(wArr),
+			ptr(hArr)
+		)
+
+		this.width = wArr[0];
+		this.height = hArr[0];
     }
 }
