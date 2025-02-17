@@ -19,12 +19,13 @@ export default class Keyboard {
     public static handleStates() {
         const keyState = libsdl.symbols.SDL_GetKeyboardState(null);
         if (keyState == null) throw `Keyboard state returned null.`;
-        const keyDV = new DataView(toArrayBuffer(keyState, 0, 512));
-        for (let kn = 0; kn < 512; kn++) {
+        const keyDV = new DataView(toArrayBuffer(keyState, 0, 128));
+        for (let kn = 0; kn < 128; kn++) {
             if (keyDV.getUint8(kn) == 1) {
                 const keyName = this.convertScancodeToKey(kn);
                 const kmGet = this.keyMap.get(keyName);
 
+							
                 if (kmGet == undefined || kmGet == 0) {
                     this.keyMap.set(keyName, 1);
                 } else if (kmGet == 1) {
@@ -50,7 +51,7 @@ export default class Keyboard {
     }
 }
 
-type keys =
+export type keys =
     | "a"
     | "b"
     | "c"
@@ -93,4 +94,7 @@ type keys =
     | "left shift"
     | "right shift"
     | "left ctrl"
-    | "escape";
+    | "escape"
+    | "backspace"
+    | "."
+    | "return";

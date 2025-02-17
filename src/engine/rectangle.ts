@@ -4,8 +4,8 @@ import { ptr, type Pointer } from 'bun:ffi';
 /** @internal */
 export default class Rectangle {
     
-    public readonly position;
-    public readonly size;
+    public position;
+    public size;
 
     constructor(position: Vector2, size: Vector2) {
         this.position = position;

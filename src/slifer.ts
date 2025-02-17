@@ -9,6 +9,7 @@ import Keyboard from "./modules/keyboard";
 import Mouse from "./modules/mouse";
 import Render from "./engine/render";
 import Color from './engine/color';
+import Cursor from './engine/cursor';
 
 class Slifer {
     public isRunning: boolean;
@@ -37,6 +38,10 @@ class Slifer {
         this.start = Number(libsdl.symbols.SDL_GetTicks64());
 
         return new Window();
+    }
+
+    public setCursor(cursor: Cursor) {
+    	libsdl.symbols.SDL_SetCursor((cursor as any).pointer);
     }
 
     public shouldClose(): boolean {

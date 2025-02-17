@@ -31,15 +31,15 @@ export default class Canvas {
 		libsdl.symbols.SDL_FillRect(this.pointer, ptr(this.destArray), _col);
 	}
 
-	clear() {
+	public clear() {
         this.drawBG(new Color(0, 0, 0, 0));
 	}
 
-	setBackground(color: Color) {
+	public setBackground(color: Color) {
 		this.drawBG(color);
 	}
 
-	draw(drawable: Image | Canvas, x: number, y: number) : void {
+	public draw(drawable: Image | Canvas, x: number, y: number) : void {
 		(drawable as any).destArray[0] = x;
 		(drawable as any).destArray[1] = y;
 		        

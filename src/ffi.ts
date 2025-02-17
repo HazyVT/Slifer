@@ -173,6 +173,14 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_FreeSurface: {
     	args: ['pointer'],
     	returns: 'void'
+    },
+    SDL_CreateColorCursor: {
+    	args: ['pointer', 'int', 'int'],
+    	returns: 'pointer'
+    },
+    SDL_SetCursor: {
+    	args: ['pointer'],
+    	returns: 'void'
     }
 });
 
@@ -205,6 +213,10 @@ export const libttf = dlopen(libTTFImport.default, {
         args: ["pointer", "cstring", "u32"],
         returns: "pointer",
     },
+    TTF_RenderText_Solid_Wrapped: {
+            args: ["pointer", "cstring", "u32", "u32"],
+            returns: "pointer",
+   	},
     TTF_SizeText: {
         args: ["pointer", "cstring", "pointer", "pointer"],
         returns: "int",

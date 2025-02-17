@@ -14,7 +14,7 @@ export default class Image {
     constructor(path: string) {
         const cs = Buffer.from(path+'\x00');
         const surface = libimage.symbols.IMG_Load(cs);
-        if (surface == null) throw `Loading ${path} failed`;
+        if (surface == null) throw `${libsdl.symbols.SDL_GetError()}`
         this.pointer = surface;
 
 
@@ -23,7 +23,7 @@ export default class Image {
 			Render.pointer,
 			this.pointer
 		)
-		if (texture == null) throw `Loading ${path} failed`;
+		if (texture == null) throw `${libsdl.symbols.SDL_GetError()}`;
 
 		const wArr = new Uint32Array(1);
 		const hArr = new Uint32Array(1);
