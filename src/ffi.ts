@@ -181,6 +181,22 @@ export const libsdl = dlopen(libSDLImport.default, {
     SDL_SetCursor: {
     	args: ['pointer'],
     	returns: 'void'
+    },
+    SDL_CreateTexture: {
+        args: ['pointer', 'u32' ,'int', 'int' ,'int'],
+        returns: 'pointer'
+    },
+    SDL_RenderDrawRect: {
+        args: ['pointer', 'pointer'],
+        returns: 'int'
+    },
+    SDL_SetRenderDrawColor: {
+        args: ['pointer', 'int', 'int', 'int', 'int'],
+        returns: 'int'
+    },
+    SDL_RenderFillRect: {
+        args: ['pointer', 'pointer'],
+        returns: 'int'
     }
 });
 

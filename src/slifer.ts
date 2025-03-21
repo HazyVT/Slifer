@@ -45,9 +45,8 @@ class Slifer {
     }
 
     public shouldClose(): boolean {
+        libsdl.symbols.SDL_SetRenderDrawColor(Render.pointer, this.black.r, this.black.g, this.black.b, this.black.a);
         libsdl.symbols.SDL_RenderClear(Render.pointer);
-
-        this.Graphics.setBackground(this.black);
 		
         const eventArray = new Uint16Array(32);
         const event = libsdl.symbols.SDL_PollEvent(ptr(eventArray));
@@ -75,7 +74,6 @@ class Slifer {
 		this.deltaTime = (this.end - this.start) / 1000;
 
         this.start = this.end;
-        
 
         return !this.isRunning;
     }
@@ -85,7 +83,6 @@ class Slifer {
     }
 
     public quit(): void {
-    	libsdl.symbols.SDL_FreeSurface(Render.surface);
         libsdl.symbols.SDL_DestroyRenderer(Render.pointer);
         libsdl.symbols.SDL_DestroyWindow(Window.pointer);
         libsdl.symbols.SDL_Quit();

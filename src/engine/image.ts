@@ -13,17 +13,10 @@ export default class Image {
 
     constructor(path: string) {
         const cs = Buffer.from(path+'\x00');
-        const surface = libimage.symbols.IMG_Load(cs);
-        if (surface == null) throw `${libsdl.symbols.SDL_GetError()}`
-        this.pointer = surface;
-
-
-		// Convert to texture
-		const texture = libsdl.symbols.SDL_CreateTextureFromSurface(
-			Render.pointer,
-			this.pointer
-		)
+        
+		const texture = libimage.symbols.IMG_LoadTexture(Render.pointer, cs);
 		if (texture == null) throw `${libsdl.symbols.SDL_GetError()}`;
+		this.pointer = texture;
 
 		const wArr = new Uint32Array(1);
 		const hArr = new Uint32Array(1);
