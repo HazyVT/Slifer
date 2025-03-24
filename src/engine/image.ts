@@ -1,5 +1,5 @@
 import { libimage, libsdl } from "../ffi";
-import { type Pointer, ptr, toArrayBuffer } from 'bun:ffi';
+import { type Pointer, ptr } from 'bun:ffi';
 import Render from "./render";
 
 /** @internal */
@@ -14,8 +14,12 @@ export default class Image {
     constructor(path: string) {
         const cs = Buffer.from(path+'\x00');
         
-		const texture = libimage.symbols.IMG_LoadTexture(Render.pointer, cs);
-		if (texture == null) throw `${libsdl.symbols.SDL_GetError()}`;
+		//@ts-expect-error
+		const surface = libimage.symbols.IMG_Load(cs);
+		if (surface == null) throw `Surface load failed on image ${cs}`;
+
+		const texture = libsdl.symbols.SDL_CreateTextureFromSurface(Render.pointer, surface);
+		if (texture == null) throw `Texture load failed on image ${cs}`;
 		this.pointer = texture;
 
 		const wArr = new Uint32Array(1);
