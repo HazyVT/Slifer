@@ -138,3 +138,6 @@ char.png
 .wakatime-project
 libs/
 test.ts
+*.dll
+*.dylib
+*.so
