@@ -26,6 +26,18 @@ const base = Deno.dlopen(baseName, {
 	SDL_CreateRenderer: {
 		parameters: ["pointer", "i32", "i32"],
 		result: "pointer"
+	},
+	SDL_GetKeyboardState: {
+		parameters: ["pointer"],
+		result: "pointer"
+	},
+	SDL_GetKeyFromScancode: {
+		parameters: ["i32"],
+		result: "i32"
+	},
+	SDL_GetKeyName: {
+		parameters: ['i32'],
+		result: 'pointer'
 	}
 })
 

@@ -1,5 +1,6 @@
 import { Renderer, Window } from "./engine.ts";
 import { closebase, sdl } from './ffi.ts';
+import Keyboard from "./modules/keyboard.ts";
 
 enum Event {
     first = 0,
@@ -14,6 +15,8 @@ enum Event {
 class Slifer {
 
 	public isRunning: boolean = true;
+	
+	public Keyboard = new Keyboard();
 	
 	private encoder = new TextEncoder();
 
@@ -40,8 +43,12 @@ class Slifer {
 	}
 
 	public shouldClose() : boolean {
+		// Handle events
 		const eventArray = new Uint16Array(32);
 		const event = Deno.UnsafePointer.of(eventArray);
+
+		Keyboard.handleKeyStates();
+
 		if (sdl.SDL_PollEvent(event) == 1) {
 
 			const view = new Deno.UnsafePointerView(event!);
@@ -51,11 +58,14 @@ class Slifer {
 				case Event.quit:
 					this.isRunning = false;
 					break;
+				case Event.keyDown:
 				default:
 					break;
 			}
-
 		}
+
+		
+
 		return !this.isRunning;
 	}
 
