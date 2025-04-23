@@ -1,6 +1,7 @@
 import { Renderer, Window } from "./engine.ts";
 import { closebase, sdl } from './ffi.ts';
 import Keyboard from "./modules/keyboard.ts";
+import Mouse from "./modules/mouse.ts";
 
 enum Event {
     first = 0,
@@ -12,11 +13,13 @@ enum Event {
     mouseButtonUp
 }
 
+/** @internal */
 class Slifer {
 
 	public isRunning: boolean = true;
 	
 	public Keyboard = new Keyboard();
+	public Mouse = new Mouse();
 	
 	private encoder = new TextEncoder();
 
@@ -47,7 +50,12 @@ class Slifer {
 		const eventArray = new Uint16Array(32);
 		const event = Deno.UnsafePointer.of(eventArray);
 
+		// Handle keyboard
 		Keyboard.handleKeyStates();
+
+		// Handle mouse
+		Mouse.handleMouseState();
+		
 
 		if (sdl.SDL_PollEvent(event) == 1) {
 

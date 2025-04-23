@@ -1,5 +1,6 @@
 import { sdl } from "../ffi.ts";
 
+/** @internal */
 class Keyboard {
 
     public static keyMap = new Map<string, number>();
@@ -17,7 +18,7 @@ class Keyboard {
         // Handle keyboard events
         const keyStates = sdl.SDL_GetKeyboardState(null);
         const keyView = new Deno.UnsafePointerView(keyStates!);
-        for (let i = 0; i < 128; i++) {
+        for (let i = 0; i < 256; i++) {
             const keyName = this.convertToString(i);
 
             if (keyView.getUint8(i) == 1) {

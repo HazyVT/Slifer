@@ -38,6 +38,10 @@ const base = Deno.dlopen(baseName, {
 	SDL_GetKeyName: {
 		parameters: ['i32'],
 		result: 'pointer'
+	},
+	SDL_GetMouseState: {
+		parameters: ["pointer", "pointer"],
+		result: 'u16'
 	}
 })
 
