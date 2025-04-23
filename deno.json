@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-ffi test.ts",
+    "build": "deno compile --allow-ffi --output main test.ts",
+    "build-win": "deno compile --allow-ffi --target x86_64-pc-windows-msvc --output main.exe test.ts"
+  }
+}
