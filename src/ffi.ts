@@ -22,6 +22,10 @@ const base = Deno.dlopen(baseName, {
 	SDL_PollEvent: {
 		parameters: ["pointer"],
 		result: "i32"
+	},
+	SDL_CreateRenderer: {
+		parameters: ["pointer", "i32", "i32"],
+		result: "pointer"
 	}
 })
 

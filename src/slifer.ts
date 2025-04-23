@@ -1,4 +1,4 @@
-import Window from "./engine/window.ts";
+import { Renderer, Window } from "./engine.ts";
 import { closebase, sdl } from './ffi.ts';
 
 enum Event {
@@ -10,7 +10,6 @@ enum Event {
     mouseButtonDown,
     mouseButtonUp
 }
-
 
 class Slifer {
 
@@ -31,6 +30,12 @@ class Slifer {
 		if (winPointer == null) throw `Window Creation Failed`;
 
 		Window.pointer = winPointer;
+
+		const renPointer = sdl.SDL_CreateRenderer(winPointer, -1, 0);
+		if (renPointer == null) throw `Renderer Creation Failed`;
+
+		Renderer.pointer = renPointer;
+		
 		return new Window();
 	}
 
