@@ -98,6 +98,10 @@ const base = Deno.dlopen(baseName, {
 	SDL_RenderDrawRect: {
 		parameters: ['pointer', 'pointer'],
 		result: 'i32'
+	},
+	SDL_GetTicks64: {
+		parameters: [],
+		result: 'u64'
 	}
 })
 

@@ -8,12 +8,15 @@ import Mouse from "./modules/mouse.ts";
 class Slifer {
 
 	public isRunning: boolean = true;
+	public deltaTime : number = 0;
 	
 	public Keyboard = new Keyboard();
 	public Mouse = new Mouse();
 	public Graphics = new Graphics();
 	
 	private encoder = new TextEncoder();
+	private start!: bigint;
+	private end!: bigint;
 
 	constructor() {
 		const sdlInit = sdl.SDL_Init(32);
@@ -28,6 +31,7 @@ class Slifer {
 
 
 		//sdl.SDL_SetHint(this.encoder.encode("SDL_HINT_RENDER_SCALE_QUALITY\x00"), this.encoder.encode("0\x00"));
+		
 	}
 
 	public createWindow(title: string, width: number, height: number) {
@@ -41,6 +45,8 @@ class Slifer {
 		if (renPointer == null) throw `Renderer Creation Failed`;
 
 		Renderer.pointer = renPointer;
+
+		this.start = sdl.SDL_GetTicks64();
 		
 		return new Window();
 	}
@@ -69,6 +75,10 @@ class Slifer {
 				this.isRunning = false;
 			}
 		}
+
+		this.end = sdl.SDL_GetTicks64();
+		this.deltaTime = (Number(this.end) - Number(this.start)) / 1000;
+		this.start = this.end;
 
 		return !this.isRunning;
 	}
