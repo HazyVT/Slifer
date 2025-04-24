@@ -78,6 +78,18 @@ const base = Deno.dlopen(baseName, {
 	SDL_SetHint: { 
 		parameters: ['buffer', 'buffer'],
 		result: 'bool'
+	},
+	SDL_DestroyRenderer: {
+		parameters: ['pointer'],
+		result: 'void'
+	},
+	SDL_DestroyWindow: {
+		parameters: ['pointer'],
+		result: 'void'
+	},
+	SDL_DestroyTexture: {
+		parameters: ['pointer'],
+		result: 'void'
 	}
 })
 

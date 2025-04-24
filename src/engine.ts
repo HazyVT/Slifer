@@ -14,7 +14,7 @@ export class Renderer {
 
 export class Image {
 
-    private pointer : Deno.PointerValue;
+    private readonly pointer : Deno.PointerValue;
 
     public readonly width: number;
     public readonly height: number;
@@ -31,6 +31,10 @@ export class Image {
 
         this.width = wArr[0];
         this.height = hArr[0];
+    }
+
+    public close() {
+        sdl.SDL_DestroyTexture(this.pointer);
     }
 
 }

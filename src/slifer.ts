@@ -19,12 +19,12 @@ class Slifer {
 		const sdlInit = sdl.SDL_Init(32);
 		if (sdlInit != 0) throw `SDL Init Failed`;
 
-		console.log("SDL Init Success");
+		//console.log("SDL Init Success");
 
 		const imgInit = image.IMG_Init(2);
 		if (imgInit != 2) throw `SDL Image Init Failed`;
 
-		console.log("SDL Image Init Success");
+		//console.log("SDL Image Init Success");
 
 
 		//sdl.SDL_SetHint(this.encoder.encode("SDL_HINT_RENDER_SCALE_QUALITY\x00"), this.encoder.encode("0\x00"));
@@ -74,6 +74,8 @@ class Slifer {
 	}
 
 	public quit() : void {
+		sdl.SDL_DestroyRenderer(Renderer.pointer);
+		sdl.SDL_DestroyWindow(Window.pointer);
 		closeBase();
 		closeImage();
 	}
