@@ -10,6 +10,18 @@ const baseName = {
 	illumos: ""
 }[Deno.build.os]
 
+const imageName = {
+	windows: "SDL2_image.dll",
+	darwin: "libSDL2_image.dylib",
+	linux: "libSDL2_image.so",
+	android: "",
+	freebsd: "",
+	netbsd: "",
+	aix: "",
+	solaris: "",
+	illumos: ""
+}[Deno.build.os]
+
 const base = Deno.dlopen(baseName, {
 	SDL_Init: {
 		parameters: ["i32"],
@@ -42,9 +54,48 @@ const base = Deno.dlopen(baseName, {
 	SDL_GetMouseState: {
 		parameters: ["pointer", "pointer"],
 		result: 'u16'
+	},
+	SDL_RenderClear: {
+		parameters: ['pointer'],
+		result: 'i32'
+	},
+	SDL_RenderPresent: {
+		parameters: ['pointer'],
+		result: 'i32'
+	},
+	SDL_SetRenderDrawColor: {
+		parameters: ['pointer', 'i8', 'i8', 'i8', 'i8'],
+		result: 'i32'
+	},
+	SDL_QueryTexture: {
+		parameters: ['pointer', 'pointer', 'pointer', 'pointer', 'pointer'],
+		result: 'i32'
+	},
+	SDL_RenderCopy: {
+		parameters: ['pointer', 'pointer', 'pointer', 'pointer'],
+		result: 'i32'
+	},
+	SDL_SetHint: { 
+		parameters: ['buffer', 'buffer'],
+		result: 'bool'
 	}
 })
 
-export const closebase = () => base.close();
+const img = Deno.dlopen(imageName, {
+	IMG_Init: {
+		parameters: ['i32'],
+		result: 'i32'
+	},
+	IMG_LoadTexture: {
+		parameters: ['pointer', 'buffer'],
+		result: 'pointer'
+	}
+
+})
+
+
+export const closeBase = () => base.close();
+export const closeImage = () => img.close();
 
 export const sdl = base.symbols;
+export const image = img.symbols;

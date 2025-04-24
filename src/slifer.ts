@@ -1,17 +1,8 @@
 import { Renderer, Window } from "./engine.ts";
-import { closebase, sdl } from './ffi.ts';
+import { closeBase, closeImage, sdl, image } from './ffi.ts';
+import Graphics from "./modules/graphics.ts";
 import Keyboard from "./modules/keyboard.ts";
 import Mouse from "./modules/mouse.ts";
-
-enum Event {
-    first = 0,
-    quit = 0x100,
-    keyDown = 0x300,
-    keyUp,
-    mouseMotion = 0x400,
-    mouseButtonDown,
-    mouseButtonUp
-}
 
 /** @internal */
 class Slifer {
@@ -20,14 +11,23 @@ class Slifer {
 	
 	public Keyboard = new Keyboard();
 	public Mouse = new Mouse();
+	public Graphics = new Graphics();
 	
 	private encoder = new TextEncoder();
 
 	constructor() {
 		const sdlInit = sdl.SDL_Init(32);
-		if (sdlInit != 0) throw `SDL Init failed`;
+		if (sdlInit != 0) throw `SDL Init Failed`;
 
 		console.log("SDL Init Success");
+
+		const imgInit = image.IMG_Init(2);
+		if (imgInit != 2) throw `SDL Image Init Failed`;
+
+		console.log("SDL Image Init Success");
+
+
+		//sdl.SDL_SetHint(this.encoder.encode("SDL_HINT_RENDER_SCALE_QUALITY\x00"), this.encoder.encode("0\x00"));
 	}
 
 	public createWindow(title: string, width: number, height: number) {
@@ -46,6 +46,9 @@ class Slifer {
 	}
 
 	public shouldClose() : boolean {
+		// Clear renderer
+		sdl.SDL_RenderClear(Renderer.pointer);
+
 		// Handle events
 		const eventArray = new Uint16Array(32);
 		const event = Deno.UnsafePointer.of(eventArray);
@@ -62,23 +65,17 @@ class Slifer {
 			const view = new Deno.UnsafePointerView(event!);
 			const type = view.getUint16();
 
-			switch (type) {
-				case Event.quit:
-					this.isRunning = false;
-					break;
-				case Event.keyDown:
-				default:
-					break;
+			if (type == 256) {
+				this.isRunning = false;
 			}
 		}
-
-		
 
 		return !this.isRunning;
 	}
 
 	public quit() : void {
-		closebase();
+		closeBase();
+		closeImage();
 	}
 }
 

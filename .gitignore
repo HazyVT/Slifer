@@ -141,3 +141,4 @@ test.ts
 *.dll
 *.dylib
 *.so
+*.png
