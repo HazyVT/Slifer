@@ -90,6 +90,14 @@ const base = Deno.dlopen(baseName, {
 	SDL_DestroyTexture: {
 		parameters: ['pointer'],
 		result: 'void'
+	},
+	SDL_RenderFillRect: {
+		parameters: ['pointer', 'pointer'],
+		result: 'i32'
+	},
+	SDL_RenderDrawRect: {
+		parameters: ['pointer', 'pointer'],
+		result: 'i32'
 	}
 })
 
