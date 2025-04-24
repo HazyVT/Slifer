@@ -47,11 +47,20 @@ class Slifer {
 		Renderer.pointer = renPointer;
 
 		this.start = sdl.SDL_GetTicks64();
-		
-		return new Window();
+
+		return new Window(width, height);
 	}
 
 	public shouldClose() : boolean {
+		// Set background color
+		sdl.SDL_SetRenderDrawColor(
+			Renderer.pointer, 
+			Graphics.backgroundColor.red,
+			Graphics.backgroundColor.green,
+			Graphics.backgroundColor.blue,
+			Graphics.backgroundColor.alpha
+		);
+		
 		// Clear renderer
 		sdl.SDL_RenderClear(Renderer.pointer);
 

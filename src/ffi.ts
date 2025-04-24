@@ -102,6 +102,38 @@ const base = Deno.dlopen(baseName, {
 	SDL_GetTicks64: {
 		parameters: [],
 		result: 'u64'
+	},
+	SDL_SetWindowFullscreen: {
+		parameters: ['pointer', 'i32'],
+		result: 'i32'
+	},
+	SDL_SetWindowResizable: {
+		parameters: ['pointer', 'i32'],
+		result: 'i32'
+	},
+	SDL_GetDesktopDisplayMode: {
+		parameters: ['i32', 'pointer'],
+		result: 'i32'
+	},
+	SDL_SetWindowSize: {
+		parameters: ['pointer', 'i32', 'i32'],
+		result: 'void'
+	},
+	SDL_SetWindowPosition: {
+		parameters: ['pointer', 'i32', 'i32'],
+		result: 'void'
+	},
+	SDL_MaximizeWindow: {
+		parameters: ['pointer'],
+		result :'void'
+	},
+	SDL_MinimizeWindow: {
+		parameters: ['pointer'],
+		result :'void'
+	},
+	SDL_SetWindowTitle: {
+		parameters: ['pointer', 'buffer'],
+		result: 'void'
 	}
 })
 

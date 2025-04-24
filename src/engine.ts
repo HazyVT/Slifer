@@ -5,6 +5,47 @@ const encoder = new TextEncoder();
 /* @internal */
 export class Window {
     public static pointer: Deno.PointerValue;
+
+    public readonly width: number;
+    public readonly height: number;
+
+    constructor(w: number, h: number) {
+    	this.width = w;
+    	this.height = h;
+    }
+
+    public setFullscreen(flag: boolean) : void {
+        sdl.SDL_SetWindowFullscreen(Window.pointer, Number(flag));
+    }
+
+    public setSize(width: number, height: number) : void {
+    	sdl.SDL_SetWindowSize(Window.pointer, width, height);
+    	(this.width as any) = width;
+    	(this.height as any) = height;
+        sdl.SDL_SetWindowPosition(Window.pointer, 0x2FFF0000, 0x2FFF0000);
+    }
+
+    public setResizable(flag: boolean) : void {
+        sdl.SDL_SetWindowResizable(Window.pointer, Number(flag));
+    }
+
+    public setPosition(x: number, y: number) : void {
+    	sdl.SDL_SetWindowPosition(Window.pointer, x, y);
+    }
+
+    public maximize() : void {
+        sdl.SDL_MaximizeWindow(Window.pointer);
+    }
+
+    public minimize() : void {
+        sdl.SDL_MinimizeWindow(Window.pointer);
+    }
+
+    public setTitle(title: string) : void {
+        const titleArray = encoder.encode(title+"\x00");
+        sdl.SDL_SetWindowTitle(Window.pointer, titleArray);
+    }
+    
 }
 
 /* @internal */

@@ -3,18 +3,23 @@ import { sdl } from "../ffi.ts";
 
 /** @internal */
 class Graphics {
+
+    public static renderColor: Color = new Color(0, 0, 0, 255);
+    public static backgroundColor: Color = new Color(0, 0, 0, 255);
     
     public render() {
         sdl.SDL_RenderPresent(Renderer.pointer);
     }
 
     private setColor(color: Color) {
-        sdl.SDL_SetRenderDrawColor(Renderer.pointer, color.red, color.green, color.blue, color.alpha);
+        sdl.SDL_SetRenderDrawColor(
+            Renderer.pointer,
+            color.red, color.green, color.blue, color.alpha
+        );
     }
 
     public setBackground(color: Color) {
-        this.setColor(color);
-        sdl.SDL_RenderClear(Renderer.pointer);
+        Graphics.backgroundColor = color;
     }
 
     public draw(image: Image, x: number, y: number) {
@@ -48,6 +53,8 @@ class Graphics {
                 sdl.SDL_RenderDrawRect(Renderer.pointer, Deno.UnsafePointer.of(dest));
                 break;
         }
+
+
     }
 }
 
