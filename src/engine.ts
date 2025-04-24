@@ -93,3 +93,18 @@ export class Color {
         this.alpha = alpha;
     }
 }
+
+export class Cursor {
+    private pointer : Deno.UnsafePointer;
+
+    constructor(path: string) {
+        const pathArray = encoder.encode(path+"\x00");
+        const img = image.IMG_Load(pathArray);
+        if (img == null) throw `Cursor Creation Load Failed`;
+
+        const curPointer = sdl.SDL_CreateColorCursor(img, 0, 0);
+        if (curPointer == null) throw `Cursor Creation Failed`;
+
+        this.pointer = curPointer;
+    }
+}

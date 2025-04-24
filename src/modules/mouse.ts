@@ -1,3 +1,4 @@
+import { Cursor } from "../engine.ts";
 import { sdl } from "../ffi.ts";
 
 enum buttonsEnum {
@@ -51,6 +52,10 @@ class Mouse {
         if (bmGet == undefined) return false;
         
         return bmGet;
+    }
+
+    public setCursor(cursor: Cursor) {
+        sdl.SDL_SetCursor((cursor as any).pointer);
     }
 }
 

@@ -134,6 +134,14 @@ const base = Deno.dlopen(baseName, {
 	SDL_SetWindowTitle: {
 		parameters: ['pointer', 'buffer'],
 		result: 'void'
+	},
+	SDL_CreateColorCursor: {
+		parameters: ['pointer', 'i32', 'i32'],
+		result: 'pointer'
+	},
+	SDL_SetCursor: {
+		parameters: ['pointer'],
+		result: 'void'
 	}
 })
 
@@ -144,6 +152,10 @@ const img = Deno.dlopen(imageName, {
 	},
 	IMG_LoadTexture: {
 		parameters: ['pointer', 'buffer'],
+		result: 'pointer'
+	},
+	IMG_Load: {
+		parameters: ['buffer'],
 		result: 'pointer'
 	}
 

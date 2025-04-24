@@ -3,6 +3,7 @@ import { closeBase, closeImage, sdl, image } from './ffi.ts';
 import Graphics from "./modules/graphics.ts";
 import Keyboard from "./modules/keyboard.ts";
 import Mouse from "./modules/mouse.ts";
+import json from '../deno.json' with {type: 'json'}
 
 /** @internal */
 class Slifer {
@@ -90,6 +91,10 @@ class Slifer {
 		this.start = this.end;
 
 		return !this.isRunning;
+	}
+
+	public getVersion() : string {
+		return `v${json.version}`
 	}
 
 	public quit() : void {
