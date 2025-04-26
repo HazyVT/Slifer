@@ -22,13 +22,13 @@ class Graphics {
         Graphics.backgroundColor = color;
     }
 
-    public draw(image: Image, x: number, y: number) {
+    public draw(image: Image, x: number, y: number, xScale?: number, yScale?: number) {
 
         const dest = new Uint32Array(4);
         dest[0] = x;
         dest[1] = y;
-        dest[2] = image.width;
-        dest[3] = image.height;
+        dest[2] = image.width * (xScale ? xScale : 1);
+        dest[3] = image.height * (yScale ? yScale : 1);
 
         // deno-lint-ignore no-explicit-any
         sdl.SDL_RenderCopy(Renderer.pointer, (image as any).pointer, (image as any).rectPointer, Deno.UnsafePointer.of(dest));

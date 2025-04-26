@@ -86,6 +86,9 @@ export class Image {
         rpc[3] = height;
         // deno-lint-ignore no-explicit-any
         (this.rectPointer as any) = Deno.UnsafePointer.of(rpc); 
+
+        (this as any).width = width;
+        (this as any ).height = height;
     }
 
     public close() {
