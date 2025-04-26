@@ -31,7 +31,7 @@ class Graphics {
         dest[3] = image.height;
 
         // deno-lint-ignore no-explicit-any
-        sdl.SDL_RenderCopy(Renderer.pointer, (image as any).pointer, null, Deno.UnsafePointer.of(dest));
+        sdl.SDL_RenderCopy(Renderer.pointer, (image as any).pointer, (image as any).rectPointer, Deno.UnsafePointer.of(dest));
     }
 
     public rectangle(mode:  'fill' | 'line', x: number, y: number, width: number, height: number, color: Color) {

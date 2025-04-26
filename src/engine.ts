@@ -56,6 +56,7 @@ export class Renderer {
 export class Image {
 
     private readonly pointer : Deno.PointerValue;
+    private readonly rectPointer : Deno.PointerValue | null;
 
     public readonly width: number;
     public readonly height: number;
@@ -72,6 +73,16 @@ export class Image {
 
         this.width = wArr[0];
         this.height = hArr[0];
+        this.rectPointer = null;
+    }
+
+    public crop(x: number, y: number, width: number, height: number) {
+        const rpc = new Uint32Array(4);
+        rpc[0] = x;
+        rpc[1] = y;
+        rpc[2] = width;
+        rpc[3] = height;
+        (this.rectPointer as any) = Deno.UnsafePointer.of(rpc); 
     }
 
     public close() {
