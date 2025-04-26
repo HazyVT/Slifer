@@ -20,7 +20,9 @@ export class Window {
 
     public setSize(width: number, height: number) : void {
     	sdl.SDL_SetWindowSize(Window.pointer, width, height);
+    	// deno-lint-ignore no-explicit-any
     	(this.width as any) = width;
+    	// deno-lint-ignore no-explicit-any
     	(this.height as any) = height;
         sdl.SDL_SetWindowPosition(Window.pointer, 0x2FFF0000, 0x2FFF0000);
     }
@@ -82,6 +84,7 @@ export class Image {
         rpc[1] = y;
         rpc[2] = width;
         rpc[3] = height;
+        // deno-lint-ignore no-explicit-any
         (this.rectPointer as any) = Deno.UnsafePointer.of(rpc); 
     }
 
