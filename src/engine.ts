@@ -95,10 +95,10 @@ export class Image {
 }
 
 export class Color {
-    readonly red;
-    readonly green;
-    readonly blue;
-    readonly alpha;
+    readonly red: number;
+    readonly green: number;;
+    readonly blue: number;;
+    readonly alpha: number;;
 
     constructor(red: number, green: number, blue: number, alpha: number) {
         this.red = red;

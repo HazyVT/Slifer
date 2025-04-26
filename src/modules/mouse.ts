@@ -22,6 +22,9 @@ class Mouse {
         ["right", false]
     ]);
 
+    public static mx : number;
+    public static my: number;
+
     public static handleMouseState() {
         const xArr = new Uint32Array(1);
         const yArr = new Uint32Array(1);
@@ -30,6 +33,9 @@ class Mouse {
         this.buttonMap.set('left', Boolean(mode & buttonsEnum.LEFT));
         this.buttonMap.set('middle', Boolean(mode & buttonsEnum.MIDDLE));
         this.buttonMap.set('right', Boolean(mode & buttonsEnum.RIGHT));
+
+        this.mx = xArr[0];
+        this.my = yArr[0];
     }
 
     public isPressed(button: buttons) : boolean {
@@ -56,6 +62,10 @@ class Mouse {
 
     public setCursor(cursor: Cursor) {
         sdl.SDL_SetCursor((cursor as any).pointer);
+    }
+
+    public getPosition() : { x: number, y: number} {
+        return { x: Mouse.mx, y: Mouse.my }
     }
 }
 

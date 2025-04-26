@@ -11,9 +11,9 @@ class Slifer {
 	public isRunning: boolean = true;
 	public deltaTime : number = 0;
 	
-	public Keyboard = new Keyboard();
-	public Mouse = new Mouse();
-	public Graphics = new Graphics();
+	public Keyboard : Keyboard = new Keyboard();
+	public Mouse : Mouse = new Mouse();
+	public Graphics : Graphics = new Graphics();
 	
 	private encoder = new TextEncoder();
 	private start!: bigint;
@@ -35,7 +35,7 @@ class Slifer {
 		
 	}
 
-	public createWindow(title: string, width: number, height: number) {
+	public createWindow(title: string, width: number, height: number) : Window {
 		const titleArray = this.encoder.encode(title+"\x00");
 		const winPointer = sdl.SDL_CreateWindow(titleArray, 0x2FFF0000, 0x2FFF0000, width, height, 0);
 		if (winPointer == null) throw `Window Creation Failed`;

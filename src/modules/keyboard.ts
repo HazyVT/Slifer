@@ -3,7 +3,7 @@ import { sdl } from "../ffi.ts";
 /** @internal */
 class Keyboard {
 
-    public static keyMap = new Map<string, number>();
+    public static keyMap : Map<string, number> = new Map<string, number>();
 
     private static decoder = new TextDecoder();
 
