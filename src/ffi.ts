@@ -146,6 +146,10 @@ const base = Deno.dlopen(baseName, {
 	SDL_RenderCopyEx: {
 		parameters: ['pointer', 'pointer', 'pointer', 'pointer', 'f64', 'pointer', 'i32'],
 		result: 'i32'
+	},
+	SDL_GetRelativeMouseState: {
+		parameters: ['pointer', 'pointer'],
+		result: 'i32'
 	}
 })
 

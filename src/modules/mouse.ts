@@ -24,6 +24,8 @@ class Mouse {
 
     public static mx : number;
     public static my: number;
+    public static dx: number = 0;
+    public static dy: number = 0;
 
     public static handleMouseState() {
         const xArr = new Uint32Array(1);
@@ -33,6 +35,9 @@ class Mouse {
         this.buttonMap.set('left', Boolean(mode & buttonsEnum.LEFT));
         this.buttonMap.set('middle', Boolean(mode & buttonsEnum.MIDDLE));
         this.buttonMap.set('right', Boolean(mode & buttonsEnum.RIGHT));
+
+        this.dx = xArr[0] - this.mx;
+        this.dy = yArr[0] - this.my;
 
         this.mx = xArr[0];
         this.my = yArr[0];
@@ -66,6 +71,10 @@ class Mouse {
 
     public getPosition() : { x: number, y: number} {
         return { x: Mouse.mx, y: Mouse.my }
+    }
+
+    public getDelta() : { x: number, y: number }  {
+        return { x: Mouse.dx, y: Mouse.dy };
     }
 }
 
