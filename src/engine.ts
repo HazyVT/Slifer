@@ -125,3 +125,20 @@ export class Cursor {
         this.pointer = curPointer;
     }
 }
+
+export class Vector2 {
+    public x: number;
+    public y: number;
+
+    constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public lerp(stop: Vector2, step: number) : void {
+        const xv = (1 - step) * this.x + step * stop.x;
+        const yv = (1 - step) * this.y + step * stop.y;
+        this.x = xv;
+        this.y = yv;
+    }
+}

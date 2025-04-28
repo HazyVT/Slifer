@@ -4,6 +4,7 @@ import Graphics from "./modules/graphics.ts";
 import Keyboard from "./modules/keyboard.ts";
 import Mouse from "./modules/mouse.ts";
 import json from '../deno.json' with {type: 'json'}
+import Math from "./modules/math.ts";
 
 /** @internal */
 class Slifer {
@@ -14,6 +15,7 @@ class Slifer {
 	public Keyboard : Keyboard = new Keyboard();
 	public Mouse : Mouse = new Mouse();
 	public Graphics : Graphics = new Graphics();
+	public Math : Math = new Math();
 	
 	private encoder = new TextEncoder();
 	private start!: bigint;
