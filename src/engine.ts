@@ -142,3 +142,29 @@ export class Vector2 {
         this.y = yv;
     }
 }
+
+export class Rectangle {
+    public x: number;
+    public y: number;
+    public width: number;
+    public height: number;
+
+    constructor(x: number, y: number, width: number, height: number) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+
+    public isColliding(rectangle: Rectangle) : boolean {
+        if (
+            this.x < rectangle.x + rectangle.width &&
+            this.x + this.width > rectangle.x &&
+            this.y < rectangle.y + rectangle.height &&
+            this.y + this.height > rectangle.y
+        ) {
+            return true;
+        }
+        return false;
+    }
+}
