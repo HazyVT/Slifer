@@ -142,6 +142,10 @@ const base = Deno.dlopen(baseName, {
 	SDL_SetCursor: {
 		parameters: ['pointer'],
 		result: 'void'
+	},
+	SDL_RenderCopyEx: {
+		parameters: ['pointer', 'pointer', 'pointer', 'pointer', 'f64', 'pointer', 'i32'],
+		result: 'i32'
 	}
 })
 

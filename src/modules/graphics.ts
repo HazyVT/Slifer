@@ -22,7 +22,7 @@ class Graphics {
         Graphics.backgroundColor = color;
     }
 
-    public draw(image: Image, x: number, y: number, xScale?: number, yScale?: number) {
+    public draw(image: Image, x: number, y: number, xScale?: number, yScale?: number, rotation?: number) {
 
         const dest = new Uint32Array(4);
         dest[0] = x;
@@ -30,8 +30,11 @@ class Graphics {
         dest[2] = image.width * (xScale ? xScale : 1);
         dest[3] = image.height * (yScale ? yScale : 1);
 
+        const rot = (rotation ? rotation : 0);
+
+        //sdl.SDL_RenderCopy(Renderer.pointer, (image as any).pointer, (image as any).rectPointer, Deno.UnsafePointer.of(dest));
         // deno-lint-ignore no-explicit-any
-        sdl.SDL_RenderCopy(Renderer.pointer, (image as any).pointer, (image as any).rectPointer, Deno.UnsafePointer.of(dest));
+        sdl.SDL_RenderCopyEx(Renderer.pointer, (image as any).pointer, (image as any).rectPointer, Deno.UnsafePointer.of(dest), rot, null, 0);
     }
 
     public rectangle(mode:  'fill' | 'line', x: number, y: number, width: number, height: number, color: Color) {
