@@ -1,4 +1,4 @@
-import { Cursor } from "../engine.ts";
+import type { Cursor } from "../engine.ts";
 import { sdl } from "../ffi.ts";
 
 enum buttonsEnum {
@@ -66,6 +66,7 @@ class Mouse {
     }
 
     public setCursor(cursor: Cursor) {
+        // deno-lint-ignore no-explicit-any
         sdl.SDL_SetCursor((cursor as any).pointer);
     }
 

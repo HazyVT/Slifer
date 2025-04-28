@@ -1,4 +1,4 @@
-import { Color, Image, Renderer } from "../engine.ts";
+import { Color, type Image, Renderer } from "../engine.ts";
 import { sdl } from "../ffi.ts";
 
 /** @internal */
