@@ -1,5 +1,6 @@
+import { resolve } from "jsr:@std/path/resolve";
 import { sdl } from "./ffi.ts";
-import { Color, type Keys } from "./utils.ts";
+import { Color, Image, type Keys } from "./utils.ts";
 import Window from "./window.ts";
 
 class Slifer {
@@ -19,7 +20,7 @@ class Slifer {
 
 
     private static keyMap: Map<string, -1 | 0 | 1 | 2> = new Map();
-    private static backgroundColor: Color = new Color(255,0,0,255);
+    private static backgroundColor: Color = new Color(0,0,0,255);
 
     static log(text: string) {
         if (this.shouldLog) {
@@ -147,10 +148,23 @@ class Slifer {
     }
 
     
+    /**
+     * 
+     * @param data - Image loaded through "import data from ./image.png with { type: 'bytes' } "
+     * @returns Image object
+     */
+    loadImage(path: string): Image {
+        const imageBytes = Deno.readFileSync(resolve(path));
+        const image = new Image(imageBytes);
+        return image;
+    }
 
-    
-
-
+    /**
+     * Close running instance of slifer
+     */
+    quit(): void {
+        Slifer.running = false;
+    }
 }
 
 export default Slifer;

@@ -21,6 +21,7 @@ if (Deno.mainModule.includes("deno-compile-main")) {
     isCompiled = true;
 }
 
+
 // Load SDL2 libraries from expected location
 let simpleDirectMediaLayerLocation: string = "";
 let imageLibraryLocation: string = "";
@@ -60,7 +61,7 @@ switch (Deno.build.os) {
 
         // If build file is being called then load that
         if (isCompiled) {
-            simpleDirectMediaLayerLocation = "../resources/libSDL2.dylib";
+            simpleDirectMediaLayerLocation = path+"libSDL2.dylib";
             if (!await exists(simpleDirectMediaLayerLocation)) onFailedSDLLoad(resolve(simpleDirectMediaLayerLocation));
         }
 
@@ -70,7 +71,7 @@ switch (Deno.build.os) {
         imageLibraryLocation = path+"libSDL2_image.dylib";
 
         if (isCompiled) {
-            imageLibraryLocation = "../resources/libSDL2_image.dylib";
+            imageLibraryLocation = path+"libSDL2_image.dylib";
             if (!await exists(imageLibraryLocation)) onFailedImageLoad(resolve(imageLibraryLocation));
         }
         
@@ -116,12 +117,28 @@ const baseLib = Deno.dlopen(simpleDirectMediaLayerLocation, {
 	SDL_GetKeyName: {
 		parameters: ['i32'],
 		result: 'pointer'
-	}
+	},
+    SDL_RWFromMem: {
+        parameters: ['buffer', 'i32'],
+        result: 'pointer'
+    },
+    SDL_RenderCopy: {
+        parameters: ['pointer', 'pointer', 'pointer', 'pointer'],
+        result: 'i32'
+    },
+    SDL_QueryTexture: {
+        parameters: ['pointer', 'pointer', 'pointer', 'pointer', 'pointer'],
+        result: 'i32'
+    }
 })
 
 const imageLib = Deno.dlopen(imageLibraryLocation, {
     IMG_Init: {
         parameters: ['i32'], result: 'i32'
+    },
+    IMG_LoadTexture_RW: {
+        parameters: ['pointer', 'pointer'],
+        result: 'pointer'
     }
 })
 

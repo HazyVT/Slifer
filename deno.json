@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "deno run --allow-ffi --allow-read --unstable-raw-imports test.ts",
+    "dev": "deno run --allow-ffi --allow-read test.ts",
     "build": "deno compile --allow-ffi --allow-read --output main test.ts",
     "build-win": "deno compile --allow-ffi --target x86_64-pc-windows-msvc --output main.exe test.ts"
   },

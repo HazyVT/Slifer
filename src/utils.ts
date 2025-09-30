@@ -1,3 +1,6 @@
+import { sdl, sdlImage} from "./ffi.ts";
+import Slifer from "./main.ts";
+
 export function logError(message: string) {
     console.error(`%cERROR: ${message}`, "color: red;");
 }
@@ -62,3 +65,43 @@ export type Keys =
     | "backspace"
     | "."
     | "return";
+        
+export class Image {
+
+    private _pointer: Deno.PointerValue;
+
+    public readonly width: number;
+    public readonly height: number;
+
+    constructor(data: Uint8Array) {
+        const rwops = sdl.SDL_RWFromMem(data, data.byteLength);
+        if (rwops == null) {
+            console.error("ERROR: Failed to load raw data");
+            Deno.exit();
+        }
+        const rawTexture = sdlImage.IMG_LoadTexture_RW(Slifer.renderer, rwops)
+        if (rawTexture == null) {
+            console.error("ERROR: Failed to load texture from raw");
+            Deno.exit();
+        }
+
+
+        const wArr = new Uint32Array(1);
+        const hArr = new Uint32Array(1);
+        sdl.SDL_QueryTexture(rawTexture, null, null, Deno.UnsafePointer.of(wArr), Deno.UnsafePointer.of(hArr));
+
+        this.width = wArr[0];
+        this.height = hArr[0];
+        this._pointer = rawTexture;
+    }
+
+    draw(x: number, y: number, xScale: number = 1, yScale: number = 1) {
+        const dest = new Uint32Array(4);
+        dest[0] = x;
+        dest[1] = y;
+        dest[2] = this.width * xScale;
+        dest[3] = this.height * yScale;
+        
+        sdl.SDL_RenderCopy(Slifer.renderer, this._pointer, null, Deno.UnsafePointer.of(dest));
+    }
+}
