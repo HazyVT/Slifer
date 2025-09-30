@@ -92,6 +92,18 @@ const baseLib = Deno.dlopen(simpleDirectMediaLayerLocation, {
     SDL_PollEvent: {
         parameters: ['pointer'],
         result: 'i32'
+    },
+    SDL_RenderClear: {
+        parameters: ['pointer'],
+        result: 'i32'
+    },
+    SDL_SetRenderDrawColor: {
+        parameters: ['pointer', 'i8', 'i8', 'i8', 'i8'],
+        result: 'i32'
+    },
+    SDL_RenderPresent: {
+        parameters: ['pointer'],
+        result: 'i32'
     }
 })
 
