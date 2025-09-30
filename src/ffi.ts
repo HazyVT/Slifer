@@ -1,177 +1,105 @@
-const baseName = {
-	windows: "SDL2.dll",
-	darwin: "libSDL2.dylib",
-	linux: "libSDL2.so",
-	android: "",
-	freebsd: "",
-	netbsd: "",
-	aix: "",
-	solaris: "",
-	illumos: ""
-}[Deno.build.os]
+import { exists } from "jsr:@std/fs/exists";
+import { resolve } from 'jsr:@std/path';
+import { logError } from "./utils.ts";
 
-const imageName = {
-	windows: "SDL2_image.dll",
-	darwin: "libSDL2_image.dylib",
-	linux: "libSDL2_image.so",
-	android: "",
-	freebsd: "",
-	netbsd: "",
-	aix: "",
-	solaris: "",
-	illumos: ""
-}[Deno.build.os]
+function onFailedSDLLoad(path: string) {
+    logError("SDL failed to load");
+    logError(`Expected location: ${path}`);
+    Deno.exit();
+}
 
-const base = Deno.dlopen(baseName, {
-	SDL_Init: {
-		parameters: ["i32"],
-		result: "i32"
-	},
-	SDL_CreateWindow: {
-		parameters: ["buffer", "i32", "i32", "i32", "i32", "i32"],
-		result: "pointer"
-	},
-	SDL_PollEvent: {
-		parameters: ["pointer"],
-		result: "i32"
-	},
-	SDL_CreateRenderer: {
-		parameters: ["pointer", "i32", "i32"],
-		result: "pointer"
-	},
-	SDL_GetKeyboardState: {
-		parameters: ["pointer"],
-		result: "pointer"
-	},
-	SDL_GetKeyFromScancode: {
-		parameters: ["i32"],
-		result: "i32"
-	},
-	SDL_GetKeyName: {
-		parameters: ['i32'],
-		result: 'pointer'
-	},
-	SDL_GetMouseState: {
-		parameters: ["pointer", "pointer"],
-		result: 'u16'
-	},
-	SDL_RenderClear: {
-		parameters: ['pointer'],
-		result: 'i32'
-	},
-	SDL_RenderPresent: {
-		parameters: ['pointer'],
-		result: 'i32'
-	},
-	SDL_SetRenderDrawColor: {
-		parameters: ['pointer', 'i8', 'i8', 'i8', 'i8'],
-		result: 'i32'
-	},
-	SDL_QueryTexture: {
-		parameters: ['pointer', 'pointer', 'pointer', 'pointer', 'pointer'],
-		result: 'i32'
-	},
-	SDL_RenderCopy: {
-		parameters: ['pointer', 'pointer', 'pointer', 'pointer'],
-		result: 'i32'
-	},
-	SDL_SetHint: { 
-		parameters: ['buffer', 'buffer'],
-		result: 'bool'
-	},
-	SDL_DestroyRenderer: {
-		parameters: ['pointer'],
-		result: 'void'
-	},
-	SDL_DestroyWindow: {
-		parameters: ['pointer'],
-		result: 'void'
-	},
-	SDL_DestroyTexture: {
-		parameters: ['pointer'],
-		result: 'void'
-	},
-	SDL_RenderFillRect: {
-		parameters: ['pointer', 'pointer'],
-		result: 'i32'
-	},
-	SDL_RenderDrawRect: {
-		parameters: ['pointer', 'pointer'],
-		result: 'i32'
-	},
-	SDL_GetTicks64: {
-		parameters: [],
-		result: 'u64'
-	},
-	SDL_SetWindowFullscreen: {
-		parameters: ['pointer', 'i32'],
-		result: 'i32'
-	},
-	SDL_SetWindowResizable: {
-		parameters: ['pointer', 'i32'],
-		result: 'i32'
-	},
-	SDL_GetDesktopDisplayMode: {
-		parameters: ['i32', 'pointer'],
-		result: 'i32'
-	},
-	SDL_SetWindowSize: {
-		parameters: ['pointer', 'i32', 'i32'],
-		result: 'void'
-	},
-	SDL_SetWindowPosition: {
-		parameters: ['pointer', 'i32', 'i32'],
-		result: 'void'
-	},
-	SDL_MaximizeWindow: {
-		parameters: ['pointer'],
-		result :'void'
-	},
-	SDL_MinimizeWindow: {
-		parameters: ['pointer'],
-		result :'void'
-	},
-	SDL_SetWindowTitle: {
-		parameters: ['pointer', 'buffer'],
-		result: 'void'
-	},
-	SDL_CreateColorCursor: {
-		parameters: ['pointer', 'i32', 'i32'],
-		result: 'pointer'
-	},
-	SDL_SetCursor: {
-		parameters: ['pointer'],
-		result: 'void'
-	},
-	SDL_RenderCopyEx: {
-		parameters: ['pointer', 'pointer', 'pointer', 'pointer', 'f64', 'pointer', 'i32'],
-		result: 'i32'
-	},
-	SDL_GetRelativeMouseState: {
-		parameters: ['pointer', 'pointer'],
-		result: 'i32'
-	}
+function onFailedImageLoad(path: string) {
+    logError("%cSDL Image failed to load", );
+    logError(`Expected location: ${path}`);
+    Deno.exit();
+}
+
+
+// Check if program is running as compiled script
+let isCompiled = false;
+if (Deno.mainModule.includes("deno-compile-main")) {
+    isCompiled = true;
+}
+
+// Load SDL2 libraries from expected location
+let simpleDirectMediaLayerLocation: string = "";
+let imageLibraryLocation: string = "";
+
+
+switch (Deno.build.os) {
+    case "windows": {
+        const path = "C:\\Windows\\System32\\";
+        const sdlDynamicLibraryExists = await exists(path+"SDL2.dll");
+        if (!sdlDynamicLibraryExists) onFailedSDLLoad(resolve(path+"SDL2.dll"));
+
+        simpleDirectMediaLayerLocation = path+"SDL2.dll";
+
+        if (isCompiled) {
+            simpleDirectMediaLayerLocation = "./SDL2.dll";
+            if (!await exists(simpleDirectMediaLayerLocation)) onFailedSDLLoad(resolve(simpleDirectMediaLayerLocation));
+        }
+
+        const imageDynamicLibraryExists = await exists(path+"SDL2_image.dll");
+        if (!imageDynamicLibraryExists) onFailedImageLoad(resolve(path+"SDL2_image.dll"));
+
+        imageLibraryLocation = path+"SDL2_image.dll";
+
+        if (isCompiled) {
+            imageLibraryLocation = "./SDL2_image.dll";
+            if (!await exists(imageLibraryLocation)) onFailedImageLoad(resolve(imageLibraryLocation));
+        }
+        
+        break;
+    }
+    case "darwin": {
+        const path = "/opt/homebrew/lib/";
+        const sdlDynamicLibraryExists = await exists(path+"libSDL2.dylib");
+        if (!sdlDynamicLibraryExists) onFailedSDLLoad(resolve(path+"libSDL2.dylib"));
+
+        simpleDirectMediaLayerLocation = path+"libSDL2.dylib";
+
+        // If build file is being called then load that
+        if (isCompiled) {
+            simpleDirectMediaLayerLocation = "../resources/libSDL2.dylib";
+            if (!await exists(simpleDirectMediaLayerLocation)) onFailedSDLLoad(resolve(simpleDirectMediaLayerLocation));
+        }
+
+        const imageDynamicLibraryExists = await exists(path+"libSDL2_image.dylib");
+        if (!imageDynamicLibraryExists) onFailedImageLoad(resolve(path+"libSDL2_image.dylib"));
+
+        imageLibraryLocation = path+"libSDL2_image.dylib";
+
+        if (isCompiled) {
+            imageLibraryLocation = "../resources/libSDL2_image.dylib";
+            if (!await exists(imageLibraryLocation)) onFailedImageLoad(resolve(imageLibraryLocation));
+        }
+        
+    }
+}
+
+const baseLib = Deno.dlopen(simpleDirectMediaLayerLocation, {
+    SDL_Init: {
+        parameters: ['i32'], result: 'i32'
+    },
+    SDL_CreateWindow: {
+        parameters: ['buffer', 'i32', 'i32', 'i32', 'i32', 'i32'],
+        result: 'pointer'
+    },
+    SDL_CreateRenderer: {
+        parameters: ['pointer', 'i32', 'i32'],
+        result: 'pointer'
+    },
+    SDL_PollEvent: {
+        parameters: ['pointer'],
+        result: 'i32'
+    }
 })
 
-const img = Deno.dlopen(imageName, {
-	IMG_Init: {
-		parameters: ['i32'],
-		result: 'i32'
-	},
-	IMG_LoadTexture: {
-		parameters: ['pointer', 'buffer'],
-		result: 'pointer'
-	},
-	IMG_Load: {
-		parameters: ['buffer'],
-		result: 'pointer'
-	}
-
+const imageLib = Deno.dlopen(imageLibraryLocation, {
+    IMG_Init: {
+        parameters: ['i32'], result: 'i32'
+    }
 })
 
-
-export const closeBase = () => base.close();
-export const closeImage = () => img.close();
-
-export const sdl = base.symbols;
-export const image = img.symbols;
+export const sdl = baseLib.symbols;
+export const sdlImage = imageLib.symbols;

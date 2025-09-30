@@ -1,9 +1,13 @@
 {
-  "version": "4",
+  "version": "5",
   "specifiers": {
+    "jsr:@std/fs@*": "1.0.19",
     "jsr:@std/path@*": "1.0.8"
   },
   "jsr": {
+    "@std/fs@1.0.19": {
+      "integrity": "051968c2b1eae4d2ea9f79a08a3845740ef6af10356aff43d3e2ef11ed09fb06"
+    },
     "@std/path@1.0.8": {
       "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
     }

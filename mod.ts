@@ -1,7 +1,5 @@
-import Slifer from './src/slifer.ts';
-import type { keys } from "./src/modules/keyboard.ts";
-import { Color, Image, Cursor, Vector2, Rectangle } from "./src/engine.ts";
+import Slifer from "./src/main.ts";
 
-const slf : Slifer = new Slifer();
+const slf = new Slifer();
 
-export { Color, Image, Cursor, Rectangle, Vector2, slf as Slifer, type keys };
+export { slf as Slifer}
