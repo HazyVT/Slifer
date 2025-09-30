@@ -1,17 +1,27 @@
-import { exists } from "jsr:@std/fs/exists";
-import { resolve } from 'jsr:@std/path';
+import { exists } from "@std/fs/exists";
+import { resolve } from '@std/path';
 import { logError } from "./utils.ts";
 
-function onFailedSDLLoad(path: string) {
-    logError("SDL failed to load");
-    logError(`Expected location: ${path}`);
+function onFailedLibraryLoad(fullPath: string) {
+    logError(`Failed to load library: ${fullPath}`);
     Deno.exit();
 }
 
-function onFailedImageLoad(path: string) {
-    logError("%cSDL Image failed to load", );
-    logError(`Expected location: ${path}`);
-    Deno.exit();
+async function loadDynamicLibrary(path: string, name: string, compiledPath: string) : Promise<string> {
+    let libraryLocation = "";
+    
+    if (!await exists(path+name)) onFailedLibraryLoad(path+name);
+
+    libraryLocation = path + name;
+    
+    if (isCompiled) {
+        libraryLocation = compiledPath + name;
+
+        if (!await exists(libraryLocation)) onFailedLibraryLoad(resolve(compiledPath+name));
+    }
+
+    return libraryLocation;
+    
 }
 
 
@@ -29,52 +39,60 @@ let imageLibraryLocation: string = "";
 
 switch (Deno.build.os) {
     case "windows": {
-        const path = "C:\\Windows\\System32\\";
-        const sdlDynamicLibraryExists = await exists(path+"SDL2.dll");
-        if (!sdlDynamicLibraryExists) onFailedSDLLoad(resolve(path+"SDL2.dll"));
+        simpleDirectMediaLayerLocation = await loadDynamicLibrary(
+            "C:\\Windows\\System32\\",
+            "SDL2.dll",
+            "./"
+        );
 
-        simpleDirectMediaLayerLocation = path+"SDL2.dll";
-
-        if (isCompiled) {
-            simpleDirectMediaLayerLocation = "./SDL2.dll";
-            if (!await exists(simpleDirectMediaLayerLocation)) onFailedSDLLoad(resolve(simpleDirectMediaLayerLocation));
-        }
-
-        const imageDynamicLibraryExists = await exists(path+"SDL2_image.dll");
-        if (!imageDynamicLibraryExists) onFailedImageLoad(resolve(path+"SDL2_image.dll"));
-
-        imageLibraryLocation = path+"SDL2_image.dll";
-
-        if (isCompiled) {
-            imageLibraryLocation = "./SDL2_image.dll";
-            if (!await exists(imageLibraryLocation)) onFailedImageLoad(resolve(imageLibraryLocation));
-        }
+        imageLibraryLocation = await loadDynamicLibrary(
+            "C:\\Windows\\System32\\",
+            "SDL2_image.dll",
+            "./"
+        );
         
         break;
     }
     case "darwin": {
-        const path = "/opt/homebrew/lib/";
-        const sdlDynamicLibraryExists = await exists(path+"libSDL2.dylib");
-        if (!sdlDynamicLibraryExists) onFailedSDLLoad(resolve(path+"libSDL2.dylib"));
+        simpleDirectMediaLayerLocation = await loadDynamicLibrary(
+            "/opt/homebrew/lib/",
+            "libSDL2.dylib",
+            "../resources/"
+        )
 
-        simpleDirectMediaLayerLocation = path+"libSDL2.dylib";
+        imageLibraryLocation = await loadDynamicLibrary(
+            "/opt/homebrew/lib/",
+            "libSDL2_image.dylib",
+            "../resources"
+        )
+        break;
+    }
+    case "linux": {
+        /*
+        const path = "/usr/lib/x86_64-linux-gnu";
+        const name = "libSDL2.so"
+        if (!await exists(path+name)) onFailedSDLLoad(resolve(path+name));
 
-        // If build file is being called then load that
+        simpleDirectMediaLayerLocation = path + name;
+
         if (isCompiled) {
-            simpleDirectMediaLayerLocation = path+"libSDL2.dylib";
+            simpleDirectMediaLayerLocation = "./" + name;
+
             if (!await exists(simpleDirectMediaLayerLocation)) onFailedSDLLoad(resolve(simpleDirectMediaLayerLocation));
         }
+        */
+        simpleDirectMediaLayerLocation = await loadDynamicLibrary(
+            "/usr/lib/x86_64-linux-gnu/",
+            "libSDL2.so",
+            "./"
+        );
 
-        const imageDynamicLibraryExists = await exists(path+"libSDL2_image.dylib");
-        if (!imageDynamicLibraryExists) onFailedImageLoad(resolve(path+"libSDL2_image.dylib"));
-
-        imageLibraryLocation = path+"libSDL2_image.dylib";
-
-        if (isCompiled) {
-            imageLibraryLocation = path+"libSDL2_image.dylib";
-            if (!await exists(imageLibraryLocation)) onFailedImageLoad(resolve(imageLibraryLocation));
-        }
-        
+        imageLibraryLocation = await loadDynamicLibrary(
+            "/usr/lib/x86_64-linux-gnu/",
+            "libSDL2_image.so",
+            "./"
+        )
+        break;
     }
 }
 

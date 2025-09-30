@@ -7,5 +7,9 @@
   "version": "0.1.4",
   "name": "@hazora/slifer",
   "license": "MIT",
-  "exports": "./mod.ts"
+  "exports": "./mod.ts",
+  "imports": {
+    "@std/fs": "jsr:@std/fs@^1.0.19",
+    "@std/path": "jsr:@std/path@^1.1.2"
+  }
 }
