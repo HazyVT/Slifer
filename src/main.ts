@@ -1,4 +1,4 @@
-import { resolve } from "jsr:@std/path/resolve";
+import { resolve } from "@std/path/resolve";
 import { sdl } from "./ffi.ts";
 import { Color, Image, type Keys } from "./utils.ts";
 import Window from "./window.ts";

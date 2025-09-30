@@ -68,19 +68,6 @@ switch (Deno.build.os) {
         break;
     }
     case "linux": {
-        /*
-        const path = "/usr/lib/x86_64-linux-gnu";
-        const name = "libSDL2.so"
-        if (!await exists(path+name)) onFailedSDLLoad(resolve(path+name));
-
-        simpleDirectMediaLayerLocation = path + name;
-
-        if (isCompiled) {
-            simpleDirectMediaLayerLocation = "./" + name;
-
-            if (!await exists(simpleDirectMediaLayerLocation)) onFailedSDLLoad(resolve(simpleDirectMediaLayerLocation));
-        }
-        */
         simpleDirectMediaLayerLocation = await loadDynamicLibrary(
             "/usr/lib/x86_64-linux-gnu/",
             "libSDL2.so",

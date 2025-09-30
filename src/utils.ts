@@ -74,7 +74,8 @@ export class Image {
     public readonly height: number;
 
     constructor(data: Uint8Array) {
-        const rwops = sdl.SDL_RWFromMem(data, data.byteLength);
+        const fb = new Uint8Array(data).buffer;
+        const rwops = sdl.SDL_RWFromMem(fb, fb.byteLength);
         if (rwops == null) {
             console.error("ERROR: Failed to load raw data");
             Deno.exit();
