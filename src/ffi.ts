@@ -104,7 +104,19 @@ const baseLib = Deno.dlopen(simpleDirectMediaLayerLocation, {
     SDL_RenderPresent: {
         parameters: ['pointer'],
         result: 'i32'
-    }
+    },
+    SDL_GetKeyboardState: {
+		parameters: ["pointer"],
+		result: "pointer"
+	},
+	SDL_GetKeyFromScancode: {
+		parameters: ["i32"],
+		result: "i32"
+	},
+	SDL_GetKeyName: {
+		parameters: ['i32'],
+		result: 'pointer'
+	}
 })
 
 const imageLib = Deno.dlopen(imageLibraryLocation, {
