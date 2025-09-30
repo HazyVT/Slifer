@@ -24,7 +24,7 @@ class Window {
         this.width = width;
         this.height = height;
 
-        const titleArray = encoder.encode(title);
+        const titleArray = encoder.encode(title+"\x00");
         const windowPointer = sdl.SDL_CreateWindow(
             titleArray,
             center, center,
