@@ -6,12 +6,10 @@ import Window from "./window.ts";
 class Slifer {
 
     public Window = Window;
+    public Color = Color;
 
     // Event codes
     private QUIT = 256;
-    private KEYDOWN = 768;
-    private KEYUP = 769;
-    
 
     static window: Deno.PointerValue;
     static renderer: Deno.PointerValue;
@@ -20,7 +18,7 @@ class Slifer {
 
 
     private static keyMap: Map<string, -1 | 0 | 1 | 2> = new Map();
-    private static backgroundColor: Color = new Color(0,0,0,255);
+    private static backgroundColor: Color = new Color(0,0,0);
 
     static log(text: string) {
         if (this.shouldLog) {
@@ -38,7 +36,7 @@ class Slifer {
 
     /**
      * 
-     * @returns running - whether Slifer is running or not
+     * @returns whether Slifer is running
      */
     isRunning(): boolean {
         // Draw background color
@@ -47,7 +45,7 @@ class Slifer {
             Slifer.backgroundColor.red,
             Slifer.backgroundColor.green,
             Slifer.backgroundColor.blue,
-            Slifer.backgroundColor.alpha
+            255
         );
 
         // Clear renderer for drawing

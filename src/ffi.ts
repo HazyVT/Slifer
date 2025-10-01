@@ -134,6 +134,14 @@ const baseLib = Deno.dlopen(simpleDirectMediaLayerLocation, {
     SDL_QueryTexture: {
         parameters: ['pointer', 'pointer', 'pointer', 'pointer', 'pointer'],
         result: 'i32'
+    },
+    SDL_SetTextureBlendMode: {
+        parameters: ['pointer', 'i32'],
+        result: 'i32'
+    },
+    SDL_SetTextureAlphaMod: {
+        parameters: ['pointer', 'i8'],
+        result: 'i32'
     }
 })
 
