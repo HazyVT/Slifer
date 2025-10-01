@@ -1,6 +1,6 @@
 import { resolve } from "@std/path/resolve";
 import { sdl } from "./ffi.ts";
-import { Color, Image, type Keys } from "./utils.ts";
+import { Color, Image, type Keys, type Buttons, buttonMap } from "./utils.ts";
 import Window from "./window.ts";
 
 class Slifer {
@@ -10,6 +10,8 @@ class Slifer {
 
     // Event codes
     private QUIT = 256;
+    private MOUSEDOWN = 1025
+    private MOUSEUP = 1026
 
     static window: Deno.PointerValue;
     static renderer: Deno.PointerValue;
@@ -18,7 +20,10 @@ class Slifer {
 
 
     private static keyMap: Map<string, -1 | 0 | 1 | 2> = new Map();
+    private static mouseMap: Map<string, -1 | 0 | 1 | 2> = new Map();
+    
     private static backgroundColor: Color = new Color(0,0,0);
+    private static mouse: {x: number, y: number};
 
     static log(text: string) {
         if (this.shouldLog) {
@@ -56,11 +61,10 @@ class Slifer {
         const event = Deno.UnsafePointer.of(eventArr);
         while (sdl.SDL_PollEvent(event)) {
             const view = new Deno.UnsafePointerView(event!);
-            const type = view.getUint16();
+            const type = view.getUint32();
 
             // Quit event
             if (type == this.QUIT) Slifer.running = false;
-
         }
 
         // Handle keyboard 
@@ -88,6 +92,48 @@ class Slifer {
                 }
             }
         }
+
+        // Handle mouse events
+        const mx = new Uint32Array(1);
+        const my = new Uint32Array(2);
+
+        const mouseState = sdl.SDL_GetMouseState(Deno.UnsafePointer.of(mx), Deno.UnsafePointer.of(my));
+        
+
+        if (mouseState != 0) {
+            for (const [k, v] of buttonMap) {
+                const isPressed = mouseState & v;
+                const state = Slifer.mouseMap.get(k);
+                if (isPressed) {
+                    if (state == undefined || state == 0) {
+                        Slifer.mouseMap.set(k, 1);
+                    }
+                    else if (state == 1) {
+                        Slifer.mouseMap.set(k, 2);
+                    }
+                } else {
+                    if (state == undefined || state == -1) {
+                        Slifer.mouseMap.set(k, 0);
+                    }
+                    else if (state > 0) {
+                        Slifer.mouseMap.set(k, -1);
+                    }
+                }
+
+            }
+        } else {
+            for (const [k, _v] of buttonMap) {
+                const state = Slifer.mouseMap.get(k);
+                if (state == undefined || state == -1) {
+                    Slifer.mouseMap.set(k, 0);
+                }
+                else if (state > 0) {
+                    Slifer.mouseMap.set(k, -1);
+                }
+            }
+        }
+        
+        Slifer.mouse = {x: mx[0], y: my[0]};
 
         return Slifer.running;
     }
@@ -121,6 +167,16 @@ class Slifer {
         return true;
     }
 
+
+    isMouseButtonDown(button: Buttons) : boolean {
+        const state = Slifer.mouseMap.get(button);
+        if (state == undefined || state == 0) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * 
      * @param key - string of which key to get
@@ -133,6 +189,14 @@ class Slifer {
         return false;
     }
 
+    isMouseButtonPressed(button: Buttons) : boolean {
+        const state = Slifer.mouseMap.get(button);
+        if (state == 1) return true;
+
+        return false;
+    }
+    
+
     /**
      * 
      * @param key - string of which key to get
@@ -140,6 +204,13 @@ class Slifer {
      */
     isKeyReleased(key: Keys) : boolean {
         const state = Slifer.keyMap.get(key);
+        if (state == -1) return true;
+
+        return false;
+    }
+
+    isMouseButtonReleased(button: Buttons) : boolean {
+        const state = Slifer.mouseMap.get(button);
         if (state == -1) return true;
 
         return false;

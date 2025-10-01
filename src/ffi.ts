@@ -142,6 +142,10 @@ const baseLib = Deno.dlopen(simpleDirectMediaLayerLocation, {
     SDL_SetTextureAlphaMod: {
         parameters: ['pointer', 'i8'],
         result: 'i32'
+    },
+    SDL_GetMouseState: {
+        parameters: ['pointer', 'pointer'],
+        result: 'i32'
     }
 })
 

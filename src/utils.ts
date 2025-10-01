@@ -63,6 +63,17 @@ export type Keys =
     | "backspace"
     | "."
     | "return";
+
+export type Buttons = 
+    | 'left'
+    | 'middle'
+    | 'right'
+
+export const buttonMap = new Map([
+    ["left", 1],
+    ["middle", 2],
+    ["right", 4]
+])
         
 export class Image {
 
