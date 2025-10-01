@@ -116,8 +116,12 @@ export class Image {
         sdl.SDL_RenderCopy(Slifer.renderer, this._pointer, null, Deno.UnsafePointer.of(dest));
     }
 
+    /**
+     * 
+     * @param value - Percentage of how high the opacity of the sprite should be. From 0 - 1
+     */
     setOpacity(value: number) : void {
-        if (sdl.SDL_SetTextureAlphaMod(this._pointer, value) == 0) {
+        if (sdl.SDL_SetTextureAlphaMod(this._pointer, Math.floor(value * 255)) != 0) {
             console.error("ERROR: Failed to set the opacity of texture")
         }
     }
