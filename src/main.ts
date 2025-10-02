@@ -168,6 +168,11 @@ class Slifer {
     }
 
 
+    /**
+     * 
+     * @param button - string of which button to check
+     * @returns if that button is being held down
+     */
     isMouseButtonDown(button: Buttons) : boolean {
         const state = Slifer.mouseMap.get(button);
         if (state == undefined || state == 0) {
@@ -189,6 +194,11 @@ class Slifer {
         return false;
     }
 
+    /**
+     * 
+     * @param button - string of which button to get
+     * @returns if that button has been pressed in the last frame.
+     */
     isMouseButtonPressed(button: Buttons) : boolean {
         const state = Slifer.mouseMap.get(button);
         if (state == 1) return true;
@@ -209,6 +219,11 @@ class Slifer {
         return false;
     }
 
+    /**
+     * 
+     * @param button - string of which button to get
+     * @returns if that button has been released in the last frame
+     */
     isMouseButtonReleased(button: Buttons) : boolean {
         const state = Slifer.mouseMap.get(button);
         if (state == -1) return true;
