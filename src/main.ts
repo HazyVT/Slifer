@@ -4,6 +4,9 @@ import Image from "./utils/image.ts";
 import Color from "./utils/color.ts";
 import Window from "./window.ts";
 
+/**
+ * Slifer's main class
+ */
 class Slifer {
 
     public Window = Window;

@@ -72,7 +72,7 @@ By default, Slifer will look inside <code>/opt/homebrew/lib</code> for all the d
 
 ## Example
 ```ts
-import Slifer from "./mod.ts";
+import Slifer from "@hazora/slifer";
 
 new Slifer.Window("Hello", 640, 360);
 
