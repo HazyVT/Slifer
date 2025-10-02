@@ -1,6 +1,12 @@
 import { exists } from "@std/fs/exists";
-import { resolve } from '@std/path';
+import { dirname, join } from '@std/path';
 import { logError } from "./utils.ts";
+
+// Get working directory
+export const execPath = dirname(Deno.execPath());
+
+
+
 
 function onFailedLibraryLoad(fullPath: string) {
     logError(`Failed to load library: ${fullPath}`);
@@ -15,9 +21,9 @@ async function loadDynamicLibrary(path: string, name: string, compiledPath: stri
     libraryLocation = path + name;
     
     if (isCompiled) {
-        libraryLocation = compiledPath + name;
+        libraryLocation = join(execPath, compiledPath, name);
 
-        if (!await exists(libraryLocation)) onFailedLibraryLoad(resolve(compiledPath+name));
+        if (!await exists(libraryLocation)) onFailedLibraryLoad(libraryLocation);
     }
 
     return libraryLocation;
@@ -25,8 +31,9 @@ async function loadDynamicLibrary(path: string, name: string, compiledPath: stri
 }
 
 
+
 // Check if program is running as compiled script
-let isCompiled = false;
+export let isCompiled = false;
 if (Deno.mainModule.includes("deno-compile-main")) {
     isCompiled = true;
 }
@@ -57,14 +64,16 @@ switch (Deno.build.os) {
         simpleDirectMediaLayerLocation = await loadDynamicLibrary(
             "/opt/homebrew/lib/",
             "libSDL2.dylib",
-            "../resources/"
+            "../Resources"
         )
 
         imageLibraryLocation = await loadDynamicLibrary(
             "/opt/homebrew/lib/",
             "libSDL2_image.dylib",
-            "../resources"
+            "../Resources"
         )
+
+        
         break;
     }
     case "linux": {
@@ -123,10 +132,6 @@ const baseLib = Deno.dlopen(simpleDirectMediaLayerLocation, {
 		parameters: ['i32'],
 		result: 'pointer'
 	},
-    SDL_RWFromMem: {
-        parameters: ['buffer', 'i32'],
-        result: 'pointer'
-    },
     SDL_RenderCopy: {
         parameters: ['pointer', 'pointer', 'pointer', 'pointer'],
         result: 'i32'
@@ -146,6 +151,10 @@ const baseLib = Deno.dlopen(simpleDirectMediaLayerLocation, {
     SDL_GetMouseState: {
         parameters: ['pointer', 'pointer'],
         result: 'i32'
+    },
+    SDL_SetTextureScaleMode: {
+        parameters: ['pointer', 'i32'],
+        result: 'i32'
     }
 })
 
@@ -153,8 +162,8 @@ const imageLib = Deno.dlopen(imageLibraryLocation, {
     IMG_Init: {
         parameters: ['i32'], result: 'i32'
     },
-    IMG_LoadTexture_RW: {
-        parameters: ['pointer', 'pointer'],
+    IMG_LoadTexture: {
+        parameters: ['pointer', 'buffer'],
         result: 'pointer'
     }
 })

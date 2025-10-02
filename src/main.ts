@@ -1,17 +1,17 @@
-import { resolve } from "@std/path/resolve";
 import { sdl } from "./ffi.ts";
-import { Color, Image, type Keys, type Buttons, buttonMap } from "./utils.ts";
+import { type Keys, type Buttons, buttonMap } from "./utils.ts";
+import Image from "./utils/image.ts";
+import Color from "./utils/color.ts";
 import Window from "./window.ts";
 
 class Slifer {
 
     public Window = Window;
     public Color = Color;
+    public Image = Image;
 
     // Event codes
     private QUIT = 256;
-    private MOUSEDOWN = 1025
-    private MOUSEUP = 1026
 
     static window: Deno.PointerValue;
     static renderer: Deno.PointerValue;
@@ -214,18 +214,6 @@ class Slifer {
         if (state == -1) return true;
 
         return false;
-    }
-
-    
-    /**
-     * 
-     * @param data - Image loaded through "import data from ./image.png with { type: 'bytes' } "
-     * @returns Image object
-     */
-    loadImage(path: string): Image {
-        const imageBytes = Deno.readFileSync(resolve(path));
-        const image = new Image(imageBytes);
-        return image;
     }
 
     /**
