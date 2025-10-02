@@ -72,21 +72,19 @@ By default, Slifer will look inside <code>/opt/homebrew/lib</code> for all the d
 
 ## Example
 ```ts
-import { Slifer, Color } from 'slifer';
+import Slifer from "./mod.ts";
 
-const window = Slifer.createWindow('Hello From Slifer!', 640, 480);
+new Slifer.Window("Hello", 640, 360);
 
-const bgColor = new Color(48, 52, 70, 255);
+const background = new Slifer.Color(48, 52, 70);
 
-while (!Slifer.shouldClose()) {
-	Slifer.Graphics.setBackground(bgColor);
+while (Slifer.isRunning()) {
+    Slifer.setBackground(background);
 
-	if (Slifer.Keyboard.isPressed('space')) {
-		console.log('Beep :3');
-	}
+    if (Slifer.isKeyPressed('escape')) {
+        Slifer.quit();
+    }
 
-	Slifer.Graphics.render();
+    Slifer.render();
 }
-
-Slifer.quit();
 ```

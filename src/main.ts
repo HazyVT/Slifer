@@ -27,7 +27,7 @@ class Slifer {
 
     static log(text: string) {
         if (this.shouldLog) {
-            console.log(`Slifer: %c${text}`, "color: green;");
+            console.log(`%cSlifer: %c${text}`, "color: green;", "color: #FFF");
         }
     }
 
