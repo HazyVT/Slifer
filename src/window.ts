@@ -1,4 +1,4 @@
-import { sdl, sdlImage} from "./ffi.ts";
+import { sdl, sdlImage } from "./ffi.ts";
 import Slifer from './main.ts'
 
 const encoder = new TextEncoder();

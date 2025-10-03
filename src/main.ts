@@ -1,8 +1,9 @@
-import { sdl } from "./ffi.ts";
+import { closeLibraries, sdl } from "./ffi.ts";
 import { type Keys, type Buttons, buttonMap } from "./utils.ts";
 import Image from "./utils/image.ts";
 import Color from "./utils/color.ts";
 import Window from "./window.ts";
+
 
 /**
  * Slifer's main class
@@ -239,6 +240,7 @@ class Slifer {
      */
     quit(): void {
         Slifer.running = false;
+        closeLibraries();
     }
 }
 

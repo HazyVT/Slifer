@@ -1,6 +1,7 @@
 {
   "tasks": {
     "dev": "deno run --allow-ffi --allow-read test.ts",
+    "test": "deno test --allow-ffi --allow-read",
     "build": "deno compile --allow-ffi --allow-read --output main test.ts",
     "build-win": "deno compile --allow-ffi --target x86_64-pc-windows-msvc --output main.exe test.ts"
   },
@@ -9,8 +10,14 @@
   "license": "MIT",
   "exports": "./mod.ts",
   "imports": {
+    "@std/assert": "jsr:@std/assert@^1.0.14",
     "@std/cli": "jsr:@std/cli@^1.0.22",
+    "@std/expect": "jsr:@std/expect@^1.0.17",
     "@std/fs": "jsr:@std/fs@^1.0.19",
-    "@std/path": "jsr:@std/path@^1.1.2"
+    "@std/path": "jsr:@std/path@^1.1.2",
+    "@std/testing": "jsr:@std/testing@^1.0.15"
+  },
+  "test": {
+    "exclude": ["test.ts"]
   }
 }
