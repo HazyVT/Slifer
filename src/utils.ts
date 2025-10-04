@@ -1,13 +1,5 @@
 import type Color from "./utils/color.ts";
 
-export function logError(message: string) {
-    console.error(`%cERROR: %c${message}`, "color: red;", "color: #FFF");
-}
-
-export function logWarning(message: string) {
-    console.warn(`%cWARNING: %c${message}`, "color: yellow;", "color: #FFF;");
-}
-
 export function colorToUint(color: Color) {
     const colorAsUint = ((color.red << 0) + (color.green << 8) + (color.blue << 16));
     return colorAsUint;

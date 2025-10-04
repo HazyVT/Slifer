@@ -1,3 +1,4 @@
+/*
 import { sdlFont, sdl } from "../ffi.ts";
 import { logError, colorToUint } from "../utils.ts";
 import Slifer from '../main.ts'
@@ -85,3 +86,4 @@ class Font {
 }
 
 export default Font;
+*/

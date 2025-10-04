@@ -1,3 +1,4 @@
+/*
 import { sdl, sdlFont, sdlImage } from "./ffi.ts";
 import Slifer from './main.ts'
 import { logError } from "./utils.ts";
@@ -56,3 +57,4 @@ class Window {
 }
 
 export default Window;
+*/

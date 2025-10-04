@@ -1,3 +1,4 @@
+/*
 import { exists } from "@std/fs/exists";
 import { dirname, join } from '@std/path';
 import { logError } from "./utils.ts";
@@ -225,3 +226,51 @@ export function closeLibraries(libraries?: Libraries) : void {
     }
 }
 
+*/
+
+import { dirname, join } from "@std/path";
+import { exists } from '@std/fs/exists'
+import { logError, logWarning } from "./utils/logging.ts";
+
+type OperatingSystem = "windows" | "linux" | "darwin";
+
+function onLibraryLoadFail(path: string) {
+    logError(`Failed to load library: ${path}`);
+    Deno.exit();
+}
+
+if (Deno.build.os != "windows" && Deno.build.os != "linux" && Deno.build.os != "darwin") {
+    logError(`Unsupported operating system used: ${Deno.build.os}`);
+    Deno.exit();
+}
+
+const os: OperatingSystem = Deno.build.os;
+const isCompiled = Deno.mainModule.includes("deno-compile-main");
+const executePath = dirname(Deno.execPath());
+
+const librarySDLName = {
+    windows: "SDL2.dll",
+    darwin: "libSDL2.dylib",
+    linux: "libSDL2.so",
+}[os]
+
+const libraryImageName = {
+    windows: "SDL2_image.dll",
+    darwin: "libSDL2_image.dylib",
+    linux: "libSDL2_image.so"
+}[os]
+
+const libraryTrueTypeFontName = {
+    windows: "SDL2_ttf.dll",
+    darwin: "libSDL2_ttf.dylib",
+    linux: "libSDL2_ttf.so"
+}[os]
+
+const libraryLocation = {
+    windows: isCompiled ? "./" : "C:\\Windows\\System32\\",
+    linux: isCompiled ? "./" : "/usr/lib/x86_64-gnu/",
+    darwin: isCompiled ? "../Resources/" : "/opt/homebrew/lib/"
+}[os]
+
+const libSDLPath = join(isCompiled ? executePath : '', libraryLocation, librarySDLName);
+if (!await exists(libSDLPath)) onLibraryLoadFail(libSDLPath);

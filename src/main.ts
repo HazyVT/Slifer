@@ -1,3 +1,5 @@
+
+/*
 import { closeLibraries, sdl } from "./ffi.ts";
 import { type Keys, type Buttons, buttonMap } from "./utils.ts";
 import Image from "./utils/image.ts";
@@ -5,10 +7,6 @@ import Color from "./utils/color.ts";
 import Window from "./window.ts";
 import Font from './utils/font.ts'
 
-
-/**
- * Slifer's main class
- */
 class Slifer {
 
     public Window = Window;
@@ -31,16 +29,11 @@ class Slifer {
     private static backgroundColor: Color = new Color(0,0,0);
     private static mouse: {x: number, y: number};
 
-    static log(text: string) {
-        if (this.shouldLog) {
-            console.log(`%cSlifer: %c${text}`, "color: green;", "color: #FFF");
-        }
-    }
+    
 
     /**
      * 
      * @param flag - Should slifer log default logs. False will turn default logs off
-     */
     setLog(flag: boolean): void {
         Slifer.shouldLog = flag
     }
@@ -48,7 +41,6 @@ class Slifer {
     /**
      * 
      * @returns whether Slifer is running
-     */
     isRunning(): boolean {
         // Draw background color
         sdl.SDL_SetRenderDrawColor(
@@ -147,14 +139,12 @@ class Slifer {
     /**
      * 
      * @param color - Color object to set the background color to.
-     */
     setBackground(color: Color): void {
         Slifer.backgroundColor = color;
     }
 
     /**
      * Method to render everything drawn to the screen
-     */
     render(): void {
         sdl.SDL_RenderPresent(Slifer.renderer);
     }
@@ -163,7 +153,6 @@ class Slifer {
      * 
      * @param key - string of which key to get
      * @returns if that key is being held down.
-     */
     isKeyDown(key: Keys) : boolean {
         const state = Slifer.keyMap.get(key);
         if (state == undefined || state == 0) {
@@ -178,7 +167,6 @@ class Slifer {
      * 
      * @param button - string of which button to check
      * @returns if that button is being held down
-     */
     isMouseButtonDown(button: Buttons) : boolean {
         const state = Slifer.mouseMap.get(button);
         if (state == undefined || state == 0) {
@@ -192,7 +180,6 @@ class Slifer {
      * 
      * @param key - string of which key to get
      * @returns if that key has been pressed in the last frame.
-     */
     isKeyPressed(key: Keys) : boolean {
         const state = Slifer.keyMap.get(key);
         if (state == 1) return true;
@@ -204,7 +191,6 @@ class Slifer {
      * 
      * @param button - string of which button to get
      * @returns if that button has been pressed in the last frame.
-     */
     isMouseButtonPressed(button: Buttons) : boolean {
         const state = Slifer.mouseMap.get(button);
         if (state == 1) return true;
@@ -217,7 +203,6 @@ class Slifer {
      * 
      * @param key - string of which key to get
      * @returns if that key has been released in the last frame
-     */
     isKeyReleased(key: Keys) : boolean {
         const state = Slifer.keyMap.get(key);
         if (state == -1) return true;
@@ -229,7 +214,6 @@ class Slifer {
      * 
      * @param button - string of which button to get
      * @returns if that button has been released in the last frame
-     */
     isMouseButtonReleased(button: Buttons) : boolean {
         const state = Slifer.mouseMap.get(button);
         if (state == -1) return true;
@@ -239,7 +223,6 @@ class Slifer {
 
     /**
      * Close running instance of slifer
-     */
     quit(): void {
         Slifer.running = false;
         closeLibraries();
@@ -247,3 +230,4 @@ class Slifer {
 }
 
 export default Slifer;
+*/
