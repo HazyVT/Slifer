@@ -2,11 +2,9 @@ import { exists } from "@std/fs/exists";
 import { dirname, join } from '@std/path';
 import { logError } from "./utils.ts";
 
+type SDLColor = { fields: {r: number, g: number, b: number, a: number }};
 // Get working directory
 export const execPath = dirname(Deno.execPath());
-
-
-
 
 function onFailedLibraryLoad(fullPath: string) {
     logError(`Failed to load library: ${fullPath}`);
@@ -51,6 +49,7 @@ export async function loadLibraries() {
     // Load SDL2 libraries from expected location
     let simpleDirectMediaLayerLocation: string = "";
     let imageLibraryLocation: string = "";
+    let ttfLibraryLocation: string = "";
 
 
     switch (Deno.build.os) {
@@ -82,6 +81,12 @@ export async function loadLibraries() {
                 "../Resources"
             )
 
+            ttfLibraryLocation = await loadDynamicLibrary(
+                "/opt/homebrew/lib/",
+                "libSDL2_ttf.dylib",
+                "../Resources"
+            )
+
             
             break;
         }
@@ -98,6 +103,7 @@ export async function loadLibraries() {
                 "./"
             )
             break;
+
         }
     }
 
@@ -164,6 +170,14 @@ export async function loadLibraries() {
         SDL_SetTextureScaleMode: {
             parameters: ['pointer', 'i32'],
             result: 'i32'
+        },
+        SDL_CreateTextureFromSurface: {
+            parameters: ['pointer', 'pointer'],
+            result: 'pointer'
+        },
+        SDL_FreeSurface: {
+            parameters: ['pointer'],
+            result: 'void'
         }
     })
 
@@ -177,13 +191,29 @@ export async function loadLibraries() {
         }
     })
 
-    return {"SDL": baseLib, "IMAGE": imageLib}
+    const ttfLib = Deno.dlopen(ttfLibraryLocation, {
+        TTF_Init: {
+            parameters: [],
+            result: 'i32'
+        },
+        TTF_OpenFont: {
+            parameters: ['buffer', 'i32'],
+            result: 'pointer'
+        },
+        TTF_RenderText_Solid: {
+            parameters: ['pointer', 'buffer', 'u32'],
+            result: 'pointer'
+        }
+    })
+
+    return {"SDL": baseLib, "IMAGE": imageLib, "TTF": ttfLib};
 
 }
 
 const libs = await loadLibraries();
 export const sdl = libs.SDL.symbols;
 export const sdlImage = libs.IMAGE.symbols;
+export const sdlFont = libs.TTF.symbols;
 
 export function closeLibraries(libraries?: Libraries) : void {
     if (libraries) {
@@ -194,3 +224,4 @@ export function closeLibraries(libraries?: Libraries) : void {
         libs.IMAGE.close();
     }
 }
+

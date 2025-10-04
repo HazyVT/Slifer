@@ -1,5 +1,6 @@
-import { sdl, sdlImage } from "./ffi.ts";
+import { sdl, sdlFont, sdlImage } from "./ffi.ts";
 import Slifer from './main.ts'
+import { logError } from "./utils.ts";
 
 const encoder = new TextEncoder();
 const center = 0x2FFF0000;
@@ -11,11 +12,18 @@ class Window {
     
     constructor(title: string, width: number, height: number) {
         if (sdl.SDL_Init(0x00000020) != 0) {
-            throw new Error("SDL failed to initialize");
+            logError("SDL failed to initialize");
+            Deno.exit();
         }
 
         if (sdlImage.IMG_Init(0x00000003) != 3) {
-            throw new Error("SDL Image failed to initialize");
+            logError("SDL Image failed to initialize");
+            Deno.exit();
+        }
+
+        if (sdlFont.TTF_Init() != 0) {
+            logError("SDL TTF failed to initialize");
+            Deno.exit();
         }
 
         Slifer.log("Initialized successfully");

@@ -3,6 +3,7 @@ import { type Keys, type Buttons, buttonMap } from "./utils.ts";
 import Image from "./utils/image.ts";
 import Color from "./utils/color.ts";
 import Window from "./window.ts";
+import Font from './utils/font.ts'
 
 
 /**
@@ -13,6 +14,7 @@ class Slifer {
     public Window = Window;
     public Color = Color;
     public Image = Image;
+    public Font = Font
 
     // Event codes
     private QUIT = 256;
