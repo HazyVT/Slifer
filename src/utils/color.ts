@@ -10,4 +10,8 @@ class Color {
     }
 }
 
+export function colorToNumber(color: Color) {
+    return ((color.red << 0) + (color.green << 8) + (color.blue << 16));
+}
+
 export default Color;

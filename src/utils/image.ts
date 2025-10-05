@@ -1,7 +1,7 @@
 import { sdl, sdlImage, execPath, isCompiled } from '../ffi.ts';
 import { join } from "@std/path";
 import { logError } from "../utils.ts";
-import Slifer from "../main.ts";
+import Slifer from "../slifer.ts";
 
 const encoder = new TextEncoder();
 

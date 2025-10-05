@@ -1,6 +1,6 @@
 /*
 import { sdlFont, sdl } from "../ffi.ts";
-import { logError, colorToUint } from "../utils.ts";
+import { logError, c../slifer.ts } from "../utils.ts";
 import Slifer from '../main.ts'
 import Color from "./color.ts";
 

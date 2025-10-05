@@ -1,4 +1,4 @@
-import Slifer from "./src/main.ts";
+import Slifer from "./src/slifer.ts";
 
 /**
  * Slifer
