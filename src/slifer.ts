@@ -16,8 +16,8 @@ class Slifer {
     static loadedFonts: Deno.PointerValue[] = [];
 
     public Window = Window;
-    public Keyboard = new Keyboard();
-    public Mouse = new Mouse();
+    public Keyboard: Keyboard = new Keyboard();
+    public Mouse: Mouse = new Mouse();
     public Image = Image;
     public Color = Color;
     public Font = Font;
