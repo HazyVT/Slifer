@@ -237,6 +237,7 @@ import Color from "./utils/color.ts";
 import Window from "./window.ts";
 import Keyboard from "./utils/keyboard.ts";
 import Mouse from "./utils/mouse.ts";
+import Image from "./utils/image.ts";
 
 class Slifer {
 
@@ -244,9 +245,14 @@ class Slifer {
     static window: Deno.PointerValue;
     static renderer: Deno.PointerValue;
 
+    static loadedTextures: Deno.PointerValue[] = []
+
     public Window = Window;
     public Keyboard = new Keyboard();
     public Mouse = new Mouse();
+    public Image = Image;
+
+
 
     private isRunning = true;
     private backgroundColor: Color = new Color(0,0,0);
@@ -291,6 +297,11 @@ class Slifer {
     }
     
     public quit() : void {
+        // Destroy all textures
+        for (const texture of Slifer.loadedTextures) {
+            libs.SDL.SDL_DestroyTexture(texture);
+        }
+        
         // Destory window and renderer
         libs.SDL.SDL_DestroyRenderer(Slifer.renderer);
         libs.SDL.SDL_DestroyWindow(Slifer.window);

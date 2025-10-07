@@ -136,6 +136,10 @@ const baseLib = Deno.dlopen(libSDLPath, {
     SDL_DestroyRenderer: {
         parameters: ['pointer'],
         result: 'void'
+    },
+    SDL_DestroyTexture: {
+        parameters: ['pointer'],
+        result: 'void'
     }
 })
 
