@@ -78,10 +78,11 @@ new Slifer.Window("Hello", 640, 360);
 
 const background = new Slifer.Color(48, 52, 70);
 
-while (Slifer.isRunning()) {
-    Slifer.setBackground(background);
+Slifer.setBackground(background);
 
-    if (Slifer.isKeyPressed('escape')) {
+while (Slifer.isRunning()) {
+
+    if (Slifer.Keyboard.isKeyPressed('escape')) {
         Slifer.quit();
     }
 
