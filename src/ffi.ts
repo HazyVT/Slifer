@@ -165,6 +165,10 @@ const ttfLib = Deno.dlopen(libTrueTypeFontPath, {
     TTF_RenderText_Solid: {
         parameters: ['pointer', 'buffer', 'u32'],
         result: 'pointer'
+    },
+    TTF_CloseFont: {
+        parameters: ['pointer'],
+        result: 'void'
     }
 })
 
