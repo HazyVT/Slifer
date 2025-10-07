@@ -251,6 +251,7 @@ class Slifer {
     public Keyboard = new Keyboard();
     public Mouse = new Mouse();
     public Image = Image;
+    public Color = Color;
 
 
 
@@ -291,6 +292,11 @@ class Slifer {
         
         return !this.isRunning;
     }
+
+    public setBackgroundColor(color: Color) {
+        this.backgroundColor = color;
+    }
+    
 
     public render() : void {
         libs.SDL.SDL_RenderPresent(Slifer.renderer);
