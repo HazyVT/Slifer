@@ -22,11 +22,13 @@ class Slifer {
     public Color = Color;
     public Font = Font;
 
-
-
     private isRunning = true;
     private backgroundColor: Color = new Color(0,0,0);
     
+    /**
+     * 
+     * @returns where slifer should close
+     */
     public shouldClose() : boolean {
         // Set the background color
         libs.SDL.SDL_SetRenderDrawColor(
@@ -62,15 +64,25 @@ class Slifer {
         return !this.isRunning;
     }
 
-    public setBackgroundColor(color: Color) {
+    /**
+     * 
+     * @param color - Color object created using Slifer.Color()
+     */
+    public setBackgroundColor(color: Color): void {
         this.backgroundColor = color;
     }
     
 
+    /**
+     * Renders all draw functions to the
+     */
     public render() : void {
         libs.SDL.SDL_RenderPresent(Slifer.renderer);
     }
     
+    /**
+     * Quits slifer safely. Should always be used if you want to stop running slifer.
+     */
     public quit() : void {
         // Destroy all fonts
         for (const font of Slifer.loadedFonts) {

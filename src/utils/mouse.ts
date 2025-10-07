@@ -49,6 +49,11 @@ class Mouse {
              
     }
 
+    /**
+     * 
+     * @param button - string of which mouse button to check
+     * @returns if that mouse button is being held down
+     */
     public isMouseButtonDown(button: Buttons) : boolean {
         const buttonStateInMap = Mouse.buttonMap.get(button);
         if (buttonStateInMap == 1 || buttonStateInMap == 2) return true;
@@ -56,6 +61,11 @@ class Mouse {
         return false;
     }
 
+    /**
+     * 
+     * @param button - string of which mouse button to check
+     * @returns if that mouse button was pressed in the last frame
+     */
     public isMouseButtonPressed(button: Buttons) : boolean {
         const buttonStateInMap = Mouse.buttonMap.get(button);
         if (buttonStateInMap == 1) return true;
@@ -63,6 +73,11 @@ class Mouse {
         return false;
     }
 
+    /**
+     * 
+     * @param button - string of which mouse button to check
+     * @returns if that mouse button was released in the last frame
+     */
     public isMouseButtonReleased(button: Buttons) : boolean {
         const buttonStateInMap = Mouse.buttonMap.get(button);
         if (buttonStateInMap == -1) return true;

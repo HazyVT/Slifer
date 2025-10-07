@@ -40,6 +40,11 @@ class Keyboard {
         }
     } 
 
+    /**
+     * 
+     * @param key - string of which key to check
+     * @returns if that key is being held down
+     */
     public isKeyDown(key: Keys) : boolean {
         const keyStateInMap = Keyboard.keyMap.get(key);
         if (keyStateInMap == 1 || keyStateInMap == 2) {
@@ -49,6 +54,11 @@ class Keyboard {
         return false;
     }
 
+    /**
+     * 
+     * @param key - string of which key to check
+     * @returns if that key has been pressed in the last frame
+     */
     public isKeyPressed(key: Keys) : boolean {
         const keyStateInMap = Keyboard.keyMap.get(key);
         if (keyStateInMap == 1) return true;
@@ -56,6 +66,11 @@ class Keyboard {
         return false;
     }
 
+    /**
+     * 
+     * @param key - string of which key to check
+     * @returns if that key has been released in the last frame
+     */
     public isKeyReleased(key: Keys) : boolean{
         const keyStateInMap = Keyboard.keyMap.get(key);
         if (keyStateInMap == -1) return true;

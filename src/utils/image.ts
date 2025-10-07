@@ -17,6 +17,10 @@ class Image {
     public readonly width: number;
     public readonly height: number;
 
+    /**
+     * 
+     * @param path - relative path of image
+     */
     constructor(path: string) {
         const rawTexture = libs.IMAGE.IMG_LoadTexture(
             Slifer.renderer, 

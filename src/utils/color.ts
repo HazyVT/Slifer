@@ -3,6 +3,12 @@ class Color {
     readonly green: number;
     readonly blue: number;
 
+    /**
+     * 
+     * @param red - value of red from 0 - 255
+     * @param green - value of green from 0 - 255
+     * @param blue - value of blue from 0 - 255
+     */
     constructor(red: number, green: number, blue: number) {
         this.red = red;
         this.green = green;
