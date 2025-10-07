@@ -11,6 +11,9 @@ class Image {
 
     private _pointer: Deno.PointerValue;
 
+    private originalWidth: number;
+    private originalHeight: number
+    
     public readonly width: number;
     public readonly height: number;
 
@@ -38,6 +41,8 @@ class Image {
 
         this.width = wArr[0];
         this.height = hArr[0];
+        this.originalWidth = this.width;
+        this.originalHeight = this.height;
         this._pointer = rawTexture;
 
         if (libs.SDL.SDL_SetTextureBlendMode(this._pointer, 1) != 0) {
@@ -56,11 +61,17 @@ class Image {
      * @param yScale - [Optional] multiply the height of the image. Default is 1
      */
     draw(x: number, y: number, xScale: number = 1, yScale: number = 1) : void {
+        // deno-lint-ignore no-explicit-any
+        (this.width as any) = this.originalWidth * xScale;
+
+        // deno-lint-ignore no-explicit-any
+        (this.height as any) = this.originalHeight * yScale;
+        
         const dest = new Uint32Array(4);
         dest[0] = x;
         dest[1] = y;
-        dest[2] = this.width * xScale;
-        dest[3] = this.height * yScale;
+        dest[2] = this.width;
+        dest[3] = this.height;
         
         libs.SDL.SDL_RenderCopy(Slifer.renderer, this._pointer, null, Deno.UnsafePointer.of(dest));
     }
