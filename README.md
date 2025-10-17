@@ -72,11 +72,11 @@ By default, Slifer will look inside <code>/opt/homebrew/lib</code> for all the d
 
 ## Example
 ```ts
-import Slifer from "@hazora/slifer";
+import { Slifer, type Color } from "@hazora/slifer";
 
-new Slifer.Window("Hello", 640, 360);
+const window = new Slifer.Window("Hello", 640, 360);
 
-const background = new Slifer.Color(48, 52, 70);
+const background: Color = new Slifer.Color(48, 52, 70);
 
 Slifer.setBackground(background);
 
