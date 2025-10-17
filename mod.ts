@@ -6,6 +6,6 @@ import type Color from "./src/utils/color.ts"
 /**
  * Slifer
  */
-const slf = new Slifer();
+const slf: Slifer = new Slifer();
 
 export {slf as Slifer, type Image, type Font, type Color }
