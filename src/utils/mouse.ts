@@ -10,6 +10,8 @@ class Mouse {
      */
     private static buttonMap: Map<string, -1 | 0 | 1 | 2> = new Map();
     private static buttons: string[] = ["left", "middle", "right"];
+    private static xpos: number;
+    private static ypos: number;
 
     private static setMouseButtonDownInMap(name: string) {
         const mbState = this.buttonMap.get(name);
@@ -30,7 +32,9 @@ class Mouse {
     }
 
     public static handleMouse() : void {
-        const mouseState = libs.SDL.SDL_GetMouseState(null, null);
+        const xArr = new Uint32Array(1);
+        const yArr = new Uint32Array(1);
+        const mouseState = libs.SDL.SDL_GetMouseState(Deno.UnsafePointer.of(xArr), Deno.UnsafePointer.of(yArr));
 
         const mouseButtonDownStates = [];
         if (mouseState & 1) mouseButtonDownStates.push('left');
@@ -45,6 +49,9 @@ class Mouse {
                 this.setMouseButtonUpInMap(name);
             }
         }
+
+        this.xpos = xArr[0];
+        this.ypos = yArr[0];
 
              
     }
@@ -83,6 +90,10 @@ class Mouse {
         if (buttonStateInMap == -1) return true;
 
         return false;
+    }
+
+    public getMousePosition() : {x: number, y: number} {
+        return { x: Mouse.xpos, y: Mouse.ypos };
     }
 
 }
