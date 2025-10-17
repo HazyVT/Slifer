@@ -80,6 +80,8 @@ const background: Color = new Slifer.Color(48, 52, 70);
 
 Slifer.setBackground(background);
 
+Slifer.setBackground(background);
+
 while (Slifer.isRunning()) {
 
     if (Slifer.Keyboard.isKeyPressed('escape')) {
