@@ -140,6 +140,58 @@ const baseLib = Deno.dlopen(libSDLPath, {
     SDL_DestroyTexture: {
         parameters: ['pointer'],
         result: 'void'
+    },
+    SDL_ShowWindow: {
+        parameters: ['pointer'],
+        result: 'void'
+    },
+    SDL_HideWindow: {
+        parameters: ['pointer'],
+        result: 'void'
+    },
+    SDL_SetWindowTitle: {
+        parameters: ['pointer', 'buffer'],
+        result: 'void'
+    },
+    SDL_SetWindowIcon: {
+        parameters: ['pointer', 'pointer'],
+        result: 'void'
+    },
+    SDL_SetWindowPosition: {
+        parameters: ['pointer', 'i32', 'i32'],
+        result: 'void'
+    },
+    SDL_GetWindowPosition: {
+        parameters: ['pointer', 'pointer', 'pointer'],
+        result: 'void'
+    },
+    SDL_SetWindowSize: {
+        parameters: ['pointer', 'i32', 'i32'],
+        result: 'void'
+    },
+    SDL_MaximizeWindow: {
+        parameters: ['pointer'],
+        result: 'void'
+    },
+    SDL_MinimizeWindow: {
+        parameters: ['pointer'],
+        result: 'void'
+    },
+    SDL_RestoreWindow: {
+        parameters: ['pointer'],
+        result: 'void'
+    },
+    SDL_SetWindowOpacity: {
+        parameters: ['pointer', 'f32'],
+        result: 'i32'
+    },
+    SDL_SetWindowFullscreen: {
+        parameters: ['pointer', 'i32'],
+        result: 'i32'
+    },
+    SDL_SetWindowBordered: {
+        parameters: ['pointer', 'bool'],
+        result: 'void'
     }
 })
 
