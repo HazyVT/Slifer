@@ -5,6 +5,7 @@ import Keyboard from "./utils/keyboard.ts";
 import Mouse from "./utils/mouse.ts";
 import Image from "./utils/image.ts";
 import Font from "./utils/font.ts";
+import { Timer } from "./utils/timer.ts";
 
 class Slifer {
 
@@ -24,12 +25,19 @@ class Slifer {
 
     private isRunning = true;
     private backgroundColor: Color = new Color(0,0,0);
+
+    private fps = 60;
+    private ticksPerFrame = 1000 / this.fps;
+
+    private fpsCapTimer: Timer = new Timer();
     
     /**
      * 
      * @returns where slifer should close
      */
     public shouldClose() : boolean {
+        this.fpsCapTimer.start()
+
         // Set the background color
         libs.SDL.SDL_SetRenderDrawColor(
             Slifer.renderer,
@@ -60,6 +68,8 @@ class Slifer {
 
         // Handle mouse state
         Mouse.handleMouse();
+
+        
         
         return !this.isRunning;
     }
@@ -71,6 +81,11 @@ class Slifer {
     public setBackgroundColor(color: Color): void {
         this.backgroundColor = color;
     }
+
+    public setFPS(fps: number) {
+        this.fps = fps;
+        this.ticksPerFrame = 1000 / this.fps;
+    }
     
 
     /**
@@ -78,6 +93,11 @@ class Slifer {
      */
     public render() : void {
         libs.SDL.SDL_RenderPresent(Slifer.renderer);
+
+        const ticks = this.fpsCapTimer.getTicks();
+        if (ticks < this.ticksPerFrame) {
+            libs.SDL.SDL_Delay(Math.floor(this.ticksPerFrame - ticks));
+        }
     }
     
     /**

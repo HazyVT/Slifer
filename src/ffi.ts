@@ -192,6 +192,22 @@ const baseLib = Deno.dlopen(libSDLPath, {
     SDL_SetWindowBordered: {
         parameters: ['pointer', 'bool'],
         result: 'void'
+    },
+    SDL_GetTicks64: {
+        parameters: [],
+        result: 'u64'
+    },
+    SDL_GetPerformanceFrequency: {
+        parameters: [],
+        result: 'i64'
+    },
+    SDL_Delay: {
+        parameters: ['u32'],
+        result: 'void'
+    },
+    SDL_GetPerformanceCounter: {
+        parameters: [],
+        result: 'u64'
     }
 })
 
